@@ -1,5 +1,6 @@
 Hello 
-Edited by Christian and Ben :)
+Edited by Christian and Ben
+
 Team members
 - Ben Harle
 - Kai Brewster
