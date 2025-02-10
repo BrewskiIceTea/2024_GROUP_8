@@ -1,0 +1,4 @@
+show will list the commit for a specific commit ID
+log will list the history of the commits for that branch
+init will initialise the git repository to be able to use git commands
+reset will change the current head the commit is referencing
