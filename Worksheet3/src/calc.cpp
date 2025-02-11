@@ -1,11 +1,8 @@
 // begin = calc.cpp ============
 #include <sstream>
 #include <iostream>
-
-int add(int a, int b) {
-    return a + b;
-}
-
+#include "adder.h"
+    
 int main(int argc, char* argv[]) {
     int a, b, c;
 
