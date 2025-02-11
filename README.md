@@ -11,6 +11,6 @@ Team members
 
 Overview 
 
-developing a vr software and further understanding of coding and making a car
+developing a vr software and further understanding of coding and not making a car
 
 Priority: unknown
