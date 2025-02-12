@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(calc)
 
+include_directories(../inc)
+
 # This project contains a library
 add_library(maths adder.cpp)
 
