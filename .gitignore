@@ -34,7 +34,8 @@
 *.app
 
 # Folders
-/build
-/out
-/html
-/.vs
+build/
+out/
+html/
+.vs/
+latex/
