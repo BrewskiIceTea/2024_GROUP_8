@@ -32,3 +32,18 @@
 *.exe
 *.out
 *.app
+
+# Resources
+*.qrc
+
+# Folders
+build/
+out/
+html/
+.vs/
+latex/
+.vscode/
+.qt/
+CMakeFiles/
+bin/
+
