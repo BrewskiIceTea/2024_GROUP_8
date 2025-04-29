@@ -129,8 +129,8 @@
   </widget>
   <action name="actionOpen_File">
    <property name="icon">
-    <iconset>
-     <normaloff>:/Icons/icons/fileopen.png</normaloff>:/Icons/icons/fileopen.png</iconset>
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
    </property>
    <property name="text">
     <string>Open File</string>

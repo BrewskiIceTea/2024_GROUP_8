@@ -10,6 +10,8 @@
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 
+#include "VRRenderThread.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -27,10 +29,16 @@ public:
 
 public slots:
     void handleAddButton();
-    void on_actionOpenFile_triggered();
     void handleTreeClicked();
+
+    // Actions
+    void on_actionOpenFile_triggered();
     void on_actionItemOptions_triggered();
     void on_actionOpen_File_triggered(); 
+    void on_actionStart_VR_triggered();
+    void on_actionStop_VR_triggered();
+    
+    
     void openFileDialog();  
 
 signals:
@@ -42,11 +50,14 @@ private:
     Ui::MainWindow *ui;
     ModelPartList* partList;
 
-    //Worksheet 7 Exercise 3
+    VRRenderThread* vrThread = nullptr; // Pointer to the VR thread
+
+    // Renderer and window
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
+    void syncThreadActors();
 };
 #endif // MAINWINDOW_H
