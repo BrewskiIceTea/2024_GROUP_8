@@ -33,17 +33,23 @@
 *.out
 *.app
 
+<<<<<<< HEAD
 # Resources
 *.qrc
 
+=======
+>>>>>>> 4ade91660c2b34588ab68c1d2830afc90e9a6ea2
 # Folders
 build/
 out/
 html/
 .vs/
 latex/
+<<<<<<< HEAD
 .vscode/
 .qt/
 CMakeFiles/
 bin/
 
+=======
+>>>>>>> 4ade91660c2b34588ab68c1d2830afc90e9a6ea2

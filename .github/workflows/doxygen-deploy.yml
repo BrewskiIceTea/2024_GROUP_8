@@ -1,0 +1,38 @@
+# doxygen-deploy.yml
+
+name: doxygen-deploy
+
+on:
+  push:
+    branches: [master]  # Change this to your default branch if needed ("main" instead of "master")
+
+jobs:
+  # The job that will build Worksheet5
+  deploy-worksheet5:
+  
+    # Defines the operating system for the virtual machine
+    runs-on: ubuntu-latest
+
+    # A list of steps to follow to complete the build
+    steps:
+    
+      # This is a predefined action that checks out a copy of your code
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Doxygen
+        run: sudo apt-get install -y doxygen
+
+      # Run Doxygen on Worksheet5 folder
+      - name: Run Doxygen
+        working-directory: ${{ github.workspace }}/Worksheet5
+        run: doxygen
+
+      # Deploy HTML output from Doxygen to GitHub Pages
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        with:
+          # The branch the action should deploy to
+          branch: gh-pages
+          # The folder the action should deploy
+          folder: ${{ github.workspace }}/Worksheet5/html
