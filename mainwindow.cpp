@@ -17,26 +17,34 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // -------------------------------- SETUP UI ----------------------------------
+
     ui->setupUi(this);
     ui->treeView->addAction(ui->actionItemOptions);
+    
 
+    bool checkConnect; 
     // Connect signals and slots
-    connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleButton_1);
-    connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::handleButton_2);
+    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleAddButton);
+    Q_ASSERT(checkConnect);
+
+    checkConnect = connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::on_actionItemOptions_triggered);
+    Q_ASSERT(checkConnect);
+
 
     //Ex5 ClickedSignalOfTree Constructor
-    connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::handleTreeClicked);
+    checkConnect = connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::handleTreeClicked);
+    Q_ASSERT(checkConnect);
 
     // Connect a custom signal to the status bar
-    connect(this, &MainWindow::statusUpdateMessage, ui->statusBar, &QStatusBar::showMessage);
+    checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
+    Q_ASSERT(checkConnect);
 
     // Connect For exercise 8
-    connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::openFileDialog);
+    checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpenFile_triggered);
+    Q_ASSERT(checkConnect);  
 
-    // Connect for exercise 9
-    connect(ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::openDialog);
-
-
+    // -------------------------------- VTK RENDERING ----------------------------------
 
     // Exercise 3, Worksheet 7 Task
     // Link a render window with the Qt widget
@@ -66,12 +74,13 @@ MainWindow::MainWindow(QWidget *parent)
     renderer->AddActor(cylinderActor);
 
     // Reset camera
+    renderer->SetBackground(0.2, 0.2, 0.2); //Background Grey
     renderer->ResetCamera();
     renderer->GetActiveCamera()->Azimuth(30);
     renderer->GetActiveCamera()->Elevation(30);
     renderer->ResetCameraClippingRange();
 
-    //-----------------------------------------------
+    // -------------------------------- SETUP MODEL PART LIST ----------------------------------
 
     /* Create/allocate the ModelList */
     this->partList = new ModelPartList("Parts List");
@@ -112,20 +121,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::handleButton_1(){
+// Update your button handling slot so it activates the status bar
+void MainWindow::handleAddButton() {
+    // This causes MainWindow to emit the signal that will then be
+    // received by the status bar’s slot
     emit statusUpdateMessage(QString("Add button was clicked"), 0);
 }
 
-void MainWindow::handleButton_2(){
 
-    //-----------QMsg Box-------------------
-    //QMessageBox msgBox;
-    //msgBox.setText("Button 2 was clicked!");
-    //msgBox.exec();
-
-    //------------Status Bar----------------
-    emit statusUpdateMessage(QString("Add button 2 was clicked"), 0);
-}
 
 void MainWindow::handleTreeClicked(){
     //------Exercise-5------
@@ -147,6 +150,48 @@ void MainWindow::handleTreeClicked(){
 void MainWindow::on_actionOpen_File_triggered()
 {
     emit statusUpdateMessage(QString("Open File action triggered"), 0);
+}
+
+void MainWindow::on_actionOpenFile_triggered() {
+
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text Files (*.txt)")
+    );
+
+    //  Give a warning if no file was selected
+    if (fileName.isEmpty()) { 
+        QMessageBox::warning(this, 
+            tr("File Selection"), 
+            tr("No file was selected."), 
+            QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    } 
+        
+
+    QModelIndex index = ui->treeView->currentIndex();
+    if (index.isValid()) {
+        ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+        part->set(0, fileName); 
+
+        qDebug() << "About to load STL for" << fileName;
+
+        part->loadSTL(fileName);    // <<< This MUST happen!
+        updateRender();             // <<< Then refresh
+    }
+    
+
+    QString name = QFileInfo(fileName).completeBaseName();
+     // Get the index of the selected item
+     ModelPart *selectedPart = static_cast<ModelPart *>(index.internalPointer());
+
+     selectedPart->set(0, QVariant(name));
+
+    // Add this line of code so you can see if the action is working
+    emit statusUpdateMessage(QString("The selected item is: ") + fileName, 0);
 }
 
 void MainWindow::openFileDialog() {
@@ -173,20 +218,7 @@ void MainWindow::openFileDialog() {
 
 
 void MainWindow::on_actionItemOptions_triggered() {
-    QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) return;
-
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
-    OptionDialog dialog(this);
-    dialog.loadFromModelPart(part->data(0).toString(), part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
-
-    if (dialog.exec() == QDialog::Accepted) {
-        part->set(0, dialog.getPartName());
-        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
-        part->setVisible(dialog.getVisibility());
-        emit statusUpdateMessage(QString("ModelPart updated"), 0);
-    }
+    openDialog();
 }
 
 void MainWindow::openDialog() {
@@ -206,7 +238,7 @@ void MainWindow::openDialog() {
         part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
         part->setVisible(dialog.getVisibility());
 
-        // 🌟 Update actor color immediately
+        //  Update actor color immediately
         if (part->getActor()) {
             part->getActor()->GetProperty()->SetColor(
                 part->getColourR() / 255.0,
@@ -226,11 +258,14 @@ void MainWindow::openDialog() {
 void MainWindow::updateRender() {
     renderer->RemoveAllViewProps();
     updateRenderFromTree(partList->index(0, 0, QModelIndex()));
-    renderer->Render();
-
     renderer->ResetCamera();    // <<< THIS IS MISSING
-    renderer->Render();
     renderer->SetBackground(0.2, 0.2, 0.2); //Background Grey
+
+    // Forcing render update 
+    ui->vtkWidget->update();
+    renderer->Render();
+    renderWindow->Render(); // forces the render window to update
+
 }
 
 void MainWindow::updateRenderFromTree(const QModelIndex& index) {

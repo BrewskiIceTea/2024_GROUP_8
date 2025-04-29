@@ -50,6 +50,7 @@ latex/
 .qt/
 CMakeFiles/
 bin/
+FS_STL/
 
 =======
 >>>>>>> 4ade91660c2b34588ab68c1d2830afc90e9a6ea2

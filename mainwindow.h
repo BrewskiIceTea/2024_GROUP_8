@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QStatusBar>
 #include "ModelPart.h"
 #include "ModelPartList.h"
 #include <vtkSmartPointer.h>
@@ -24,20 +26,16 @@ public:
     ~MainWindow();
 
 public slots:
-    void handleButton_1(); //Slot for first button
-    void handleButton_2(); //Slot for second button
-    void handleTreeClicked(); //Slot for Tree Clicks
+    void handleAddButton();
+    void on_actionOpenFile_triggered();
+    void handleTreeClicked();
+    void on_actionItemOptions_triggered();
+    void on_actionOpen_File_triggered(); 
+    void openFileDialog();  
 
 signals:
     void statusUpdateMessage(const QString &message, int timeout);
 
-
-private slots:
-    void on_actionOpen_File_triggered();
-    void openFileDialog(); //Slot for opening a file Ex8
-
-    void openDialog();
-    void on_actionItemOptions_triggered();
 
 
 private:
@@ -47,7 +45,7 @@ private:
     //Worksheet 7 Exercise 3
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
-
+    void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
 };
