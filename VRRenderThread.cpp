@@ -116,7 +116,7 @@ void VRRenderThread::run() {
 	// The renderer generates the image
 	// which is then displayed on the render window.
 	// It can be thought of as a scene to which the actor is added
-	renderer = vtkOpenVRRenderer::New();	
+	renderer = vtkOpenVRRenderer::New();
 	
 	renderer->SetBackground(colors->GetColor3d("BkgColor").GetData());
 	
@@ -193,6 +193,8 @@ void VRRenderThread::run() {
 			while ((a = (vtkActor*)actorList->GetNextActor())) {
 				a->RotateZ(rotateZ);
 			}
+
+			camera->Modified();
 			
 			/* Remember time now */
 			t_last = std::chrono::steady_clock::now();

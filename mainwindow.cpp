@@ -213,9 +213,10 @@ void MainWindow::on_actionOpenFile_triggered() {
 }
 
 void MainWindow::on_actionStart_VR_triggered() {
-    VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
+    VRRenderThread* vrThread = new VRRenderThread(this); // Create a new VR thread
 
     thread->start(); // Start the VR thread
+    
     this->vrThread = thread; // Store the thread pointer for later use
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
