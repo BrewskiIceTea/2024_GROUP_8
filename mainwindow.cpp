@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->treeView->addAction(ui->actionItemOptions);
     
-    ui->actionStart_VR->setEnabled(true); // Disable the Start VR action once started
-    ui->actionStop_VR->setEnabled(false); // Enable the Stop VR action
+    ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
+    ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
 
     bool checkConnect; 
     // Connect signals and slots
@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
     renderer->AddActor(cylinderActor);
 
     // Reset camera
-    renderer->SetBackground(0.2, 0.2, 0.2); //Background Grey
+    renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
     renderer->ResetCamera();
     renderer->GetActiveCamera()->Azimuth(30);
     renderer->GetActiveCamera()->Elevation(30);
@@ -144,6 +144,7 @@ MainWindow::~MainWindow()
 void MainWindow::handleAddButton() {
     // This causes MainWindow to emit the signal that will then be
     // received by the status bar’s slot
+    openDialog();
     emit statusUpdateMessage(QString("Add button was clicked"), 0);
 }
 
@@ -166,11 +167,6 @@ void MainWindow::handleTreeClicked(){
 }
 
 
-void MainWindow::on_actionOpen_File_triggered()
-{
-    emit statusUpdateMessage(QString("Open File action triggered"), 0);
-}
-
 void MainWindow::on_actionOpenFile_triggered() {
 
     QString fileName = QFileDialog::getOpenFileName(
@@ -190,6 +186,7 @@ void MainWindow::on_actionOpenFile_triggered() {
         return;
     }   
 
+    //  Load the selected file into the current item
     QModelIndex index = ui->treeView->currentIndex();
     if (index.isValid()) {
         ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
@@ -198,6 +195,8 @@ void MainWindow::on_actionOpenFile_triggered() {
         qDebug() << "About to load STL for" << fileName;
 
         part->loadSTL(fileName);    // <<< This MUST happen!
+
+        vrThread->addActorOffline(part->getActor().GetPointer()); // Adding the actor to the VR thread
         updateRender();             // <<< Then refresh
     }
     
@@ -213,7 +212,7 @@ void MainWindow::on_actionOpenFile_triggered() {
 }
 
 void MainWindow::on_actionStart_VR_triggered() {
-    VRRenderThread* vrThread = new VRRenderThread(this); // Create a new VR thread
+    VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
 
     thread->start(); // Start the VR thread
     
@@ -226,13 +225,17 @@ void MainWindow::on_actionStart_VR_triggered() {
 
 void MainWindow::on_actionStop_VR_triggered() {
 
-    // Stop the VR thread if existing
     if (vrThread) {
-        vrThread->requestInterruption();
+        // Tell the thread to end its loop:
+        vrThread->issueCommand(VRRenderThread::END_RENDER, 0);
+
+        // Wait for run() to finish and do its own TerminateApp/Finalize:
         vrThread->wait();
+
         delete vrThread;
         vrThread = nullptr;
-   }
+    }
+    
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
@@ -262,7 +265,7 @@ void MainWindow::openFileDialog() {
 
 
 void MainWindow::on_actionItemOptions_triggered() {
-    openDialog();
+    openFileDialog();
 }
 
 void MainWindow::openDialog() {
@@ -303,7 +306,7 @@ void MainWindow::updateRender() {
     renderer->RemoveAllViewProps();
     updateRenderFromTree(partList->index(0, 0, QModelIndex()));
     renderer->ResetCamera();    // <<< THIS IS MISSING
-    renderer->SetBackground(0.2, 0.2, 0.2); //Background Grey
+    renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
 
     // Forcing render update 
     ui->vtkWidget->update();
@@ -312,7 +315,7 @@ void MainWindow::updateRender() {
     renderWindow->Render(); // forces the render window to update
 }
 
-void MainWindow::syncThreadActors() {
+void MainWindow::updateAllThreadActors() {
     return;
 }
 
@@ -326,7 +329,7 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
         if (partActor) {
             partActor->SetVisibility(1);
             renderer->AddActor(partActor);
-            qDebug() << "Added actor to renderer!"; //IS STL file being rendered
+            qDebug() << "Added actor to renderer!"; // IS STL file being rendered
         } else {
             qDebug() << "No actor to add.";
         }

@@ -34,12 +34,11 @@ public slots:
     // Actions
     void on_actionOpenFile_triggered();
     void on_actionItemOptions_triggered();
-    void on_actionOpen_File_triggered(); 
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
     
-    
-    void openFileDialog();  
+    // Generic open file dialog for loading STL files
+    void openFileDialog(); 
 
 signals:
     void statusUpdateMessage(const QString &message, int timeout);
@@ -58,6 +57,6 @@ private:
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
-    void syncThreadActors();
+    void updateAllThreadActors();
 };
 #endif // MAINWINDOW_H

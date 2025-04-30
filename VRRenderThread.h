@@ -66,6 +66,11 @@ public:
       */
     void issueCommand( int cmd, double value );
 
+    /** This function will return the interactor object, which can be used to control the VR headset
+      * and other VR devices.
+      */
+    vtkOpenVRRenderWindowInteractor* getInteractor() { return interactor; }
+
 
 protected:
     /** This is a re-implementation of a QThread function 
