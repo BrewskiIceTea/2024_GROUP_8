@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
+    cylinderActor->SetVisibility(0);
 
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -170,7 +171,32 @@ void MainWindow::handleTreeClicked(){
     emit statusUpdateMessage(QString("The selected item is: ") + text, 0);
 
 }
+    // -------------------------------- Open File ----------------------------------
 
+void MainWindow::openFileDialog() {
+    QString fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text Files (*.txt)")
+        );
+
+    if (!fileName.isEmpty()) {
+        QModelIndex index = ui->treeView->currentIndex();
+        if (index.isValid()) {
+            ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+            QString name = QFileInfo(fileName).completeBaseName();  //getting just the file name
+            part->set(0, name);
+
+            qDebug() << "About to load STL for" << name;
+
+            part->loadSTL(fileName);    // <<< This MUST happen!
+            updateRender();             // <<< Then refresh
+
+            emit statusUpdateMessage(QString("Loaded ") + fileName, 0);
+        }
+    }
+}
 
 void MainWindow::on_actionOpenFile_triggered() {
 
@@ -219,6 +245,54 @@ void MainWindow::on_actionOpenFile_triggered() {
     emit statusUpdateMessage(QString("The selected item is: ") + fileName, 0);
 }
 
+
+
+    // -------------------------------- Item Options ----------------------------------
+
+void MainWindow::on_actionItemOptions_triggered() {
+    openDialog();
+}
+
+//item options
+void MainWindow::openDialog() {
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    OptionDialog dialog(this);
+    dialog.loadFromModelPart(part->data(0).toString(),
+                             part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+
+        part->set(0, dialog.getPartName());
+        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
+        part->setVisible(dialog.getVisibility());
+        part->setActor();
+
+        /*//  Update actor color immediately
+        if (part->getActor()) {
+            part->getActor()->GetProperty()->SetColor(
+                part->getColourR() / 255.0,
+                part->getColourG() / 255.0,
+                part->getColourB() / 255.0
+                );
+        }*/
+
+        renderer->Render(); // Refresh the window
+        //updateRender();
+
+        ui->treeView->model()->dataChanged(index, index);
+    } else {
+        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    }
+}
+
+
+// -------------------------------- VR functions ----------------------------------
+
 void MainWindow::on_actionStart_VR_triggered() {
     VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
 
@@ -249,71 +323,8 @@ void MainWindow::on_actionStop_VR_triggered() {
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
 
-void MainWindow::openFileDialog() {
-    QString fileName = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-        );
-
-    if (!fileName.isEmpty()) {
-        QModelIndex index = ui->treeView->currentIndex();
-        if (index.isValid()) {
-            ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-            QString name = QFileInfo(fileName).completeBaseName();  //getting just the file name
-            part->set(0, name);
-
-            qDebug() << "About to load STL for" << name;
-
-            part->loadSTL(fileName);    // <<< This MUST happen!
-            updateRender();             // <<< Then refresh
-        }
-    }
-}
-
-
-void MainWindow::on_actionItemOptions_triggered() {
-    openDialog();
-}
-
-//item options
-void MainWindow::openDialog() {
-    QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) return;
-
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
-    OptionDialog dialog(this);
-    dialog.loadFromModelPart(part->data(0).toString(),
-                             part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
-
-    if (dialog.exec() == QDialog::Accepted) {
-        emit statusUpdateMessage(QString("Dialog accepted"), 0);
-
-        part->set(0, dialog.getPartName());
-        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
-        part->setVisible(dialog.getVisibility());
-
-        //  Update actor color immediately
-        if (part->getActor()) {
-            part->getActor()->GetProperty()->SetColor(
-                part->getColourR() / 255.0,
-                part->getColourG() / 255.0,
-                part->getColourB() / 255.0
-                );
-        }
-
-        renderer->Render(); // Refresh the window
-
-        ui->treeView->model()->dataChanged(index, index);
-    } else {
-        emit statusUpdateMessage(QString("Dialog rejected"), 0);
-    }
-}
-
 void MainWindow::updateRender() {
-    renderer->RemoveAllViewProps();
+    //renderer->RemoveAllViewProps();
     updateRenderFromTree(partList->index(0, 0, QModelIndex()));
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -354,7 +365,7 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
 }
 
 
-   // --------------------------------  Filters :( ----------------------------------
+   // --------------------------------  Filters ----------------------------------
 
 void MainWindow::openFilterDialog(){
     QModelIndex index = ui->treeView->currentIndex();
@@ -413,6 +424,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
         renderer->Render(); // Refresh the window
+        updateRender();
 
         /*emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")

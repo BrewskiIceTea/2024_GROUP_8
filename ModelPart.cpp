@@ -1,3 +1,4 @@
+
 /**     @file ModelPart.cpp
   *
   *     EEEE2076 - Software Engineering & VR Project
@@ -200,7 +201,7 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
      */
 }
 
-/////////////////////////////////////////////
+// ------------------------------------------------------------------
 //added by Ben :)
 void ModelPart::setActor(){
 
@@ -209,6 +210,7 @@ void ModelPart::setActor(){
 
 }
 
+// -------------------------------- Filters ----------------------------------
 //for filters UI setters/getters
 void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
     clipFilterEnabled = inputClipFilterEnabled;
@@ -243,12 +245,13 @@ int ModelPart::getClipOrigin(){
 }
 
 
-//////////////////////////////////
+// --------------------------------- WIP ----------------------------------
 
 
 void ModelPart::getClipActor(){
 
     if (clipFilterEnabled && !shrinkFilterEnabled){
+        /*
         //vtk filter
         //this will apply a clipping plane whose normal is the x= axis that crosses the x=axis
         vtkSmartPointer<vtkPlane> clipPlane = vtkSmartPointer<vtkPlane>::New();
@@ -266,14 +269,15 @@ void ModelPart::getClipActor(){
 
         //filter -> actor
         //actor = vtkSmartPointer<vtkActor>::New();
-        actor->SetMapper(clipMapper);
+        actor->SetMapper(clipMapper);*/
     }
+
 
 
 }
 
 void ModelPart::getShrinkActor(){
-
+/*
     vtkSmartPointer<vtkShrinkFilter> shrinkFilter = vtkSmartPointer<vtkShrinkFilter >::New();
 
     shrinkFilter->SetInputConnection(file->GetOutputPort());
@@ -287,7 +291,7 @@ void ModelPart::getShrinkActor(){
     //shrinkActor = vtkSmartPointer<vtkActor>::New();
     // Set the new mapper to the existing actor
 
-    actor->SetMapper(shrinkMapper);
+    actor->SetMapper(shrinkMapper);*/
 
 }
 
@@ -306,7 +310,8 @@ void ModelPart::getBaseModel(){
 }
 
 
-/////////////////////////////////////////////
+// ---------------------------------------------------------------------
+
 
 //vtkActor* ModelPart::getNewActor() {
 /* This is a placeholder function that you will need to modify if you want to use it
