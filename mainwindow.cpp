@@ -282,9 +282,15 @@ void MainWindow::openDialog() {
         }*/
 
         renderer->Render(); // Refresh the window
-        //updateRender();
+        updateRender();
 
         ui->treeView->model()->dataChanged(index, index);
+
+        emit statusUpdateMessage(
+            QString("ModelPart updated, dialog visible: %1").arg(part->visible()),
+            0
+            );
+
     } else {
         emit statusUpdateMessage(QString("Dialog rejected"), 0);
     }
@@ -348,7 +354,7 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
     if (selectedPart) {
         auto partActor = selectedPart->getActor();
         if (partActor) {
-            partActor->SetVisibility(1);
+            partActor->SetVisibility(selectedPart->visible());
             renderer->AddActor(partActor);
             qDebug() << "Added actor to renderer!"; // IS STL file being rendered
         } else {

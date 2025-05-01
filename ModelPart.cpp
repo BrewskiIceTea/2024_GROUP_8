@@ -188,7 +188,7 @@ void ModelPart::loadSTL(QString fileName) {
 
     actor->GetProperty()->SetColor(modelColourR, modelColourG, modelColourB);  // White model for testing
 
-    actor->SetVisibility(1); // Make sure it's visible
+    actor->SetVisibility(partIsVisible); // Make sure it's visible
 
 
 }
