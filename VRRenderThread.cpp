@@ -63,8 +63,8 @@ void VRRenderThread::addActorOffline( vtkActor* actor ) {
 		/* I have found that these initial transforms will position the FS
 		 * car model in a sensible position but you can experiment
 		 */
-		actor->RotateX(-90);
-		actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
+		// actor->RotateX(-90);
+		// actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
 
 		actors->AddItem(actor);
 	}
@@ -107,6 +107,7 @@ void VRRenderThread::run() {
 	 * so there needs to be a mechanism to pass data from the GUi thread to the VR thread.
 	 */
 
+	 
 	vtkNew<vtkNamedColors> colors;
 
 	// Set the background color.
@@ -120,12 +121,7 @@ void VRRenderThread::run() {
 	
 	renderer->SetBackground(colors->GetColor3d("BkgColor").GetData());
 	
-	/* Loop through list of actors provided and add to scene */
-	vtkActor* a;
-	actors->InitTraversal();
-	while( (a = (vtkActor*)actors->GetNextActor() ) ) {
-		renderer->AddActor(a);
-	}
+	
 
 	/* The render window is the actual GUI window
 	 * that appears on the computer screen
@@ -134,6 +130,11 @@ void VRRenderThread::run() {
 
 	window->Initialize();
 	window->AddRenderer(renderer);
+
+	window->SetUseOffScreenBuffers(true);  // Use dedicated offscreen buffers
+	window->SetSharedRenderWindow(nullptr); // Don't share context with main window
+	window->SetMultiSamples(0);            // Disable multisampling for the context
+	 
 	
 	/* Create Open VR Camera */
 	camera = vtkOpenVRCamera::New();				
@@ -147,6 +148,39 @@ void VRRenderThread::run() {
 	interactor->SetRenderWindow(window);													
 	interactor->Initialize();
 	window->Render();
+
+	/* Loop through list of actors provided and add to scene */
+	/* Loop through list of actors provided and add to scene */
+vtkActor* a;
+actors->InitTraversal();
+while((a = (vtkActor*)actors->GetNextActor())) {
+    // Create new actor and mapper
+    vtkSmartPointer<vtkActor> actorCopy = vtkSmartPointer<vtkActor>::New();
+    vtkSmartPointer<vtkPolyDataMapper> mapperCopy = vtkSmartPointer<vtkPolyDataMapper>::New();
+    
+    // Get original mapper and its input data
+    vtkPolyDataMapper* originalMapper = vtkPolyDataMapper::SafeDownCast(a->GetMapper());
+    if (originalMapper) {
+        vtkPolyData* inputData = vtkPolyData::SafeDownCast(originalMapper->GetInput());
+        if (inputData) {
+            // Create new polydata and copy the geometry
+            vtkSmartPointer<vtkPolyData> newPolyData = vtkSmartPointer<vtkPolyData>::New();
+            newPolyData->DeepCopy(inputData);
+            
+            // Set up the new mapper
+            mapperCopy->SetInputData(newPolyData);
+            actorCopy->SetMapper(mapperCopy);
+            
+            // Copy actor properties
+            actorCopy->GetProperty()->DeepCopy(a->GetProperty());
+            actorCopy->SetPosition(a->GetPosition());
+            actorCopy->SetOrientation(a->GetOrientation());
+            actorCopy->SetScale(a->GetScale());
+            
+            renderer->AddActor(actorCopy);
+        }
+    }
+}
 	
 
 	/* Now start the VR - we will implement the command loop manually
@@ -204,14 +238,14 @@ void VRRenderThread::run() {
 	if (interactor)
 	{
 	//   interactor->TerminateApp();     // signal SteamVR to quit
-	  interactor->Delete();           // delete the interactor
-	  interactor = nullptr;
+	//   interactor->Delete();           // delete the interactor
+	//   interactor = nullptr;
 	}
 	if (window)
 	{
 	  window->Finalize();             // clean up the OpenVR render window
-	  window->Delete();
-	  window = nullptr;
+	//   window->Delete();
+	//   window = nullptr;
 	}
 	if (renderer)
 	{

@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include <openvr.h>
 
 #include <vtkRenderer.h>
 #include <vtkCylinderSource.h>
@@ -69,7 +70,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Assigning the Desktop application widget to the render window
     ui->vtkWidget->setRenderWindow(renderWindow);
 
-    
     // Add a renderer
     renderer = vtkSmartPointer<vtkRenderer>::New();
     renderWindow->AddRenderer(renderer);
@@ -98,6 +98,9 @@ MainWindow::MainWindow(QWidget *parent)
     renderer->GetActiveCamera()->Azimuth(30);
     renderer->GetActiveCamera()->Elevation(30);
     renderer->ResetCameraClippingRange();
+
+    // create base instance for actor loading but no rendering yet
+    vrThread = new VRRenderThread(this); // Create a new VR thread // Store the thread pointer for later use
 
     // -------------------------------- SETUP MODEL PART LIST ----------------------------------
 
@@ -140,6 +143,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// -------------------------------- SIGNALS AND SLOTS ----------------------------------
+
 // Update your button handling slot so it activates the status bar
 void MainWindow::handleAddButton() {
     // This causes MainWindow to emit the signal that will then be
@@ -147,8 +152,6 @@ void MainWindow::handleAddButton() {
     openDialog();
     emit statusUpdateMessage(QString("Add button was clicked"), 0);
 }
-
-
 
 void MainWindow::handleTreeClicked(){
     //------Exercise-5------
@@ -165,7 +168,6 @@ void MainWindow::handleTreeClicked(){
     emit statusUpdateMessage(QString("The selected item is: ") + text, 0);
 
 }
-
 
 void MainWindow::on_actionOpenFile_triggered() {
 
@@ -195,15 +197,16 @@ void MainWindow::on_actionOpenFile_triggered() {
         qDebug() << "About to load STL for" << fileName;
 
         part->loadSTL(fileName);    // <<< This MUST happen!
+        // vrThread->addActorOffline(part->getActor().GetPointer()); // parse the pointer to the actor to the VR thread
+        // Create a new actor copy – use DeepCopy if you need an independent instance:
+        vtkSmartPointer<vtkActor> actorCopy = vtkSmartPointer<vtkActor>::New();
+        actorCopy->ShallowCopy(part->getActor()); // or ShallowCopy if that fits your use-case
 
-        if (vrThread) {
-            vrThread->addActorOffline(part->getActor().GetPointer());
-        }
-        // Adding the actor to the VR thread
+        // Now pass the copied actor (its raw pointer) to the VR thread:
+        vrThread->addActorOffline(actorCopy.GetPointer());
         updateRender();             // <<< Then refresh
     }
     
-
     QString name = QFileInfo(fileName).completeBaseName();
      // Get the index of the selected item
      ModelPart *selectedPart = static_cast<ModelPart *>(index.internalPointer());
@@ -215,11 +218,21 @@ void MainWindow::on_actionOpenFile_triggered() {
 }
 
 void MainWindow::on_actionStart_VR_triggered() {
-    VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
 
-    thread->start(); // Start the VR thread
+    if (!steamVRAvailable())
+    {
+        QMessageBox::warning(
+            this,
+            tr("Cannot start VR"),
+            tr("SteamVR is not running or no HMD detected.\n"
+               "Please launch SteamVR and try again.")
+        );
+
+        return;
+    }
     
-    this->vrThread = thread; // Store the thread pointer for later use
+    
+    vrThread->start(); // Start the VR thread
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
     ui->actionStop_VR->setEnabled(true); // Enable the Stop VR action
@@ -235,14 +248,16 @@ void MainWindow::on_actionStop_VR_triggered() {
         // Wait for run() to finish and do its own TerminateApp/Finalize:
         vrThread->wait();
 
-        delete vrThread;
-        vrThread = nullptr;
+        delete vrThread; 
+        vrThread = new VRRenderThread(this); // Create a new VR thread without rendering for future use
     }
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
+
+// -------------------------------- FILE MODEL LOADING ----------------------------------
 
 void MainWindow::openFileDialog() {
     QString fileName = QFileDialog::getOpenFileName(
@@ -264,6 +279,7 @@ void MainWindow::openFileDialog() {
             updateRender();             // <<< Then refresh
         }
     }
+
 }
 
 
@@ -305,6 +321,9 @@ void MainWindow::openDialog() {
     }
 }
 
+
+// -------------------------------- UPDATE RENDERING ----------------------------------
+
 void MainWindow::updateRender() {
     renderer->RemoveAllViewProps();
     updateRenderFromTree(partList->index(0, 0, QModelIndex()));
@@ -332,6 +351,7 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
         if (partActor) {
             partActor->SetVisibility(1);
             renderer->AddActor(partActor);
+
             qDebug() << "Added actor to renderer!"; // IS STL file being rendered
         } else {
             qDebug() << "No actor to add.";
@@ -345,3 +365,30 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
         updateRenderFromTree(partList->index(i, 0, index));
     }
 }
+
+// -------------------------------- VR CHECKERS----------------------------------
+
+// Returns true iff SteamVR is installed, running, and an HMD is connected
+bool MainWindow::steamVRAvailable() {
+    // Quick check: is the runtime installed on this machine?
+    if (!vr::VR_IsRuntimeInstalled())
+        return false;
+
+    // Is an HMD actually plugged in?
+    if (!vr::VR_IsHmdPresent())
+        return false;
+
+    // Try to initialize & immediately shut down the VR system just to test
+    vr::EVRInitError initError = vr::VRInitError_None;
+    vr::IVRSystem* pVRSys = vr::VR_Init(&initError, vr::VRApplication_Scene);
+    if (initError != vr::VRInitError_None)
+    {
+        // describe the failure in English
+        vr::VR_Shutdown();
+        return false;
+    }
+    vr::VR_Shutdown();
+    return true;
+}
+
+

@@ -27,6 +27,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    
+
 public slots:
     void handleAddButton();
     void handleTreeClicked();
@@ -54,9 +56,12 @@ private:
     // Renderer and window
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
+
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
     void updateAllThreadActors();
+
+    bool steamVRAvailable();
 };
 #endif // MAINWINDOW_H
