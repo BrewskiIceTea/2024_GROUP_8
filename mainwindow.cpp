@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     bool checkConnect; 
     // Connect signals and slots
-    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleAddButton);
+    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::openFileDialog); //just emits push button 1 was pressed
     Q_ASSERT(checkConnect);
 
     checkConnect = connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::on_actionItemOptions_triggered);
@@ -258,9 +258,10 @@ void MainWindow::openFileDialog() {
         QModelIndex index = ui->treeView->currentIndex();
         if (index.isValid()) {
             ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-            part->set(0, fileName);
+            QString name = QFileInfo(fileName).completeBaseName();  //getting just the file name
+            part->set(0, name);
 
-            qDebug() << "About to load STL for" << fileName;
+            qDebug() << "About to load STL for" << name;
 
             part->loadSTL(fileName);    // <<< This MUST happen!
             updateRender();             // <<< Then refresh
@@ -270,9 +271,10 @@ void MainWindow::openFileDialog() {
 
 
 void MainWindow::on_actionItemOptions_triggered() {
-    openFileDialog();
+    openDialog();
 }
 
+//item options
 void MainWindow::openDialog() {
     QModelIndex index = ui->treeView->currentIndex();
     if (!index.isValid()) return;
