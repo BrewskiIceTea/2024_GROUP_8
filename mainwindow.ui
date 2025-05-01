@@ -115,12 +115,17 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonStyle::ToolButtonTextUnderIcon</enum>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionStart_VR"/>
+   <addaction name="actionStop_VR"/>
   </widget>
   <action name="actionOpen_File">
    <property name="icon">
@@ -139,7 +144,42 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
+  <action name="actionStart_VR">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/startVR.png</normaloff>:/Icons/startVR.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start VR</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionStop_VR">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/Icons/stopVR.png</normaloff>:/Icons/stopVR.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop VR</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop the VR renderer</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKOpenGLNativeWidget</class>
+   <extends>QWidget</extends>
+   <header>qvtkopenglnativewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
