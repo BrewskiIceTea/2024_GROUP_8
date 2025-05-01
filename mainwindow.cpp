@@ -28,8 +28,11 @@ MainWindow::MainWindow(QWidget *parent)
     // -------------------------------- SETUP UI ----------------------------------
 
     ui->setupUi(this);
+
+    //tree right click options
     ui->treeView->addAction(ui->actionItemOptions);
     ui->treeView->addAction(ui->actionFilterOptions);   //for filter options
+    ui->treeView->addAction(ui->actionOpen_File);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
