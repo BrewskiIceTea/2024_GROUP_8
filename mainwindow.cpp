@@ -198,7 +198,10 @@ void MainWindow::on_actionOpenFile_triggered() {
 
         part->loadSTL(fileName);    // <<< This MUST happen!
 
-        vrThread->addActorOffline(part->getActor().GetPointer()); // Adding the actor to the VR thread
+        if (vrThread) {
+            vrThread->addActorOffline(part->getActor().GetPointer());
+        }
+        // Adding the actor to the VR thread
         updateRender();             // <<< Then refresh
     }
     
