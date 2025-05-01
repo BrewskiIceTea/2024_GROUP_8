@@ -27,14 +27,16 @@
 #include <vtkSTLReader.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkShrinkFilter.h>
+
 
 class ModelPart {
 public:
 
-    unsigned char modelColourR = 0;
-    unsigned char modelColourG = 0;
-    unsigned char modelColourB = 0;
-    bool partIsVisible = false;
+    unsigned char modelColourR = 255;
+    unsigned char modelColourG = 1;
+    unsigned char modelColourB = 1;
+    bool partIsVisible = true;
 
     /** Constructor
      * @param data is a List (array) of strings for each property of this item (part name and visiblity in our case
@@ -133,6 +135,45 @@ public:
       */
     //vtkActor* getNewActor();
 
+    //////////////////////////////////////////////
+    /// Added by Ben :)
+
+    void setActor();
+
+    //void buildActor();
+
+    void getClipActor();
+
+    void getShrinkActor();
+
+    void getBaseModel();
+
+
+    //for filers
+    void setClipFilterStatus(bool inputClipFilterEnabled);
+
+    void setShrinkFilterStatus(bool inputShrinkFilterEnabled);
+
+    void setShrinkFactor(int inputShrinkFactor);
+
+    void setClipOrigin(int inputClipOrigin);
+
+    bool getClipFilterStatus();
+
+    bool getShrinkFilterStatus();
+
+    int getShrinkFactor();
+
+    int getClipOrigin();
+
+
+
+
+
+    //////////////////////////////////////////////
+
+
+
 private:
     QList<ModelPart*>                           m_childItems;       /**< List (array) of child items */
     QList<QVariant>                             m_itemData;         /**< List (array of column data for item */
@@ -150,6 +191,21 @@ private:
     vtkSmartPointer<vtkMapper>                  mapper;             /**< Mapper for rendering */
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
+
+
+    ////////////////////////////////////////////////////////////
+    /// Added by Ben :)
+    //filters
+    bool clipFilterEnabled = false;         //filter is disabeld by default
+    bool shrinkFilterEnabled = false;
+    int clipOrigin = 0;
+    int shrinkFactor = 80;                  //in range 0-100 but actual range used by the filer is 0-1
+
+
+
+    ////////////////////////////////////////////////////////////
+
+
 };
 
 

@@ -21,6 +21,11 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 
+#include <vtkPlane.h>
+#include <vtkClipDataSet.h>
+#include <vtkDataSetAlgorithm.h> // For GetOutputPort()
+#include <vtkXMLUnstructuredGridReader.h> // Example reader
+
 
 ModelPart::ModelPart(const QList<QVariant>& data, ModelPart* parent )
     : m_itemData(data), m_parentItem(parent) {
@@ -180,7 +185,7 @@ void ModelPart::loadSTL(QString fileName) {
     //    );
     //actor->SetVisibility(partIsVisible ? 1 : 0); //set to visible
 
-    actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // White model for testing
+    actor->GetProperty()->SetColor(modelColourR, modelColourG, modelColourB);  // White model for testing
 
     actor->SetVisibility(1); // Make sure it's visible
 
@@ -194,6 +199,114 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
      * part to be rendered.
      */
 }
+
+/////////////////////////////////////////////
+//added by Ben :)
+void ModelPart::setActor(){
+
+    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    actor->SetVisibility(partIsVisible);
+
+}
+
+//for filters UI setters/getters
+void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
+    clipFilterEnabled = inputClipFilterEnabled;
+}
+
+void ModelPart::setShrinkFilterStatus(bool inputShrinkFilterEnabled){
+    shrinkFilterEnabled = inputShrinkFilterEnabled;
+}
+
+void ModelPart::setClipOrigin(int inputClipOrigin){
+    clipOrigin = inputClipOrigin;
+}
+
+void ModelPart::setShrinkFactor(int inputShrinkFactor){
+    shrinkFactor = inputShrinkFactor;
+}
+
+bool ModelPart::getShrinkFilterStatus(){
+    return shrinkFilterEnabled;
+}
+
+bool ModelPart::getClipFilterStatus(){
+    return clipFilterEnabled;
+}
+
+int ModelPart::getShrinkFactor(){
+    return shrinkFactor;
+}
+
+int ModelPart::getClipOrigin(){
+    return clipOrigin;
+}
+
+
+//////////////////////////////////
+
+
+void ModelPart::getClipActor(){
+
+    if (clipFilterEnabled && !shrinkFilterEnabled){
+        //vtk filter
+        //this will apply a clipping plane whose normal is the x= axis that crosses the x=axis
+        vtkSmartPointer<vtkPlane> clipPlane = vtkSmartPointer<vtkPlane>::New();
+        clipPlane->SetOrigin(getClipOrigin(), 0.0, 0.0); //adjust x to change how much of the model is clipped
+        clipPlane->SetNormal(1, 0.0, 0.0);
+
+        vtkSmartPointer<vtkClipDataSet> clipFilter = vtkSmartPointer<vtkClipDataSet >::New();
+        clipFilter ->SetInputConnection(file->GetOutputPort() );
+        clipFilter ->SetClipFunction(clipPlane);
+
+
+        //mapper -> filter
+        vtkSmartPointer<vtkPolyDataMapper> clipMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        clipMapper->SetInputConnection(clipFilter->GetOutputPort());
+
+        //filter -> actor
+        //actor = vtkSmartPointer<vtkActor>::New();
+        actor->SetMapper(clipMapper);
+    }
+
+
+}
+
+void ModelPart::getShrinkActor(){
+
+    vtkSmartPointer<vtkShrinkFilter> shrinkFilter = vtkSmartPointer<vtkShrinkFilter >::New();
+
+    shrinkFilter->SetInputConnection(file->GetOutputPort());
+    shrinkFilter->SetShrinkFactor(shrinkFactor);
+    shrinkFilter->Update();
+
+    vtkSmartPointer<vtkPolyDataMapper> shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    shrinkMapper->SetInputConnection( shrinkFilter->GetOutputPort());
+
+    //filter -> actor
+    //shrinkActor = vtkSmartPointer<vtkActor>::New();
+    // Set the new mapper to the existing actor
+
+    actor->SetMapper(shrinkMapper);
+
+}
+
+void ModelPart::getBaseModel(){
+
+    mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputConnection(file->GetOutputPort());
+
+    actor = vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    actor->SetVisibility(partIsVisible);
+
+
+}
+
+
+/////////////////////////////////////////////
 
 //vtkActor* ModelPart::getNewActor() {
 /* This is a placeholder function that you will need to modify if you want to use it

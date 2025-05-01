@@ -32,13 +32,16 @@ public slots:
     void handleTreeClicked();
 
     // Actions
-    void on_actionOpenFile_triggered();
+    void on_actionOpenFile_triggered();     //for item options
     void on_actionItemOptions_triggered();
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
+    void on_actionFilterOptions_triggered(); //filter OPtions not itemOptions
     
     // Generic open file dialog for loading STL files
-    void openFileDialog(); 
+    void openFileDialog();      //for item options
+    void openFilterDialog();    //filter OPtions not itemOptions
+
 
 signals:
     void statusUpdateMessage(const QString &message, int timeout);

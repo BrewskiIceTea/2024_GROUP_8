@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include "optiondialog.h"
+#include "filterdialog.h"
 
 
 #include <QMessageBox>
@@ -28,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     ui->treeView->addAction(ui->actionItemOptions);
+    ui->treeView->addAction(ui->actionFilterOptions);   //for filter options
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
@@ -342,3 +344,90 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
         updateRenderFromTree(partList->index(i, 0, index));
     }
 }
+
+
+   // --------------------------------  Filters :( ----------------------------------
+
+void MainWindow::openFilterDialog(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    FilterDialog dialog(this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+
+        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+
+
+    } else {
+        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    }
+}
+
+void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be opened through on action and not through normal openFilterDialog
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    FilterDialog dialog(this);
+    dialog.loadValuesFromPart(part->getClipFilterStatus(),part->getShrinkFilterStatus(),part->getClipOrigin(),part->getShrinkFactor());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        //update part values
+        part->setClipFilterStatus(dialog.getClipFilterEnabled());
+        part->setShrinkFilterStatus(dialog.getShrinkFilterEnabled());
+        part->setClipOrigin(dialog.getClipOrigin());
+        part->setShrinkFactor(dialog.getShrinkFactor());
+
+        //Need to update actor
+        //part->updateActor();
+
+        //check for no filter needed actor
+        if(!(dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
+            part->getBaseModel();
+            emit statusUpdateMessage(QString("No filtering"), 0);
+
+        }
+
+        if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
+            part->getClipActor();
+            emit statusUpdateMessage(QString("Clip filtering"), 0);
+
+        }
+
+        if(!(dialog.getClipFilterEnabled()) && (dialog.getShrinkFilterEnabled())){
+            part->getShrinkActor();
+            emit statusUpdateMessage(QString("shrink filtering"), 0);
+
+        }
+
+        renderer->Render(); // Refresh the window
+
+        /*emit statusUpdateMessage(
+            QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
+                .arg(dialog.getClipFilterEnabled())
+                .arg(dialog.getShrinkFilterEnabled()),
+            0
+            );*/
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
