@@ -177,6 +177,15 @@ void ModelPart::loadSTL(QString fileName) {
     actor = vtkSmartPointer<vtkActor>::New();
     actor->SetMapper(mapper);
 
+    // create a separate actor for VR rendering
+    vrMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    vrMapper->SetInputConnection(file->GetOutputPort());
+
+    vrActor = vtkSmartPointer<vtkActor>::New();
+    vrActor->SetMapper(vrMapper);
+
+    
+
     // CAD Colour
     //actor->GetProperty()->SetColor(
     //    modelColourR / 255.0,
@@ -185,16 +194,12 @@ void ModelPart::loadSTL(QString fileName) {
     //    );
     //actor->SetVisibility(partIsVisible ? 1 : 0); //set to visible
 
-    actor->GetProperty()->SetColor(modelColourR, modelColourG, modelColourB);  // White model for testing
-    actor->SetVisibility(partIsVisible); // Make sure it's visible
 
+    actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // White model for testing
 
-    //setting polydata for filters
-    vtkSmartPointer<vtkSTLReader> reader = vtkSmartPointer<vtkSTLReader>::New();
-    reader->SetFileName(fileName.toStdString().c_str());
+    vrActor->GetProperty()->SetColor(1.0, 1.0, 1.0);  // White model for testing
 
-    reader->Update();  // <--- This triggers the actual reading
-    this->polydata = reader->GetOutput(); // <--- Save the output so filters can use it
+    vrActor->SetVisibility(1); // Make sure it's visible
 
 
 }
@@ -215,6 +220,14 @@ void ModelPart::setActor(){
     actor->SetVisibility(partIsVisible);
 
 }
+
+vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
+    /* This is a placeholder function that you will need to modify if you want to use it */
+        return vrActor;
+    /* Needs to return a smart pointer to the vtkActor to allow
+         * part to be rendered.
+         */
+    }
 
 // -------------------------------- Filters ----------------------------------
 //for filters UI setters/getters

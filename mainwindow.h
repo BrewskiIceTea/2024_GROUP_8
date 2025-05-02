@@ -37,16 +37,19 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    
+
 public slots:
     void handleAddButton();
     void handleTreeClicked();
 
     // Actions
-    void on_actionOpenFile_triggered();     //for item options
+    void on_actionOpen_File_triggered();     //for item options
     void on_actionItemOptions_triggered();
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
     void on_actionFilterOptions_triggered(); //filter OPtions not itemOptions
+
     
     // Generic open file dialog for loading STL files
     void openFileDialog();      //for item options
@@ -67,9 +70,13 @@ private:
     // Renderer and window
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
+
+    void loadFolderAsTree();
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
     void updateAllThreadActors();
+
+    bool steamVRAvailable();
 };
 #endif // MAINWINDOW_H

@@ -50,7 +50,14 @@ VRRenderThread::VRRenderThread( QObject* parent ) {
  * usage will increase for each start/stop thread cycle.
  */
 VRRenderThread::~VRRenderThread() {
-	
+	// window and renderer are vtk objects, so they need to be deleted
+	if (window) {
+		window->Finalize();             // clean up the OpenVR render window
+	  }
+	  if (renderer){
+		renderer->Delete();
+		renderer = nullptr;
+	  }
 }
 
 
@@ -107,6 +114,7 @@ void VRRenderThread::run() {
 	 * so there needs to be a mechanism to pass data from the GUi thread to the VR thread.
 	 */
 
+	 
 	vtkNew<vtkNamedColors> colors;
 
 	// Set the background color.
@@ -120,12 +128,7 @@ void VRRenderThread::run() {
 	
 	renderer->SetBackground(colors->GetColor3d("BkgColor").GetData());
 	
-	/* Loop through list of actors provided and add to scene */
-	vtkActor* a;
-	actors->InitTraversal();
-	while( (a = (vtkActor*)actors->GetNextActor() ) ) {
-		renderer->AddActor(a);
-	}
+	
 
 	/* The render window is the actual GUI window
 	 * that appears on the computer screen
@@ -134,6 +137,11 @@ void VRRenderThread::run() {
 
 	window->Initialize();
 	window->AddRenderer(renderer);
+
+	window->SetUseOffScreenBuffers(true);  // Use dedicated offscreen buffers
+	window->SetSharedRenderWindow(nullptr); // Don't share context with main window
+	window->SetMultiSamples(0);            // Disable multisampling for the context
+	 
 	
 	/* Create Open VR Camera */
 	camera = vtkOpenVRCamera::New();				
@@ -147,6 +155,14 @@ void VRRenderThread::run() {
 	interactor->SetRenderWindow(window);													
 	interactor->Initialize();
 	window->Render();
+
+	/* Loop through list of actors provided and add to scene */
+	vtkActor* a;
+	actors->InitTraversal();
+	while( (a = (vtkActor*)actors->GetNextActor() ) ) {
+		renderer->AddActor(a);
+	}
+
 	
 
 	/* Now start the VR - we will implement the command loop manually
@@ -170,7 +186,7 @@ void VRRenderThread::run() {
 		 * interfere with the interator processes and make the simulation unresponsive. If it is too large
 		 * the animations will be jerky. Play with the value to see what works best.
 		 */
-		if (std::chrono::duration_cast <std::chrono::milliseconds> (std::chrono::steady_clock::now() - t_last).count() > 20) {
+		if (std::chrono::duration_cast <std::chrono::milliseconds> (std::chrono::steady_clock::now() - t_last).count() > FRAME_TIME) {
 
 			/* Do things that might need doing ... */
 			vtkActorCollection* actorList = renderer->GetActors();
@@ -199,24 +215,6 @@ void VRRenderThread::run() {
 			/* Remember time now */
 			t_last = std::chrono::steady_clock::now();
 		}
-	}
-	// close the interactor
-	if (interactor)
-	{
-	//   interactor->TerminateApp();     // signal SteamVR to quit
-	  interactor->Delete();           // delete the interactor
-	  interactor = nullptr;
-	}
-	if (window)
-	{
-	  window->Finalize();             // clean up the OpenVR render window
-	  window->Delete();
-	  window = nullptr;
-	}
-	if (renderer)
-	{
-	  renderer->Delete();
-	  renderer = nullptr;
 	}
 }
 

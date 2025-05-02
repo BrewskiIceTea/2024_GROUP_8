@@ -7,7 +7,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDirIterator>
 
+#include <openvr.h>
 
 #include <vtkRenderer.h>
 #include <vtkCylinderSource.h>
@@ -33,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     //tree right click options
     ui->treeView->addAction(ui->actionItemOptions);
     ui->treeView->addAction(ui->actionFilterOptions);   //for filter options
-    ui->treeView->addAction(ui->actionOpen_File);
+    //ui->treeView->addAction(ui->actionOpen_File);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
@@ -54,9 +56,11 @@ MainWindow::MainWindow(QWidget *parent)
     checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
     Q_ASSERT(checkConnect);
 
-    // Connect For openning file dialog in menubar
-    checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpenFile_triggered);
-    Q_ASSERT(checkConnect);  
+    // // Connect For openning file dialog in menubar
+    // checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpen_File_triggered);
+    // Q_ASSERT(checkConnect);  
+
+    //autoconnect to the actionOpen_File in the menu bar
 
     // Start VR Action
     checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
@@ -75,7 +79,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Assigning the Desktop application widget to the render window
     ui->vtkWidget->setRenderWindow(renderWindow);
 
-    
     // Add a renderer
     renderer = vtkSmartPointer<vtkRenderer>::New();
     renderWindow->AddRenderer(renderer);
@@ -130,6 +133,8 @@ MainWindow::MainWindow(QWidget *parent)
     renderer->GetActiveCamera()->Elevation(30);
     renderer->ResetCameraClippingRange();
 
+    // create base instance for actor loading but no rendering yet
+    vrThread = new VRRenderThread(this); // Create a new VR thread // Store the thread pointer for later use
 
     // -------------------------------- SETUP MODEL PART LIST ----------------------------------
 
@@ -139,31 +144,29 @@ MainWindow::MainWindow(QWidget *parent)
     /* Link it to the tree view in the GUI */
     ui->treeView->setModel(this->partList);
 
-    ModelPart *rootItem = this->partList->getRootItem();
+    // /* Add 3 top-level items */
+    // for (int i = 0; i < 3; i++) {
+    //     /* Create strings for both data columns */
+    //     QString name = QString("TopLevel %1").arg(i);
+    //     QString visible("true");
 
-    /* Add 3 top-level items */
-    for (int i = 0; i < 3; i++) {
-        /* Create strings for both data columns */
-        QString name = QString("TopLevel %1").arg(i);
-        QString visible("true");
+    //     /* Create child item */
+    //     ModelPart *childItem = new ModelPart({name, visible});
 
-        /* Create child item */
-        ModelPart *childItem = new ModelPart({name, visible});
+    //     /* Append to tree top-level */
+    //     rootItem->appendChild(childItem);
 
-        /* Append to tree top-level */
-        rootItem->appendChild(childItem);
+    //     /* Add 5 sub-items */
+    //     for (int j = 0; j < 5; j++) {
+    //         QString name = QString("Item %1,%2").arg(i).arg(j);
+    //         QString visible("true");
 
-        /* Add 5 sub-items */
-        for (int j = 0; j < 5; j++) {
-            QString name = QString("Item %1,%2").arg(i).arg(j);
-            QString visible("true");
+    //         ModelPart *childChildItem = new ModelPart({name, visible});
 
-            ModelPart *childChildItem = new ModelPart({name, visible});
-
-            /* Append to parent */
-            childItem->appendChild(childChildItem);
-        }
-    }
+    //         /* Append to parent */
+    //         childItem->appendChild(childChildItem);
+    //     }
+    // }
 
 }
 
@@ -172,6 +175,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// -------------------------------- SIGNALS AND SLOTS ----------------------------------
+
 // Update your button handling slot so it activates the status bar
 void MainWindow::handleAddButton() {
     // This causes MainWindow to emit the signal that will then be
@@ -179,8 +184,6 @@ void MainWindow::handleAddButton() {
     openDialog();
     emit statusUpdateMessage(QString("Add button was clicked"), 0);
 }
-
-
 
 void MainWindow::handleTreeClicked(){
     //------Exercise-5------
@@ -197,7 +200,49 @@ void MainWindow::handleTreeClicked(){
     emit statusUpdateMessage(QString("The selected item is: ") + text, 0);
 
 }
-    // -------------------------------- Open File ----------------------------------
+
+void MainWindow::on_actionStart_VR_triggered(){
+
+    if (!steamVRAvailable())
+    {
+        QMessageBox::warning(
+            this,
+            tr("Cannot start VR"),
+            tr("SteamVR is not running or no HMD detected.\n"
+               "Please launch SteamVR and try again.")
+        );
+
+        return;
+    }
+    vrThread->start(); // Start the VR thread
+
+    ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
+    ui->actionStop_VR->setEnabled(true); // Enable the Stop VR action
+    // ui->actionOpenFile->setEnabled(false); // Disable the Open File action so loading can't happen when in VR
+    emit statusUpdateMessage(QString("Started VR Renderer"), 0);
+}
+
+void MainWindow::on_actionStop_VR_triggered() {
+
+    if (vrThread) {
+        // Tell the thread to end its loop:
+        vrThread->issueCommand(VRRenderThread::END_RENDER, 0);
+
+        // Wait for run() to finish and do its own TerminateApp/Finalize:
+        vrThread->wait();
+
+        delete vrThread;
+        vrThread = new VRRenderThread(this); // Create a new VR thread without rendering for future use
+    }
+
+    ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
+    ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
+    // ui->actionOpenFile->setEnabled(true); // Enable the Open File action so loading can happen when not in VR
+
+    emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
+}
+
+// -------------------------------- FILE MODEL LOADING ----------------------------------
 
 void MainWindow::openFileDialog() {
     QString fileName = QFileDialog::getOpenFileName(
@@ -205,75 +250,21 @@ void MainWindow::openFileDialog() {
         tr("Open File"),
         "C:\\",
         tr("STL Files (*.stl);;Text Files (*.txt)")
-        );
+    );
 
     if (!fileName.isEmpty()) {
         QModelIndex index = ui->treeView->currentIndex();
         if (index.isValid()) {
             ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-            QString name = QFileInfo(fileName).completeBaseName();  //getting just the file name
-            part->set(0, name);
+            part->set(0, fileName);
 
-            qDebug() << "About to load STL for" << name;
+            qDebug() << "About to load STL for" << fileName;
 
             part->loadSTL(fileName);    // <<< This MUST happen!
             updateRender();             // <<< Then refresh
-
-            emit statusUpdateMessage(QString("Loaded ") + fileName, 0);
         }
     }
 }
-
-void MainWindow::on_actionOpenFile_triggered() {
-
-    QString fileName = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-    );
-
-    //  Give a warning if no file was selected
-    if (fileName.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }   
-
-    //  Load the selected file into the current item
-    QModelIndex index = ui->treeView->currentIndex();
-    if (index.isValid()) {
-        ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-        part->set(0, fileName); 
-
-        qDebug() << "About to load STL for" << fileName;
-
-        part->loadSTL(fileName);    // <<< This MUST happen!
-
-        if (vrThread) {
-            vrThread->addActorOffline(part->getActor().GetPointer());
-        }
-        // Adding the actor to the VR thread
-        updateRender();             // <<< Then refresh
-    }
-    
-
-    QString name = QFileInfo(fileName).completeBaseName();
-     // Get the index of the selected item
-     ModelPart *selectedPart = static_cast<ModelPart *>(index.internalPointer());
-
-     selectedPart->set(0, QVariant(name));
-
-    // Add this line of code so you can see if the action is working
-    emit statusUpdateMessage(QString("The selected item is: ") + fileName, 0);
-}
-
-
-
-    // -------------------------------- Item Options ----------------------------------
 
 void MainWindow::on_actionItemOptions_triggered() {
     openDialog();
@@ -323,41 +314,88 @@ void MainWindow::openDialog() {
 }
 
 
-// -------------------------------- VR functions ----------------------------------
+void MainWindow::loadFolderAsTree() {
+    emit statusUpdateMessage(QString("Loading models"), 0);
 
-void MainWindow::on_actionStart_VR_triggered() {
-    VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
+    QString dirPath = QFileDialog::getExistingDirectory(
+    this,
+    tr("Open Directory"),
+    "C:\\",
+    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+    );
 
-    thread->start(); // Start the VR thread
+    //  Give a warning if no folder was selected
+    if (dirPath.isEmpty()) { 
+        QMessageBox::warning(this, 
+            tr("File Selection"), 
+            tr("No folder was selected."), 
+            QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No folder selected"), 0);
+        return;
+    } 
+
     
-    this->vrThread = thread; // Store the thread pointer for later use
-
-    ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
-    ui->actionStop_VR->setEnabled(true); // Enable the Stop VR action
-    emit statusUpdateMessage(QString("Started VR Renderer"), 0);
-}
-
-void MainWindow::on_actionStop_VR_triggered() {
-
-    if (vrThread) {
-        // Tell the thread to end its loop:
-        vrThread->issueCommand(VRRenderThread::END_RENDER, 0);
-
-        // Wait for run() to finish and do its own TerminateApp/Finalize:
-        vrThread->wait();
-
-        delete vrThread;
-        vrThread = nullptr;
+    // Loading new STL files over the old ones if exist
+    if (this->partList){
+        delete this->partList; // Delete the old part list if it exists
+        this->partList = nullptr; // Set to null to avoid dangling pointer
     }
-    
-    ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
-    ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
-    emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
+
+    this->partList = new ModelPartList("Parts List");
+    ui->treeView->setModel(this->partList);  
+    ModelPart *rootItem = this->partList->getRootItem();
+    // Create iterator to recursively search through directories
+    QDirIterator it(dirPath, QStringList() << "*.stl", QDir::Files, QDirIterator::Subdirectories);
+
+    int count = 0; // Counter for the number of STL files found
+    while (it.hasNext()) {
+        QString filePath = it.next();
+
+        // Check if it's actually an STL file (case insensitive)
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.suffix().toLower() != "stl") continue; // Skip if not an STL file
+        
+        qDebug() << "Found STL file:" << filePath;
+        QString name = QFileInfo(filePath).completeBaseName();
+
+        // Create a new part for each STL file found
+        ModelPart *newPart = new ModelPart({name, "true"});
+        newPart->loadSTL(filePath); 
+        rootItem->appendChild(newPart); // append to tree
+
+        // partList->getRootItem()->appendChild(newPart);
+        
+
+        // ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+        // part->set(0, filePath);
+
+        
+        
+        vrThread->addActorOffline(newPart->getVrActor().GetPointer());
+        
+
+        // Tell the view that the model has changed
+        QModelIndex parentIndex = this->partList->index(0, 0, QModelIndex());
+        emit this->partList->dataChanged(parentIndex, parentIndex);
+        count++;
+    }
+    if (count == 0) {
+        emit statusUpdateMessage(QString("No STL files found in the selected directory"), 0);
+    } else {
+        emit statusUpdateMessage(QString("%1 STL files loaded").arg(count), 0);
+        updateRender();
+    }
 }
+
+void MainWindow::on_actionOpen_File_triggered(){
+    loadFolderAsTree(); // Load the folder as a tree structure
+}
+
+// -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
-    //renderer->RemoveAllViewProps();
-    updateRenderFromTree(partList->index(0, 0, QModelIndex()));
+    renderer->RemoveAllViewProps();
+    updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
 
@@ -372,33 +410,54 @@ void MainWindow::updateAllThreadActors() {
     return;
 }
 
-void MainWindow::updateRenderFromTree(const QModelIndex& index) {
-    if (!index.isValid())
-        return;
-
-    ModelPart* selectedPart = static_cast<ModelPart*>(index.internalPointer());
-    if (selectedPart) {
-        auto partActor = selectedPart->getActor();
-        if (partActor) {
-            partActor->SetVisibility(selectedPart->visible());
-
-            renderer->AddActor(partActor);
-            qDebug() << "Added actor to renderer!"; // IS STL file being rendered
-        } else {
-            qDebug() << "No actor to add.";
+void MainWindow::updateRenderFromTree(const QModelIndex& parentIndex) {
+    // Process the parent item first if it's valid
+    if (parentIndex.isValid()) {
+        ModelPart* part = static_cast<ModelPart*>(parentIndex.internalPointer());
+        if (part && part->getActor()) {
+            renderer->AddActor(part->getActor());
+            qDebug() << "Added actor for part:" << part->data(0).toString();
         }
     }
-    if (!partList->hasChildren(index))
-        return;
 
-    int rows = partList->rowCount(index);
-    for (int i = 0; i < rows; ++i) {
-        updateRenderFromTree(partList->index(i, 0, index));
+    // Get the number of children under this parent
+    int rowCount = partList->rowCount(parentIndex);
+    qDebug() << "Processing" << rowCount << "children at this level";
+
+    // Process all children
+    for (int i = 0; i < rowCount; ++i) {
+        QModelIndex childIndex = partList->index(i, 0, parentIndex);
+        updateRenderFromTree(childIndex);
     }
 }
 
+// -------------------------------- VR CHECKERS----------------------------------
 
-   // --------------------------------  Filters ----------------------------------
+// Returns true iff SteamVR is installed, running, and an HMD is connected
+bool MainWindow::steamVRAvailable() {
+    // Quick check: is the runtime installed on this machine?
+    if (!vr::VR_IsRuntimeInstalled())
+        return false;
+
+    // Is an HMD actually plugged in?
+    if (!vr::VR_IsHmdPresent())
+        return false;
+
+    // Try to initialize & immediately shut down the VR system just to test
+    vr::EVRInitError initError = vr::VRInitError_None;
+    vr::IVRSystem* pVRSys = vr::VR_Init(&initError, vr::VRApplication_Scene);
+    if (initError != vr::VRInitError_None)
+    {
+        // describe the failure in English
+        vr::VR_Shutdown();
+        return false;
+    }
+    vr::VR_Shutdown();
+    return true;
+}
+
+
+// --------------------------------  Filters ----------------------------------
 
 void MainWindow::openFilterDialog(){
     QModelIndex index = ui->treeView->currentIndex();
@@ -504,10 +563,6 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
     }
 }
-
-
-
-
 
 
 
