@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>My Project: Main Page</title>
+<title>My Project: # VR Model Viewer</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('index.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('md_README.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,23 +94,92 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">My Project Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title"># VR Model Viewer</div></div>
 </div><!--header-->
 <div class="contents">
-<ul><li><a href="index.html"><span>Main&#160;Page</span></a>
-</li><li><a href="pages.html"><span>Related&#160;Pages</span></a>
-</li><li><a href="annotated.html"><span>Classes</span></a>
-<ul><li><a href="annotated.html"><span>Class&#160;List</span></a>
-</li><li><a href="classes.html"><span>Class&#160;Index</span></a>
-</li><li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a>
-</li><li><a href="functions.html"><span>Class&#160;Members</span></a>
-</li></ul>
-</li><li><a href="files.html"><span>Files</span></a>
-<ul><li><a href="files.html"><span>File&#160;List</span></a>
-</li></ul>
-</li></ul>
-</div><!-- contents -->
+<div class="textblock"><p>A Qt/VTK-based application for viewing 3D STL models in both desktop and VR environments.</p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+Features</h1>
+<ul>
+<li>Load and view STL files in desktop mode</li>
+<li>View models in VR using SteamVR/OpenVR</li>
+<li>Tree view organization of loaded models</li>
+<li>Customize model properties:<ul>
+<li>Color (RGB values)</li>
+<li>Visibility</li>
+<li>Model name</li>
+</ul>
+</li>
+<li>Real-time model manipulation in VR</li>
+<li>Dark theme UI with modern styling</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Building</h1>
+<ol type="1">
+<li>Ensure all requirements are installed here.</li>
+<li>Clone the repository</li>
+<li>Create a build directory: <div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+</div><!-- fragment --></li>
+<li>Configure with CMake: <div class="fragment"><div class="line">cmake ..</div>
+</div><!-- fragment --></li>
+<li>Build the project: <div class="fragment"><div class="line">cmake --build .</div>
+</div><!-- fragment --></li>
+</ol>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Usage &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;EDIT THIS &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</h1>
+<ol type="1">
+<li>Launch the application</li>
+<li>Use "File &gt; Open File" to load STL models</li>
+<li>Select models in the tree view to:<ul>
+<li>Edit properties</li>
+<li>Toggle visibility</li>
+<li>Change colors</li>
+</ul>
+</li>
+<li>Click "Start VR" to enter VR mode (requires SteamVR to be running)</li>
+<li>Use "Stop VR" to exit VR mode</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Project Structure</h1>
+<ul>
+<li><code>mainwindow.*</code> - Main application window implementation</li>
+<li><code><a class="el" href="classModelPart.html">ModelPart</a>.*</code> - 3D model part handling</li>
+<li><code><a class="el" href="classModelPartList.html">ModelPartList</a>.*</code> - Tree structure for model organization</li>
+<li><code><a class="el" href="classVRRenderThread.html">VRRenderThread</a>.*</code> - VR rendering implementation</li>
+<li><code>optiondialog.*</code> - Model properties dialog</li>
+<li><code>style.qss</code> - Custom style sheet for dark mode</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Documentation</h1>
+<p>Doxygen documentation at</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Requirements</h1>
+<ul>
+<li>Qt 6+</li>
+<li>VTK (Visualization Toolkit)</li>
+<li>SteamVR / OpenVR</li>
+<li>CMake 3.16+</li>
+<li>C++17 compiler</li>
+</ul>
+<hr  />
+<h1><a class="anchor" id="autotoc_md7"></a>
+Team</h1>
+<ul>
+<li>Ben Harle @Beannwing</li>
+<li>Kai Brewster @BrewskiIceTea</li>
+<li>Christian Ogatis @ChristianOgatis</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md8"></a>
+License</h1>
+<p>This project uses a mix of components:</p><ul>
+<li>Qt/VTK components under their respective licenses</li>
+<li>Custom styling based on DevSec Studio's work (MIT License)</li>
+<li>Original code for the VR viewer implementation </li>
+</ul>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
