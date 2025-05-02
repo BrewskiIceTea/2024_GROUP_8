@@ -1,7 +1,7 @@
 var searchData=
 [
   ['mainwindow_0',['MainWindow',['../classMainWindow.html',1,'']]],
-  ['model_20viewer_1',['# VR Model Viewer',['../md_README.html',1,'']]],
+  ['model_20viewer_1',['VR Model Viewer',['../md_README.html',1,'']]],
   ['modelpart_2',['modelpart',['../classModelPart.html',1,'ModelPart'],['../classModelPart.html#a4f22ba9a54525edde005cb4eb7366648',1,'ModelPart::ModelPart()']]],
   ['modelpart_2ecpp_3',['ModelPart.cpp',['../ModelPart_8cpp.html',1,'']]],
   ['modelpart_2eh_4',['ModelPart.h',['../ModelPart_8h.html',1,'']]],
