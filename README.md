@@ -6,7 +6,7 @@ A Qt/VTK-based application for viewing 3D STL models in both desktop and VR envi
 
 
 ## Documentation
-Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All pub
+Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All public functions are shown at the github webpage provided.
 
 ## Features
 
@@ -59,7 +59,7 @@ cmake --build .
 - `optiondialog.*` - Model properties dialog
 - `style.qss` - Custom style sheet for dark mode
 
-lic functions are shown at the github webpage provided.
+
 
 ## Requirements
 
