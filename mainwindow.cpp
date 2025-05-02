@@ -163,6 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     renderer = vtkSmartPointer<vtkRenderer>::New();
     renderWindow->AddRenderer(renderer);
 
+    // this is for rendering basic cylinder
     // The mapper is responsible for pushing geometry into the graphics library
     //vtkNew<vtkPolyDataMapper> cylinderMapper;
     //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
@@ -475,7 +476,7 @@ void MainWindow::on_actionOpen_File_triggered(){
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
-    renderer->RemoveAllViewProps();
+    //renderer->RemoveAllViewProps();
     updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -579,7 +580,6 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
         if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
 
-            // testing using clipping filter - this works on the cylinder
             // creating the clipping plane
             vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
             planeLeft->SetOrigin(part->getClipOrigin(),0,0);
@@ -602,7 +602,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
             // Add actor to the renderer
             renderer->AddActor(clipActor);
-            clipActor->SetVisibility(part->visible());        //make cylinder be visible
+            clipActor->SetVisibility(1);
 
 
             //updating the render
