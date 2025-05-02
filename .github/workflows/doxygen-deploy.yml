@@ -1,32 +1,29 @@
-# doxygen-deploy.yml
-
-name: doxygen-deploy
+name: Doxygen Deploy
 
 on:
   push:
-    branches: [master]  # Change this to your default branch if needed ("main" instead of "master")
+    branches: [ master ]  # Track the master branch
 
 jobs:
-  deploy-vrmodelviewer:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Checkout the repository
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Install Doxygen
-      - name: Install Doxygen
-        run: sudo apt-get install -y doxygen
+      - name: Set up Doxygen and GraphViz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz
 
-      # Run Doxygen with the specified Doxyfile path
-      - name: Run Doxygen
-        working-directory: ${{ github.workspace }}
+      - name: Generate Doxygen documentation
         run: doxygen ${{ github.workspace }}/doxygen/Doxyfile
 
-      # Deploy HTML output from Doxygen to GitHub Pages
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
-          branch: gh-pages  # The branch the action should deploy to
-          folder: ${{ github.workspace }}/html  # The folder containing the HTML output
+          branch: gh-pages            # Target branch for Pages
+          folder: html                # Path to generated docs (relative to repo root)
+          clean: true                 # Remove orphaned files before deploy
+          commit-message: "Deploy Doxygen docs from ${{ github.ref }} @ ${{ github.sha }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
