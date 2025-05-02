@@ -22,7 +22,7 @@ jobs:
       # Run Doxygen with the specified Doxyfile path
       - name: Run Doxygen
         working-directory: ${{ github.workspace }}
-        run: doxygen /doxygen/Doxyfile
+        run: doxygen ${{ github.workspace }}/doxygen/Doxyfile
 
       # Deploy HTML output from Doxygen to GitHub Pages
       - name: Deploy
