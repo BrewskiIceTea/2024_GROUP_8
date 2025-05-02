@@ -143,8 +143,6 @@ public:
 
     //void buildActor();
 
-    void generateBaseModel();
-
 
     //for filers
     void setClipFilterStatus(bool inputClipFilterEnabled);
@@ -179,24 +177,17 @@ public:
     // Setter for actor
     void setActor(vtkSmartPointer<vtkActor> actor);
 
+    // Getter for clipFiltedActor
+    vtkSmartPointer<vtkActor> getClipFiltedActor() const;
+
+    // Setter for clipFiltedActor
+    void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
 
-
-    //think can delete
-
-    vtkSmartPointer<vtkPolyData> getPolyData() const;
-
-    void generateClipActor();
-
-    void generateShrinkActor();
+    //----------------------------------think can delete----------------------------------------------
 
 
-
-    void setBaseActorFromPolydata(vtkSmartPointer<vtkPolyData> polydata);
-
-
-
-    //////////////////////////////////////////////
+    //------------------------------------------------------------------------------------------------
 
 
 
@@ -216,6 +207,7 @@ private:
     vtkSmartPointer<vtkSTLReader>               file;               /**< Datafile from which part loaded */
     vtkSmartPointer<vtkPolyDataMapper>          mapper;             /**< Mapper for rendering */
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
+    vtkSmartPointer<vtkActor>                   clipFiltedActor;
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
 
     vtkSmartPointer<vtkPolyData> polydata;

@@ -437,19 +437,12 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         //Need to update actor
         //part->updateActor();
 
-        //check for no filter needed actor
-        if(!(dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
-            part->generateBaseModel();
-            emit statusUpdateMessage(QString("No filtering"), 0);
-
-        }
-
         if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
 
             // testing using clipping filter - this works on the cylinder
             // creating the clipping plane
             vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
-            planeLeft->SetOrigin(0,0,0);
+            planeLeft->SetOrigin(part->getClipOrigin(),0,0);
             planeLeft->SetNormal(-1,0,0);
 
             //applying the clipping filter to the cylinder
@@ -462,19 +455,17 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
 
 
-
-
-
-
             // The actor groups the geometry (mapper) and also has properties like color and transformation
             vtkNew<vtkActor> clipActor;
             clipActor->SetMapper(clipMapper);
-            clipActor->GetProperty()->SetColor(0.01, 0.25, 0.25); // Red color
+            clipActor->GetProperty()->SetColor(part->getColourR(), part->getColourG(), part->getColourG());
 
             // Add actor to the renderer
             renderer->AddActor(clipActor);
-            clipActor->SetVisibility(1);        //make cylinder be visible
+            clipActor->SetVisibility(part->visible());        //make cylinder be visible
 
+
+            //updating the render
             renderer->Render(); // Refresh the window
             updateRender();
             renderer->RemoveActor(part->getActor());
@@ -484,8 +475,22 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
         if(!(dialog.getClipFilterEnabled()) && (dialog.getShrinkFilterEnabled())){
-            part->generateShrinkActor();
+
             emit statusUpdateMessage(QString("shrink filtering"), 0);
+
+        }
+
+        //check for no filter needed actor
+        if(!(dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
+
+
+            renderer->AddActor(part->getActor());
+            //renderer->RemoveActor(clipActor);
+
+            renderer->Render(); // Refresh the window
+            updateRender();
+
+            emit statusUpdateMessage(QString("No filtering"), 0);
 
         }
 
