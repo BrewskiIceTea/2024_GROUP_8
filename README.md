@@ -2,6 +2,9 @@
 ---
 A Qt/VTK-based application for viewing 3D STL models in both desktop and VR environments.
 
+![Application_GUI](https://github.com/user-attachments/assets/0edff21c-2a36-4d0e-a044-bc55f6ca0583)
+
+
 ## Documentation
 Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All pub
 
