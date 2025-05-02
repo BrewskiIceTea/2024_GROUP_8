@@ -150,37 +150,12 @@ void VRRenderThread::run() {
 	window->Render();
 
 	/* Loop through list of actors provided and add to scene */
-	/* Loop through list of actors provided and add to scene */
-vtkActor* a;
-actors->InitTraversal();
-while((a = (vtkActor*)actors->GetNextActor())) {
-    // Create new actor and mapper
-    vtkSmartPointer<vtkActor> actorCopy = vtkSmartPointer<vtkActor>::New();
-    vtkSmartPointer<vtkPolyDataMapper> mapperCopy = vtkSmartPointer<vtkPolyDataMapper>::New();
-    
-    // Get original mapper and its input data
-    vtkPolyDataMapper* originalMapper = vtkPolyDataMapper::SafeDownCast(a->GetMapper());
-    if (originalMapper) {
-        vtkPolyData* inputData = vtkPolyData::SafeDownCast(originalMapper->GetInput());
-        if (inputData) {
-            // Create new polydata and copy the geometry
-            vtkSmartPointer<vtkPolyData> newPolyData = vtkSmartPointer<vtkPolyData>::New();
-            newPolyData->DeepCopy(inputData);
-            
-            // Set up the new mapper
-            mapperCopy->SetInputData(newPolyData);
-            actorCopy->SetMapper(mapperCopy);
-            
-            // Copy actor properties
-            actorCopy->GetProperty()->DeepCopy(a->GetProperty());
-            actorCopy->SetPosition(a->GetPosition());
-            actorCopy->SetOrientation(a->GetOrientation());
-            actorCopy->SetScale(a->GetScale());
-            
-            renderer->AddActor(actorCopy);
-        }
-    }
-}
+	vtkActor* a;
+	actors->InitTraversal();
+	while( (a = (vtkActor*)actors->GetNextActor() ) ) {
+		renderer->AddActor(a);
+	}
+
 	
 
 	/* Now start the VR - we will implement the command loop manually
@@ -204,7 +179,7 @@ while((a = (vtkActor*)actors->GetNextActor())) {
 		 * interfere with the interator processes and make the simulation unresponsive. If it is too large
 		 * the animations will be jerky. Play with the value to see what works best.
 		 */
-		if (std::chrono::duration_cast <std::chrono::milliseconds> (std::chrono::steady_clock::now() - t_last).count() > 20) {
+		if (std::chrono::duration_cast <std::chrono::milliseconds> (std::chrono::steady_clock::now() - t_last).count() > FRAME_TIME) {
 
 			/* Do things that might need doing ... */
 			vtkActorCollection* actorList = renderer->GetActors();

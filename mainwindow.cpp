@@ -197,13 +197,8 @@ void MainWindow::on_actionOpenFile_triggered() {
         qDebug() << "About to load STL for" << fileName;
 
         part->loadSTL(fileName);    // <<< This MUST happen!
-        // vrThread->addActorOffline(part->getActor().GetPointer()); // parse the pointer to the actor to the VR thread
-        // Create a new actor copy – use DeepCopy if you need an independent instance:
-        vtkSmartPointer<vtkActor> actorCopy = vtkSmartPointer<vtkActor>::New();
-        actorCopy->ShallowCopy(part->getActor()); // or ShallowCopy if that fits your use-case
 
-        // Now pass the copied actor (its raw pointer) to the VR thread:
-        vrThread->addActorOffline(actorCopy.GetPointer());
+        vrThread->addActorOffline(part->getVrActor().GetPointer());
         updateRender();             // <<< Then refresh
     }
     

@@ -9,6 +9,8 @@
 #ifndef VR_RENDER_THREAD_H
 #define VR_RENDER_THREAD_H
 
+
+#define FRAME_TIME 11 // 11ms = 90 FPS
 /* Project headers */
 
 /* Qt headers */
