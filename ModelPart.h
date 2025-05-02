@@ -27,14 +27,16 @@
 #include <vtkSTLReader.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkShrinkFilter.h>
+
 
 class ModelPart {
 public:
 
-    unsigned char modelColourR = 0;
-    unsigned char modelColourG = 0;
-    unsigned char modelColourB = 0;
-    bool partIsVisible = false;
+    unsigned char modelColourR = 255;
+    unsigned char modelColourG = 1;
+    unsigned char modelColourB = 1;
+    bool partIsVisible = true;
 
     /** Constructor
      * @param data is a List (array) of strings for each property of this item (part name and visiblity in our case
@@ -108,6 +110,7 @@ public:
     unsigned char getColourG();
     unsigned char getColourB();
 
+
     /** Set visible flag
       * @param isVisible sets visible/non-visible
       */
@@ -133,6 +136,61 @@ public:
       */
      vtkSmartPointer<vtkActor> getVrActor();
 
+    //------------------------------Filters---------------------------------------------
+    /// Added by Ben :)
+
+    void setActor();
+
+    //void buildActor();
+
+
+    //for filers
+    void setClipFilterStatus(bool inputClipFilterEnabled);
+
+    void setShrinkFilterStatus(bool inputShrinkFilterEnabled);
+
+    void setShrinkFactor(int inputShrinkFactor);
+
+    void setClipOrigin(int inputClipOrigin);
+
+    bool getClipFilterStatus();
+
+    bool getShrinkFilterStatus();
+
+    int getShrinkFactor();
+
+    int getClipOrigin();
+
+
+
+    vtkSmartPointer<vtkSTLReader> getFile() const;
+
+    // Getter for mapper
+    vtkSmartPointer<vtkPolyDataMapper> getMapper() const;
+
+    // Setter for mapper
+    void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
+
+    // Getter for actor
+    vtkSmartPointer<vtkActor> getActor() const;
+
+    // Setter for actor
+    void setActor(vtkSmartPointer<vtkActor> actor);
+
+    // Getter for clipFiltedActor
+    vtkSmartPointer<vtkActor> getClipFiltedActor() const;
+
+    // Setter for clipFiltedActor
+    void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
+
+
+    //----------------------------------think can delete----------------------------------------------
+
+
+    //------------------------------------------------------------------------------------------------
+
+
+
 private:
     QList<ModelPart*>                           m_childItems;       /**< List (array) of child items */
     QList<QVariant>                             m_itemData;         /**< List (array of column data for item */
@@ -147,11 +205,30 @@ private:
      * commented out for now but will be used later
      */
     vtkSmartPointer<vtkSTLReader>               file;               /**< Datafile from which part loaded */
-    vtkSmartPointer<vtkMapper>                  mapper;             /**< Mapper for rendering */
+    vtkSmartPointer<vtkPolyDataMapper>          mapper;             /**< Mapper for rendering */
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkMapper>                  vrMapper;             /**< Mapper for rendering in vr*/
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
+    vtkSmartPointer<vtkActor>                   clipFiltedActor;
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
+
+    vtkSmartPointer<vtkPolyData> polydata;
+
+
+    ////////////////////////////////////////////////////////////
+    /// Added by Ben :)
+    //filters
+    bool clipFilterEnabled = false;         //filter is disabeld by default
+    bool shrinkFilterEnabled = false;
+    int clipOrigin = 0;
+    int shrinkFactor = 80;                  //in range 0-100 but actual range used by the filer is 0-1
+
+
+
+
+    ////////////////////////////////////////////////////////////
+
+
 };
 
 

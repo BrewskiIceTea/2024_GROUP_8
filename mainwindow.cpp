@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 
 #include "optiondialog.h"
+#include "filterdialog.h"
 
 
 #include <QMessageBox>
@@ -17,6 +18,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkCamera.h>
 #include <vtkProperty.h>
+#include <vtkShrinkFilter.h>
 
 #include <vtkGenericOpenGLRenderWindow.h>
 
@@ -29,14 +31,18 @@ MainWindow::MainWindow(QWidget *parent)
     // -------------------------------- SETUP UI ----------------------------------
 
     ui->setupUi(this);
+
+    //tree right click options
     ui->treeView->addAction(ui->actionItemOptions);
+    ui->treeView->addAction(ui->actionFilterOptions);   //for filter options
+    //ui->treeView->addAction(ui->actionOpen_File);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
 
     bool checkConnect; 
     // Connect signals and slots
-    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleAddButton);
+    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::openFileDialog); //just emits push button 1 was pressed
     Q_ASSERT(checkConnect);
 
     checkConnect = connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::on_actionItemOptions_triggered);
@@ -79,11 +85,34 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Create an object and add to renderer (temporary: displaying a cylinder)
     vtkNew<vtkCylinderSource> cylinder;
-    cylinder->SetResolution(8);
+    //vtkSmartPointer<vtkCylinderSource> cylinder = vtkSmartPointer<vtkCylinderSource>::New();
+    cylinder->SetResolution(30);
 
     // The mapper is responsible for pushing geometry into the graphics library
+    //vtkNew<vtkPolyDataMapper> cylinderMapper;
+    //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
+
+
+
+    // testing using clipping filter - this works on the cylinder
+    // making the clipping plane
+    vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
+    planeLeft->SetOrigin(0,0,0);
+    planeLeft->SetNormal(-1,0,0);
+
+    //applying the clipping filter to the cylinder
+    vtkSmartPointer<vtkClipPolyData> clipFilter = vtkSmartPointer<vtkClipPolyData>::New();
+    clipFilter->SetInputConnection(cylinder->GetOutputPort());
+    clipFilter->SetClipFunction(planeLeft);
+
+    // Update the mapper to use the clip filter output
     vtkNew<vtkPolyDataMapper> cylinderMapper;
-    cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
+    cylinderMapper->SetInputConnection(clipFilter->GetOutputPort());
+
+
+
+
+
 
     // The actor groups the geometry (mapper) and also has properties like color and transformation
     vtkNew<vtkActor> cylinderActor;
@@ -94,6 +123,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
+    cylinderActor->SetVisibility(1);        //make cylinder be visible
+    renderer->RemoveActor(cylinderActor);
 
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -170,11 +201,7 @@ void MainWindow::handleTreeClicked(){
 
 }
 
-void MainWindow::on_actionOpen_File_triggered() {
-    loadFolderAsTree(); // Load the folder as a tree structure
-}
-
-void MainWindow::on_actionStart_VR_triggered() {
+void MainWindow::on_actionStart_VR_triggered(){
 
     if (!steamVRAvailable())
     {
@@ -187,7 +214,6 @@ void MainWindow::on_actionStart_VR_triggered() {
 
         return;
     }
-    
     vrThread->start(); // Start the VR thread
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
@@ -205,10 +231,10 @@ void MainWindow::on_actionStop_VR_triggered() {
         // Wait for run() to finish and do its own TerminateApp/Finalize:
         vrThread->wait();
 
-        delete vrThread; 
+        delete vrThread;
         vrThread = new VRRenderThread(this); // Create a new VR thread without rendering for future use
     }
-    
+
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
     // ui->actionOpenFile->setEnabled(true); // Enable the Open File action so loading can happen when not in VR
@@ -241,9 +267,10 @@ void MainWindow::openFileDialog() {
 }
 
 void MainWindow::on_actionItemOptions_triggered() {
-    openFileDialog();
+    openDialog();
 }
 
+//item options
 void MainWindow::openDialog() {
     QModelIndex index = ui->treeView->currentIndex();
     if (!index.isValid()) return;
@@ -260,23 +287,32 @@ void MainWindow::openDialog() {
         part->set(0, dialog.getPartName());
         part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
         part->setVisible(dialog.getVisibility());
+        part->setActor();
 
-        //  Update actor color immediately
+        /*//  Update actor color immediately
         if (part->getActor()) {
             part->getActor()->GetProperty()->SetColor(
                 part->getColourR() / 255.0,
                 part->getColourG() / 255.0,
                 part->getColourB() / 255.0
                 );
-        }
+        }*/
 
         renderer->Render(); // Refresh the window
+        updateRender();
 
         ui->treeView->model()->dataChanged(index, index);
+
+        emit statusUpdateMessage(
+            QString("ModelPart updated, dialog visible: %1").arg(part->visible()),
+            0
+            );
+
     } else {
         emit statusUpdateMessage(QString("Dialog rejected"), 0);
     }
 }
+
 
 void MainWindow::loadFolderAsTree() {
     emit statusUpdateMessage(QString("Loading models"), 0);
@@ -351,6 +387,9 @@ void MainWindow::loadFolderAsTree() {
     }
 }
 
+void MainWindow::on_actionOpen_File_triggered(){
+    loadFolderAsTree(); // Load the folder as a tree structure
+}
 
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
@@ -416,5 +455,123 @@ bool MainWindow::steamVRAvailable() {
     vr::VR_Shutdown();
     return true;
 }
+
+
+// --------------------------------  Filters ----------------------------------
+
+void MainWindow::openFilterDialog(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    FilterDialog dialog(this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+
+        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+
+
+    } else {
+        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    }
+}
+
+void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be opened through on action and not through normal openFilterDialog
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    FilterDialog dialog(this);
+    dialog.loadValuesFromPart(part->getClipFilterStatus(),part->getShrinkFilterStatus(),part->getClipOrigin(),part->getShrinkFactor());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        //update part values
+        part->setClipFilterStatus(dialog.getClipFilterEnabled());
+        part->setShrinkFilterStatus(dialog.getShrinkFilterEnabled());
+        part->setClipOrigin(dialog.getClipOrigin());
+        part->setShrinkFactor(dialog.getShrinkFactor());
+
+        //Need to update actor
+        //part->updateActor();
+
+        if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
+
+            // testing using clipping filter - this works on the cylinder
+            // creating the clipping plane
+            vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
+            planeLeft->SetOrigin(part->getClipOrigin(),0,0);
+            planeLeft->SetNormal(-1,0,0);
+
+            //applying the clipping filter to the cylinder
+            vtkSmartPointer<vtkClipPolyData> clipFilterM = vtkSmartPointer<vtkClipPolyData>::New();
+            clipFilterM->SetInputConnection(part->getFile()->GetOutputPort());
+            clipFilterM->SetClipFunction(planeLeft);
+
+            // Update the mapper to use the clip filter output
+            vtkNew<vtkPolyDataMapper> clipMapper;
+            clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
+
+
+            // The actor groups the geometry (mapper) and also has properties like color and transformation
+            vtkNew<vtkActor> clipActor;
+            clipActor->SetMapper(clipMapper);
+            clipActor->GetProperty()->SetColor(part->getColourR(), part->getColourG(), part->getColourG());
+
+            // Add actor to the renderer
+            renderer->AddActor(clipActor);
+            clipActor->SetVisibility(part->visible());        //make cylinder be visible
+
+
+            //updating the render
+            renderer->Render(); // Refresh the window
+            updateRender();
+            renderer->RemoveActor(part->getActor());
+
+            emit statusUpdateMessage(QString("Clip filtering"), 0);
+
+        }
+
+        if(!(dialog.getClipFilterEnabled()) && (dialog.getShrinkFilterEnabled())){
+
+            emit statusUpdateMessage(QString("shrink filtering"), 0);
+
+        }
+
+        //check for no filter needed actor
+        if(!(dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
+
+
+            renderer->AddActor(part->getActor());
+            //renderer->RemoveActor(clipActor);
+
+            renderer->Render(); // Refresh the window
+            updateRender();
+
+            emit statusUpdateMessage(QString("No filtering"), 0);
+
+        }
+
+
+        /*emit statusUpdateMessage(
+            QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
+                .arg(dialog.getClipFilterEnabled())
+                .arg(dialog.getShrinkFilterEnabled()),
+            0
+            );*/
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
