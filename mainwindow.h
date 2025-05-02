@@ -54,6 +54,7 @@ private:
     // Renderer and window
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
+    vtkSmartPointer<vtkLight> mainLight;
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);

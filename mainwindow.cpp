@@ -15,10 +15,14 @@
 #include <vtkSmartPointer.h>
 #include <vtkCamera.h>
 #include <vtkProperty.h>
+#include <QLabel>
+#include <QWidgetAction>
 
 #include <vtkGenericOpenGLRenderWindow.h>
 
 #include "VRRenderThread.h"
+
+#include <vtkLight.h> //Lighting
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,11 +32,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     ui->treeView->addAction(ui->actionItemOptions);
-    
+
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
 
-    bool checkConnect; 
+
+    bool checkConnect;
     // Connect signals and slots
     checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::handleAddButton);
     Q_ASSERT(checkConnect);
@@ -50,15 +55,81 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect For openning file dialog in menubar
     checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpenFile_triggered);
-    Q_ASSERT(checkConnect);  
+    Q_ASSERT(checkConnect);
 
     // Start VR Action
     checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
-    Q_ASSERT(checkConnect);  
+    Q_ASSERT(checkConnect);
 
     // Stop VR Action
     checkConnect =  connect(ui->actionStop_VR, &QAction::triggered, this, &MainWindow::on_actionStop_VR_triggered);
     Q_ASSERT(checkConnect);
+
+    //Lighting Functions - CO
+    mainLight = vtkSmartPointer<vtkLight>::New();
+
+    //Creates blank panel for lighting sliders
+    QWidget *lightingPanel = new QWidget(this);
+
+    //Vertical Layout with 8 pixel spacing on each side
+    QVBoxLayout *layout = new QVBoxLayout(lightingPanel);
+    layout->setContentsMargins(8, 8, 8, 8);
+
+    // Intensity Slider
+    QSlider *intensitySlider = new QSlider(Qt::Horizontal);
+    intensitySlider->setRange(0, 100);
+    intensitySlider->setValue(50);
+    layout->addWidget(new QLabel("Intensity"));
+    layout->addWidget(intensitySlider);
+
+    // Azimuth Slider X - Plane
+    QSlider *azimuthSlider = new QSlider(Qt::Horizontal);
+    azimuthSlider->setRange(0, 360);
+    azimuthSlider->setValue(30);
+    layout->addWidget(new QLabel("Azimuth"));
+    layout->addWidget(azimuthSlider);
+
+    // Pitch Slider Y - Plane
+    QSlider *pitchSlider = new QSlider(Qt::Horizontal);
+    pitchSlider->setRange(-90, 90);
+    pitchSlider->setValue(30);
+    layout->addWidget(new QLabel("Pitch"));
+    layout->addWidget(pitchSlider);
+
+    QWidgetAction *lightingAction = new QWidgetAction(this);
+    lightingAction->setDefaultWidget(lightingPanel);
+
+    QMenu *lightingMenu = new QMenu(this);
+    lightingMenu->addAction(lightingAction);
+
+    connect(ui->actionLighting, &QAction::triggered, this, [=]() {
+        QPoint pos = mapToGlobal(ui->toolBar->geometry().bottomLeft());
+        lightingMenu->exec(QCursor::pos());
+    });
+
+    connect(intensitySlider, &QSlider::valueChanged, this, [=](int val) {
+        mainLight->SetIntensity(val / 100.0 * 5.0);
+        renderWindow->Render();
+    });
+
+    connect(azimuthSlider, &QSlider::valueChanged, this, [=](int val) {
+        double rad = qDegreesToRadians(static_cast<double>(val));
+        mainLight->SetPosition(50 * cos(rad), 50 * sin(rad), 0);
+        mainLight->SetFocalPoint(0, 0, 0);
+        renderWindow->Render();
+    });
+
+    connect(pitchSlider, &QSlider::valueChanged, this, [=](int val) {
+        double azimuth = azimuthSlider->value();
+        double rAz = qDegreesToRadians(static_cast<double>(azimuth));
+        double rEl = qDegreesToRadians(static_cast<double>(val));
+        mainLight->SetPosition(50 * cos(rEl) * cos(rAz), 50 * cos(rEl) * sin(rAz), 50 * sin(rEl));
+        mainLight->SetFocalPoint(0, 0, 0);
+        renderWindow->Render();
+    });
+    //END SLIDERS FOR LIGHTING
+
+
 
     // -------------------------------- VTK RENDERING ----------------------------------
 
@@ -69,7 +140,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Assigning the Desktop application widget to the render window
     ui->vtkWidget->setRenderWindow(renderWindow);
 
-    
     // Add a renderer
     renderer = vtkSmartPointer<vtkRenderer>::New();
     renderWindow->AddRenderer(renderer);
@@ -77,6 +147,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Create an object and add to renderer (temporary: displaying a cylinder)
     vtkNew<vtkCylinderSource> cylinder;
     cylinder->SetResolution(8);
+
+    //Renderer for lighting initiation
+    renderer = vtkSmartPointer<vtkRenderer>::New();
+    renderWindow->AddRenderer(renderer);
 
     // The mapper is responsible for pushing geometry into the graphics library
     vtkNew<vtkPolyDataMapper> cylinderMapper;
@@ -88,6 +162,14 @@ MainWindow::MainWindow(QWidget *parent)
     cylinderActor->GetProperty()->SetColor(1.0, 0.0, 0.35); // Red color
     cylinderActor->RotateX(30.0);
     cylinderActor->RotateY(45.0);
+
+    // === Section 2.2 Lighting ===
+    //light->SetLightTypeToSceneLight();
+    //light->SetPosition(50, 0, 0);      // light far to the right TESTING
+    //light->SetFocalPoint(0, 0, 0);   // Auto follows camera – safe & easy
+    //light->SetIntensity(5.0);           // Full brightness
+    renderer->AddLight(mainLight);
+    // =============================
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
@@ -177,32 +259,35 @@ void MainWindow::on_actionOpenFile_triggered() {
     );
 
     //  Give a warning if no file was selected
-    if (fileName.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
+    if (fileName.isEmpty()) {
+        QMessageBox::warning(this,
+            tr("File Selection"),
+            tr("No file was selected."),
             QMessageBox::Ok);
         emit statusUpdateMessage(QString("No file selected"), 0);
         return;
-    }   
+    }
 
     //  Load the selected file into the current item
     QModelIndex index = ui->treeView->currentIndex();
     if (index.isValid()) {
         ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-        part->set(0, fileName); 
+        part->set(0, fileName);
 
         qDebug() << "About to load STL for" << fileName;
 
         part->loadSTL(fileName);    // <<< This MUST happen!
 
+
+        //If statement change - CO
+        //Previous code Only runs if VR starts, therefore when loading STL files beforehand we have an access violation
         if (vrThread) {
             vrThread->addActorOffline(part->getActor().GetPointer());
         }
         // Adding the actor to the VR thread
         updateRender();             // <<< Then refresh
     }
-    
+
 
     QString name = QFileInfo(fileName).completeBaseName();
      // Get the index of the selected item
@@ -218,7 +303,7 @@ void MainWindow::on_actionStart_VR_triggered() {
     VRRenderThread* thread = new VRRenderThread(this); // Create a new VR thread
 
     thread->start(); // Start the VR thread
-    
+
     this->vrThread = thread; // Store the thread pointer for later use
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
@@ -238,7 +323,7 @@ void MainWindow::on_actionStop_VR_triggered() {
         delete vrThread;
         vrThread = nullptr;
     }
-    
+
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
@@ -311,7 +396,7 @@ void MainWindow::updateRender() {
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
 
-    // Forcing render update 
+    // Forcing render update
     ui->vtkWidget->update();
     renderer->Render();
 
