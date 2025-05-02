@@ -24,12 +24,36 @@
 */
 var NAVTREE =
 [
-  [ "My Project", "index.html", ]
+  [ "My Project", "index.html", [
+    [ "# VR Model Viewer", "md_README.html", [
+      [ "Features", "md_README.html#autotoc_md0", null ],
+      [ "Building", "md_README.html#autotoc_md1", null ],
+      [ "Usage >>>>>>>>>>>>>>>>EDIT THIS >>>>>>>>>>>>>>>>>", "md_README.html#autotoc_md2", null ],
+      [ "Project Structure", "md_README.html#autotoc_md3", null ],
+      [ "Documentation", "md_README.html#autotoc_md4", null ],
+      [ "Requirements", "md_README.html#autotoc_md5", null ],
+      [ "Team", "md_README.html#autotoc_md7", null ],
+      [ "License", "md_README.html#autotoc_md8", null ]
+    ] ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ]
+      ] ]
+    ] ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ]
+    ] ]
+  ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"index.html"
+"ModelPartList_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
