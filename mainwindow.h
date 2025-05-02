@@ -6,11 +6,21 @@
 #include <QStatusBar>
 #include "ModelPart.h"
 #include "ModelPartList.h"
+
 #include <vtkSmartPointer.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 
 #include "VRRenderThread.h"
+
+#include <vtkCylinderSource.h>
+#include <vtkPlane.h>
+#include <vtkClipPolyData.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
 
 
 QT_BEGIN_NAMESPACE

@@ -16,6 +16,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkCamera.h>
 #include <vtkProperty.h>
+#include <vtkShrinkFilter.h>
 
 #include <vtkGenericOpenGLRenderWindow.h>
 
@@ -81,11 +82,34 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Create an object and add to renderer (temporary: displaying a cylinder)
     vtkNew<vtkCylinderSource> cylinder;
-    cylinder->SetResolution(8);
+    //vtkSmartPointer<vtkCylinderSource> cylinder = vtkSmartPointer<vtkCylinderSource>::New();
+    cylinder->SetResolution(30);
 
     // The mapper is responsible for pushing geometry into the graphics library
+    //vtkNew<vtkPolyDataMapper> cylinderMapper;
+    //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
+
+
+
+    // testing using clipping filter - this works on the cylinder
+    // making the clipping plane
+    vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
+    planeLeft->SetOrigin(0,0,0);
+    planeLeft->SetNormal(-1,0,0);
+
+    //applying the clipping filter to the cylinder
+    vtkSmartPointer<vtkClipPolyData> clipFilter = vtkSmartPointer<vtkClipPolyData>::New();
+    clipFilter->SetInputConnection(cylinder->GetOutputPort());
+    clipFilter->SetClipFunction(planeLeft);
+
+    // Update the mapper to use the clip filter output
     vtkNew<vtkPolyDataMapper> cylinderMapper;
-    cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
+    cylinderMapper->SetInputConnection(clipFilter->GetOutputPort());
+
+
+
+
+
 
     // The actor groups the geometry (mapper) and also has properties like color and transformation
     vtkNew<vtkActor> cylinderActor;
@@ -96,7 +120,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
-    cylinderActor->SetVisibility(0);
+    cylinderActor->SetVisibility(1);        //make cylinder be visible
+    renderer->RemoveActor(cylinderActor);
 
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -104,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent)
     renderer->GetActiveCamera()->Azimuth(30);
     renderer->GetActiveCamera()->Elevation(30);
     renderer->ResetCameraClippingRange();
+
 
     // -------------------------------- SETUP MODEL PART LIST ----------------------------------
 
@@ -355,6 +381,7 @@ void MainWindow::updateRenderFromTree(const QModelIndex& index) {
         auto partActor = selectedPart->getActor();
         if (partActor) {
             partActor->SetVisibility(selectedPart->visible());
+
             renderer->AddActor(partActor);
             qDebug() << "Added actor to renderer!"; // IS STL file being rendered
         } else {
@@ -412,25 +439,56 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
         //check for no filter needed actor
         if(!(dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
-            part->getBaseModel();
+            part->generateBaseModel();
             emit statusUpdateMessage(QString("No filtering"), 0);
 
         }
 
         if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
-            part->getClipActor();
+
+            // testing using clipping filter - this works on the cylinder
+            // creating the clipping plane
+            vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
+            planeLeft->SetOrigin(0,0,0);
+            planeLeft->SetNormal(-1,0,0);
+
+            //applying the clipping filter to the cylinder
+            vtkSmartPointer<vtkClipPolyData> clipFilterM = vtkSmartPointer<vtkClipPolyData>::New();
+            clipFilterM->SetInputConnection(part->getFile()->GetOutputPort());
+            clipFilterM->SetClipFunction(planeLeft);
+
+            // Update the mapper to use the clip filter output
+            vtkNew<vtkPolyDataMapper> clipMapper;
+            clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
+
+
+
+
+
+
+            // The actor groups the geometry (mapper) and also has properties like color and transformation
+            vtkNew<vtkActor> clipActor;
+            clipActor->SetMapper(clipMapper);
+            clipActor->GetProperty()->SetColor(0.01, 0.25, 0.25); // Red color
+
+            // Add actor to the renderer
+            renderer->AddActor(clipActor);
+            clipActor->SetVisibility(1);        //make cylinder be visible
+
+            renderer->Render(); // Refresh the window
+            updateRender();
+            renderer->RemoveActor(part->getActor());
+
             emit statusUpdateMessage(QString("Clip filtering"), 0);
 
         }
 
         if(!(dialog.getClipFilterEnabled()) && (dialog.getShrinkFilterEnabled())){
-            part->getShrinkActor();
+            part->generateShrinkActor();
             emit statusUpdateMessage(QString("shrink filtering"), 0);
 
         }
 
-        renderer->Render(); // Refresh the window
-        updateRender();
 
         /*emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")

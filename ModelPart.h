@@ -110,6 +110,7 @@ public:
     unsigned char getColourG();
     unsigned char getColourB();
 
+
     /** Set visible flag
       * @param isVisible sets visible/non-visible
       */
@@ -135,18 +136,14 @@ public:
       */
     //vtkActor* getNewActor();
 
-    //////////////////////////////////////////////
+    //------------------------------Filters---------------------------------------------
     /// Added by Ben :)
 
     void setActor();
 
     //void buildActor();
 
-    void getClipActor();
-
-    void getShrinkActor();
-
-    void getBaseModel();
+    void generateBaseModel();
 
 
     //for filers
@@ -168,6 +165,35 @@ public:
 
 
 
+    vtkSmartPointer<vtkSTLReader> getFile() const;
+
+    // Getter for mapper
+    vtkSmartPointer<vtkPolyDataMapper> getMapper() const;
+
+    // Setter for mapper
+    void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
+
+    // Getter for actor
+    vtkSmartPointer<vtkActor> getActor() const;
+
+    // Setter for actor
+    void setActor(vtkSmartPointer<vtkActor> actor);
+
+
+
+
+    //think can delete
+
+    vtkSmartPointer<vtkPolyData> getPolyData() const;
+
+    void generateClipActor();
+
+    void generateShrinkActor();
+
+
+
+    void setBaseActorFromPolydata(vtkSmartPointer<vtkPolyData> polydata);
+
 
 
     //////////////////////////////////////////////
@@ -188,9 +214,11 @@ private:
      * commented out for now but will be used later
      */
     vtkSmartPointer<vtkSTLReader>               file;               /**< Datafile from which part loaded */
-    vtkSmartPointer<vtkMapper>                  mapper;             /**< Mapper for rendering */
+    vtkSmartPointer<vtkPolyDataMapper>          mapper;             /**< Mapper for rendering */
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
+
+    vtkSmartPointer<vtkPolyData> polydata;
 
 
     ////////////////////////////////////////////////////////////
@@ -200,6 +228,7 @@ private:
     bool shrinkFilterEnabled = false;
     int clipOrigin = 0;
     int shrinkFactor = 80;                  //in range 0-100 but actual range used by the filer is 0-1
+
 
 
 

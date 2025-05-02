@@ -138,7 +138,6 @@ unsigned char ModelPart::getColourB() {
     return modelColourB;   // needs updating
 }
 
-
 void ModelPart::setVisible(bool isVisible) {
     /* This is a placeholder function that you will need to modify if you want to use it */
     partIsVisible = isVisible;
@@ -187,10 +186,17 @@ void ModelPart::loadSTL(QString fileName) {
     //actor->SetVisibility(partIsVisible ? 1 : 0); //set to visible
 
     actor->GetProperty()->SetColor(modelColourR, modelColourG, modelColourB);  // White model for testing
-
     actor->SetVisibility(partIsVisible); // Make sure it's visible
 
 
+    //setting polydata for filters
+    vtkSmartPointer<vtkSTLReader> reader = vtkSmartPointer<vtkSTLReader>::New();
+    reader->SetFileName(fileName.toStdString().c_str());
+
+    reader->Update();  // <--- This triggers the actual reading
+    this->polydata = reader->GetOutput(); // <--- Save the output so filters can use it
+
+    this->setBaseActorFromPolydata(this->polydata); // Optional: set the default actor
 }
 
 vtkSmartPointer<vtkActor> ModelPart::getActor() {
@@ -248,10 +254,66 @@ int ModelPart::getClipOrigin(){
 // --------------------------------- WIP ----------------------------------
 
 
-void ModelPart::getClipActor(){
+vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
+    return this->file;
+}
+
+vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
+    return this->mapper;
+}
+
+void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
+    this->mapper = mapper;
+}
+
+vtkSmartPointer<vtkActor> ModelPart::getActor() const {
+    return this->actor;
+}
+
+void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
+    this->actor = actor;
+}
+
+
+//this things works
+void ModelPart::generateBaseModel(){
+
+    mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputConnection(file->GetOutputPort());
+
+    actor = vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    actor->SetVisibility(partIsVisible);
+
+
+}
+
+
+// --------------------------- Think can delete ----------------------------------
+
+vtkSmartPointer<vtkPolyData> ModelPart::getPolyData()const {
+    return polydata;
+}
+
+//dosent work :(
+void ModelPart::setBaseActorFromPolydata(vtkSmartPointer<vtkPolyData> polydata){
+    /*mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputData(polydata);
+    mapper->Update();
+
+    actor = vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+    actor->GetProperty()->SetColor(modelColourR, modelColourG, modelColourB);
+    actor->SetVisibility(partIsVisible);*/
+}
+
+//this thing dont work :(
+void ModelPart::generateClipActor(){
 
     if (clipFilterEnabled && !shrinkFilterEnabled){
-        /*
+
         //vtk filter
         //this will apply a clipping plane whose normal is the x= axis that crosses the x=axis
         vtkSmartPointer<vtkPlane> clipPlane = vtkSmartPointer<vtkPlane>::New();
@@ -269,43 +331,25 @@ void ModelPart::getClipActor(){
 
         //filter -> actor
         //actor = vtkSmartPointer<vtkActor>::New();
-        actor->SetMapper(clipMapper);*/
+        actor->SetMapper(clipMapper);
     }
 
 
 
 }
+//this thing dont work :(
+void ModelPart::generateShrinkActor(){
 
-void ModelPart::getShrinkActor(){
-/*
     vtkSmartPointer<vtkShrinkFilter> shrinkFilter = vtkSmartPointer<vtkShrinkFilter >::New();
 
-    shrinkFilter->SetInputConnection(file->GetOutputPort());
-    shrinkFilter->SetShrinkFactor(shrinkFactor);
+    shrinkFilter->SetInputData(this->polydata);
+    shrinkFilter->SetShrinkFactor(this->shrinkFactor);
     shrinkFilter->Update();
 
     vtkSmartPointer<vtkPolyDataMapper> shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    shrinkMapper->SetInputConnection( shrinkFilter->GetOutputPort());
+    shrinkMapper->SetInputConnection(shrinkFilter->GetOutputPort());
 
-    //filter -> actor
-    //shrinkActor = vtkSmartPointer<vtkActor>::New();
-    // Set the new mapper to the existing actor
-
-    actor->SetMapper(shrinkMapper);*/
-
-}
-
-void ModelPart::getBaseModel(){
-
-    mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInputConnection(file->GetOutputPort());
-
-    actor = vtkSmartPointer<vtkActor>::New();
-    actor->SetMapper(mapper);
-
-    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-    actor->SetVisibility(partIsVisible);
-
+    this->actor->SetMapper(shrinkMapper);
 
 }
 
