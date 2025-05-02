@@ -25,7 +25,7 @@ jobs:
 
       # Run Doxygen on Worksheet5 folder
       - name: Run Doxygen
-        working-directory: /doxygen
+        working-directory: ${{ github.workspace }}/doxygen
         run: doxygen
 
       # Deploy HTML output from Doxygen to GitHub Pages
