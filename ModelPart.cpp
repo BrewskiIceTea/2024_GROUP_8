@@ -1,3 +1,4 @@
+
 /**     @file ModelPart.cpp
   *
   *     EEEE2076 - Software Engineering & VR Project
@@ -20,6 +21,11 @@
 #include <vtkSTLReader.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
+
+#include <vtkPlane.h>
+#include <vtkClipDataSet.h>
+#include <vtkDataSetAlgorithm.h> // For GetOutputPort()
+#include <vtkXMLUnstructuredGridReader.h> // Example reader
 
 
 ModelPart::ModelPart(const QList<QVariant>& data, ModelPart* parent )
@@ -132,7 +138,6 @@ unsigned char ModelPart::getColourB() {
     return modelColourB;   // needs updating
 }
 
-
 void ModelPart::setVisible(bool isVisible) {
     /* This is a placeholder function that you will need to modify if you want to use it */
     partIsVisible = isVisible;
@@ -192,8 +197,6 @@ void ModelPart::loadSTL(QString fileName) {
 
     actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // White model for testing
 
-    actor->SetVisibility(1); // Make sure it's visible
-
     vrActor->GetProperty()->SetColor(1.0, 1.0, 1.0);  // White model for testing
 
     vrActor->SetVisibility(1); // Make sure it's visible
@@ -209,6 +212,15 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
      */
 }
 
+// ------------------------------------------------------------------
+//added by Ben :)
+void ModelPart::setActor(){
+
+    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    actor->SetVisibility(partIsVisible);
+
+}
+
 vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
     /* This is a placeholder function that you will need to modify if you want to use it */
         return vrActor;
@@ -216,6 +228,78 @@ vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
          * part to be rendered.
          */
     }
+
+// -------------------------------- Filters ----------------------------------
+//for filters UI setters/getters
+void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
+    clipFilterEnabled = inputClipFilterEnabled;
+}
+
+void ModelPart::setShrinkFilterStatus(bool inputShrinkFilterEnabled){
+    shrinkFilterEnabled = inputShrinkFilterEnabled;
+}
+
+void ModelPart::setClipOrigin(int inputClipOrigin){
+    clipOrigin = inputClipOrigin;
+}
+
+void ModelPart::setShrinkFactor(int inputShrinkFactor){
+    shrinkFactor = inputShrinkFactor;
+}
+
+bool ModelPart::getShrinkFilterStatus(){
+    return shrinkFilterEnabled;
+}
+
+bool ModelPart::getClipFilterStatus(){
+    return clipFilterEnabled;
+}
+
+int ModelPart::getShrinkFactor(){
+    return shrinkFactor;
+}
+
+int ModelPart::getClipOrigin(){
+    return clipOrigin;
+}
+
+
+// --------------------------------- WIP ----------------------------------
+
+
+vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
+    return this->file;
+}
+
+vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
+    return this->mapper;
+}
+
+vtkSmartPointer<vtkActor> ModelPart::getActor() const {
+    return this->actor;
+}
+
+vtkSmartPointer<vtkActor> ModelPart::getClipFiltedActor() const {
+    return this->clipFiltedActor;
+}
+
+void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
+    this->actor = actor;
+}
+
+void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
+    this->mapper = mapper;
+}
+
+void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
+    this->clipFiltedActor = clipFiltedActor;
+}
+
+// --------------------------- Think can delete ----------------------------------
+
+
+// ---------------------------------------------------------------------
+
 
 //vtkActor* ModelPart::getNewActor() {
 /* This is a placeholder function that you will need to modify if you want to use it
