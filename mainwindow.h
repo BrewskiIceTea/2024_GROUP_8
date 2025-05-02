@@ -6,11 +6,21 @@
 #include <QStatusBar>
 #include "ModelPart.h"
 #include "ModelPartList.h"
+
 #include <vtkSmartPointer.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
 
 #include "VRRenderThread.h"
+
+#include <vtkCylinderSource.h>
+#include <vtkPlane.h>
+#include <vtkClipPolyData.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -27,18 +37,24 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    
+
 public slots:
     void handleAddButton();
     void handleTreeClicked();
 
     // Actions
-    void on_actionOpenFile_triggered();
+    void on_actionOpen_File_triggered();     //for item options
     void on_actionItemOptions_triggered();
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
+    void on_actionFilterOptions_triggered(); //filter OPtions not itemOptions
+
     
     // Generic open file dialog for loading STL files
-    void openFileDialog(); 
+    void openFileDialog();      //for item options
+    void openFilterDialog();    //filter OPtions not itemOptions
+
 
 signals:
     void statusUpdateMessage(const QString &message, int timeout);
@@ -55,9 +71,13 @@ private:
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
     vtkSmartPointer<vtkLight> mainLight;
+
+    void loadFolderAsTree();
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
     void updateAllThreadActors();
+
+    bool steamVRAvailable();
 };
 #endif // MAINWINDOW_H

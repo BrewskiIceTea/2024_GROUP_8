@@ -28,6 +28,9 @@ set(PROJECT_SOURCES
         optiondialog.cpp
         optiondialog.ui
         optiondialog.h
+        filterdialog.cpp
+        filterdialog.ui
+        filterdialog.h
         VRRenderThread.cpp
         VRRenderThread.h
         icons.qrc
