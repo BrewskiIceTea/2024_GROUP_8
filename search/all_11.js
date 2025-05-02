@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['viewer_0',['# VR Model Viewer',['../md_README.html',1,'']]],
-  ['visible_1',['visible',['../classModelPart.html#a6ae791107c322f3e729a8de69257fa4b',1,'ModelPart']]],
-  ['vr_20model_20viewer_2',['# VR Model Viewer',['../md_README.html',1,'']]],
-  ['vrrenderthread_3',['vrrenderthread',['../classVRRenderThread.html',1,'VRRenderThread'],['../classVRRenderThread.html#a35976e55f6655840aa217aa8a066f196',1,'VRRenderThread::VRRenderThread()']]],
-  ['vrrenderthread_2ecpp_4',['VRRenderThread.cpp',['../VRRenderThread_8cpp.html',1,'']]],
-  ['vrrenderthread_2eh_5',['VRRenderThread.h',['../VRRenderThread_8h.html',1,'']]]
+  ['_7emodelpart_0',['~ModelPart',['../classModelPart.html#a0b3b00630e9866e3e8fd648d28b7f016',1,'ModelPart']]],
+  ['_7emodelpartlist_1',['~ModelPartList',['../classModelPartList.html#a9c45a4e506f201c312f65a4c94ab4650',1,'ModelPartList']]],
+  ['_7evrrenderthread_2',['~VRRenderThread',['../classVRRenderThread.html#a21c23037bf11cd2a1592076c7e499de0',1,'VRRenderThread']]]
 ];
