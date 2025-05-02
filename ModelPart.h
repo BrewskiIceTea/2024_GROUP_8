@@ -184,12 +184,6 @@ public:
     void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
 
-    //----------------------------------think can delete----------------------------------------------
-
-
-    //------------------------------------------------------------------------------------------------
-
-
 
 private:
     QList<ModelPart*>                           m_childItems;       /**< List (array) of child items */

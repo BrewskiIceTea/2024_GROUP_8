@@ -313,7 +313,6 @@ void MainWindow::openDialog() {
     }
 }
 
-
 void MainWindow::loadFolderAsTree() {
     emit statusUpdateMessage(QString("Loading models"), 0);
 
@@ -563,7 +562,6 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
     }
 }
-
 
 
 
