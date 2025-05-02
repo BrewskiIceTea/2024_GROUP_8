@@ -6,6 +6,7 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDirIterator>
 
 #include <openvr.h>
 
@@ -49,9 +50,11 @@ MainWindow::MainWindow(QWidget *parent)
     checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
     Q_ASSERT(checkConnect);
 
-    // Connect For openning file dialog in menubar
-    checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpenFile_triggered);
-    Q_ASSERT(checkConnect);  
+    // // Connect For openning file dialog in menubar
+    // checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpen_File_triggered);
+    // Q_ASSERT(checkConnect);  
+
+    //autoconnect to the actionOpen_File in the menu bar
 
     // Start VR Action
     checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
@@ -110,31 +113,29 @@ MainWindow::MainWindow(QWidget *parent)
     /* Link it to the tree view in the GUI */
     ui->treeView->setModel(this->partList);
 
-    ModelPart *rootItem = this->partList->getRootItem();
+    // /* Add 3 top-level items */
+    // for (int i = 0; i < 3; i++) {
+    //     /* Create strings for both data columns */
+    //     QString name = QString("TopLevel %1").arg(i);
+    //     QString visible("true");
 
-    /* Add 3 top-level items */
-    for (int i = 0; i < 3; i++) {
-        /* Create strings for both data columns */
-        QString name = QString("TopLevel %1").arg(i);
-        QString visible("true");
+    //     /* Create child item */
+    //     ModelPart *childItem = new ModelPart({name, visible});
 
-        /* Create child item */
-        ModelPart *childItem = new ModelPart({name, visible});
+    //     /* Append to tree top-level */
+    //     rootItem->appendChild(childItem);
 
-        /* Append to tree top-level */
-        rootItem->appendChild(childItem);
+    //     /* Add 5 sub-items */
+    //     for (int j = 0; j < 5; j++) {
+    //         QString name = QString("Item %1,%2").arg(i).arg(j);
+    //         QString visible("true");
 
-        /* Add 5 sub-items */
-        for (int j = 0; j < 5; j++) {
-            QString name = QString("Item %1,%2").arg(i).arg(j);
-            QString visible("true");
+    //         ModelPart *childChildItem = new ModelPart({name, visible});
 
-            ModelPart *childChildItem = new ModelPart({name, visible});
-
-            /* Append to parent */
-            childItem->appendChild(childChildItem);
-        }
-    }
+    //         /* Append to parent */
+    //         childItem->appendChild(childChildItem);
+    //     }
+    // }
 
 }
 
@@ -169,47 +170,8 @@ void MainWindow::handleTreeClicked(){
 
 }
 
-void MainWindow::on_actionOpenFile_triggered() {
-
-    QString fileName = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-    );
-
-    //  Give a warning if no file was selected
-    if (fileName.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }   
-
-    //  Load the selected file into the current item
-    QModelIndex index = ui->treeView->currentIndex();
-    if (index.isValid()) {
-        ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-        part->set(0, fileName); 
-
-        qDebug() << "About to load STL for" << fileName;
-
-        part->loadSTL(fileName);    // <<< This MUST happen!
-
-        vrThread->addActorOffline(part->getVrActor().GetPointer());
-        updateRender();             // <<< Then refresh
-    }
-    
-    QString name = QFileInfo(fileName).completeBaseName();
-     // Get the index of the selected item
-     ModelPart *selectedPart = static_cast<ModelPart *>(index.internalPointer());
-
-     selectedPart->set(0, QVariant(name));
-
-    // Add this line of code so you can see if the action is working
-    emit statusUpdateMessage(QString("The selected item is: ") + fileName, 0);
+void MainWindow::on_actionOpen_File_triggered() {
+    loadFolderAsTree(); // Load the folder as a tree structure
 }
 
 void MainWindow::on_actionStart_VR_triggered() {
@@ -226,11 +188,11 @@ void MainWindow::on_actionStart_VR_triggered() {
         return;
     }
     
-    
     vrThread->start(); // Start the VR thread
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
     ui->actionStop_VR->setEnabled(true); // Enable the Stop VR action
+    // ui->actionOpenFile->setEnabled(false); // Disable the Open File action so loading can't happen when in VR
     emit statusUpdateMessage(QString("Started VR Renderer"), 0);
 }
 
@@ -249,6 +211,8 @@ void MainWindow::on_actionStop_VR_triggered() {
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
+    // ui->actionOpenFile->setEnabled(true); // Enable the Open File action so loading can happen when not in VR
+
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
 
@@ -260,7 +224,7 @@ void MainWindow::openFileDialog() {
         tr("Open File"),
         "C:\\",
         tr("STL Files (*.stl);;Text Files (*.txt)")
-        );
+    );
 
     if (!fileName.isEmpty()) {
         QModelIndex index = ui->treeView->currentIndex();
@@ -274,9 +238,7 @@ void MainWindow::openFileDialog() {
             updateRender();             // <<< Then refresh
         }
     }
-
 }
-
 
 void MainWindow::on_actionItemOptions_triggered() {
     openFileDialog();
@@ -316,12 +278,85 @@ void MainWindow::openDialog() {
     }
 }
 
+void MainWindow::loadFolderAsTree() {
+    emit statusUpdateMessage(QString("Loading models"), 0);
+
+    QString dirPath = QFileDialog::getExistingDirectory(
+    this,
+    tr("Open Directory"),
+    "C:\\",
+    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+    );
+
+    //  Give a warning if no folder was selected
+    if (dirPath.isEmpty()) { 
+        QMessageBox::warning(this, 
+            tr("File Selection"), 
+            tr("No folder was selected."), 
+            QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No folder selected"), 0);
+        return;
+    } 
+
+    
+    // Loading new STL files over the old ones if exist
+    if (this->partList){
+        delete this->partList; // Delete the old part list if it exists
+        this->partList = nullptr; // Set to null to avoid dangling pointer
+    }
+
+    this->partList = new ModelPartList("Parts List");
+    ui->treeView->setModel(this->partList);  
+    ModelPart *rootItem = this->partList->getRootItem();
+    // Create iterator to recursively search through directories
+    QDirIterator it(dirPath, QStringList() << "*.stl", QDir::Files, QDirIterator::Subdirectories);
+
+    int count = 0; // Counter for the number of STL files found
+    while (it.hasNext()) {
+        QString filePath = it.next();
+
+        // Check if it's actually an STL file (case insensitive)
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.suffix().toLower() != "stl") continue; // Skip if not an STL file
+        
+        qDebug() << "Found STL file:" << filePath;
+        QString name = QFileInfo(filePath).completeBaseName();
+
+        // Create a new part for each STL file found
+        ModelPart *newPart = new ModelPart({name, "true"});
+        newPart->loadSTL(filePath); 
+        rootItem->appendChild(newPart); // append to tree
+
+        // partList->getRootItem()->appendChild(newPart);
+        
+
+        // ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+        // part->set(0, filePath);
+
+        
+        
+        vrThread->addActorOffline(newPart->getVrActor().GetPointer());
+        
+
+        // Tell the view that the model has changed
+        QModelIndex parentIndex = this->partList->index(0, 0, QModelIndex());
+        emit this->partList->dataChanged(parentIndex, parentIndex);
+        count++;
+    }
+    if (count == 0) {
+        emit statusUpdateMessage(QString("No STL files found in the selected directory"), 0);
+    } else {
+        emit statusUpdateMessage(QString("%1 STL files loaded").arg(count), 0);
+        updateRender();
+    }
+}
+
 
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
     renderer->RemoveAllViewProps();
-    updateRenderFromTree(partList->index(0, 0, QModelIndex()));
+    updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
 
@@ -336,28 +371,24 @@ void MainWindow::updateAllThreadActors() {
     return;
 }
 
-void MainWindow::updateRenderFromTree(const QModelIndex& index) {
-    if (!index.isValid())
-        return;
-
-    ModelPart* selectedPart = static_cast<ModelPart*>(index.internalPointer());
-    if (selectedPart) {
-        auto partActor = selectedPart->getActor();
-        if (partActor) {
-            partActor->SetVisibility(1);
-            renderer->AddActor(partActor);
-
-            qDebug() << "Added actor to renderer!"; // IS STL file being rendered
-        } else {
-            qDebug() << "No actor to add.";
+void MainWindow::updateRenderFromTree(const QModelIndex& parentIndex) {
+    // Process the parent item first if it's valid
+    if (parentIndex.isValid()) {
+        ModelPart* part = static_cast<ModelPart*>(parentIndex.internalPointer());
+        if (part && part->getActor()) {
+            renderer->AddActor(part->getActor());
+            qDebug() << "Added actor for part:" << part->data(0).toString();
         }
     }
-    if (!partList->hasChildren(index))
-        return;
 
-    int rows = partList->rowCount(index);
-    for (int i = 0; i < rows; ++i) {
-        updateRenderFromTree(partList->index(i, 0, index));
+    // Get the number of children under this parent
+    int rowCount = partList->rowCount(parentIndex);
+    qDebug() << "Processing" << rowCount << "children at this level";
+
+    // Process all children
+    for (int i = 0; i < rowCount; ++i) {
+        QModelIndex childIndex = partList->index(i, 0, parentIndex);
+        updateRenderFromTree(childIndex);
     }
 }
 

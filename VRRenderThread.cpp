@@ -50,7 +50,14 @@ VRRenderThread::VRRenderThread( QObject* parent ) {
  * usage will increase for each start/stop thread cycle.
  */
 VRRenderThread::~VRRenderThread() {
-	
+	// window and renderer are vtk objects, so they need to be deleted
+	if (window) {
+		window->Finalize();             // clean up the OpenVR render window
+	  }
+	  if (renderer){
+		renderer->Delete();
+		renderer = nullptr;
+	  }
 }
 
 
@@ -63,8 +70,8 @@ void VRRenderThread::addActorOffline( vtkActor* actor ) {
 		/* I have found that these initial transforms will position the FS
 		 * car model in a sensible position but you can experiment
 		 */
-		// actor->RotateX(-90);
-		// actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
+		actor->RotateX(-90);
+		actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
 
 		actors->AddItem(actor);
 	}
@@ -208,24 +215,6 @@ void VRRenderThread::run() {
 			/* Remember time now */
 			t_last = std::chrono::steady_clock::now();
 		}
-	}
-	// close the interactor
-	if (interactor)
-	{
-	//   interactor->TerminateApp();     // signal SteamVR to quit
-	//   interactor->Delete();           // delete the interactor
-	//   interactor = nullptr;
-	}
-	if (window)
-	{
-	  window->Finalize();             // clean up the OpenVR render window
-	//   window->Delete();
-	//   window = nullptr;
-	}
-	if (renderer)
-	{
-	  renderer->Delete();
-	  renderer = nullptr;
 	}
 }
 

@@ -34,7 +34,7 @@ public slots:
     void handleTreeClicked();
 
     // Actions
-    void on_actionOpenFile_triggered();
+    void on_actionOpen_File_triggered();
     void on_actionItemOptions_triggered();
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
@@ -57,6 +57,7 @@ private:
     vtkSmartPointer<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer> renderer;
 
+    void loadFolderAsTree();
     void openDialog();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);

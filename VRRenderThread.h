@@ -10,7 +10,7 @@
 #define VR_RENDER_THREAD_H
 
 
-#define FRAME_TIME 11 // 11ms = 90 FPS
+
 /* Project headers */
 
 /* Qt headers */
@@ -28,6 +28,7 @@
 #include <vtkCommand.h>
 
 
+#define FRAME_TIME 11 // 11ms ≈ 90 FPS
 
 /* Note that this class inherits from the Qt class QThread which allows it to be a parallel thread
  * to the main() thread, and also from vtkCommand which allows it to act as a "callback" for the 
