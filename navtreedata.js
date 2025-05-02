@@ -25,15 +25,15 @@
 var NAVTREE =
 [
   [ "My Project", "index.html", [
-    [ "VR Model Viewer", "md_README.html", [
-      [ "Documentation", "md_README.html#autotoc_md1", null ],
-      [ "Features", "md_README.html#autotoc_md2", null ],
-      [ "Building", "md_README.html#autotoc_md3", null ],
-      [ "How to use", "md_README.html#autotoc_md4", null ],
-      [ "Project Structure", "md_README.html#autotoc_md5", null ],
-      [ "Requirements", "md_README.html#autotoc_md6", null ],
-      [ "Contributors", "md_README.html#autotoc_md8", null ],
-      [ "License", "md_README.html#autotoc_md9", null ]
+    [ "# VR Model Viewer", "md_README.html", [
+      [ "Documentation", "md_README.html#autotoc_md0", null ],
+      [ "Features", "md_README.html#autotoc_md1", null ],
+      [ "Building", "md_README.html#autotoc_md2", null ],
+      [ "How to use", "md_README.html#autotoc_md3", null ],
+      [ "Project Structure", "md_README.html#autotoc_md4", null ],
+      [ "Requirements", "md_README.html#autotoc_md5", null ],
+      [ "Contributors", "md_README.html#autotoc_md7", null ],
+      [ "License", "md_README.html#autotoc_md8", null ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
