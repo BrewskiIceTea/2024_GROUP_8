@@ -19,16 +19,13 @@ jobs:
       # This is a predefined action that checks out a copy of your code
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-          path: gh-pages
 
       - name: Install Doxygen
         run: sudo apt-get install -y doxygen
 
       # Run Doxygen on Worksheet5 folder
       - name: Run Doxygen
-        working-directory: ${{ github.workspace }}/gh-pages/doxygen
+        working-directory: ${{ github.workspace }}
         run: doxygen
 
       # Deploy HTML output from Doxygen to GitHub Pages
@@ -38,5 +35,5 @@ jobs:
           # The branch the action should deploy to
           branch: gh-pages
           # The folder the action should deploy
-          folder: ${{ github.workspace }}/gh-pages/html
+          folder: ${{ github.workspace }}/html
 
