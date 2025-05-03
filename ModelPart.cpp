@@ -271,6 +271,7 @@ int ModelPart::getClipOrigin(){
 
 // --------------------------------- WIP ----------------------------------
 
+// ------------------------------ getters ---------------------------------
 
 vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
     return this->file;
@@ -288,6 +289,13 @@ vtkSmartPointer<vtkActor> ModelPart::getClipFiltedActor() const {
     return this->clipFiltedActor;
 }
 
+vtkSmartPointer<vtkActor> ModelPart::getShrinkFiltedActor() const {
+    return this->shrinkFiltedActor;
+}
+
+
+// ------------------------------ setters ---------------------------------
+
 void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
     this->actor = actor;
 }
@@ -301,7 +309,10 @@ void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
     clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
 }
 
-// --------------------------- Think can delete ----------------------------------
+void ModelPart::setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor){
+    this->shrinkFiltedActor = shrinkFiltedActor;
+    shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+}
 
 
 // ---------------------------------------------------------------------

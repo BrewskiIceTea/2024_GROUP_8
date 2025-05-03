@@ -171,31 +171,6 @@ MainWindow::MainWindow(QWidget *parent)
     //vtkNew<vtkPolyDataMapper> cylinderMapper;
     //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
 
-    // --------------------------- Shrink Filtered cylinder ----------------------------------
-    //test for shrink filter
-    /*
-    vtkSmartPointer<vtkShrinkFilter> shrinkFilter = vtkSmartPointer<vtkShrinkFilter >::New();
-    shrinkFilter->SetInputConnection(cylinder->GetOutputPort());
-    shrinkFilter->SetShrinkFactor(.9);
-    shrinkFilter->Update();
-
-    // Update the mapper to use the clip filter output
-    vtkNew<vtkPolyDataMapper> cylinderMapper;
-    cylinderMapper->SetInputConnection(shrinkFilter->GetOutputPort());
-
-
-
-    //error check for shrink filter
-    //check error message
-    shrinkFilter->Update();
-    vtkPolyData* output = vtkPolyData::SafeDownCast(shrinkFilter->GetOutput());
-
-    vtkIdType numPoints = output->GetNumberOfPoints();
-
-    QString message = QString("Number of points after shrink: %1").arg(numPoints);
-    statusBar()->showMessage(message);
-
-    */
     // --------------------------- Shrink Filtered cylinder v2 ----------------------------------
 
     // setup the shrink filter
@@ -207,9 +182,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Set up the mapper and actor
     auto cylinderMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
     cylinderMapper->SetInputConnection(shrinkFilter->GetOutputPort());
-
-
-
 
 
     // ---------------------------------------------------------------------------------------
@@ -236,7 +208,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
-    //renderer->RemoveActor(cylinderActor);
+    renderer->RemoveActor(cylinderActor);
 
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -622,7 +594,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             vtkNew<vtkPolyDataMapper> clipMapper;
             clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
 
-            //removes old clipActor
+            //removes old clipActor (makes sure no duplicates)
             if (part->getClipFiltedActor()) {
                 renderer->RemoveActor(part->getClipFiltedActor());
             }
@@ -647,6 +619,32 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
         if(!(dialog.getClipFilterEnabled()) && (dialog.getShrinkFilterEnabled())){
+
+            // setup the shrink filter
+            auto shrinkFilter = vtkSmartPointer<vtkShrinkPolyData>::New();
+            shrinkFilter->SetInputConnection(part->getFile()->GetOutputPort());
+            shrinkFilter->SetShrinkFactor(0.8);
+            shrinkFilter->Update();
+
+            // Set up the mapper and actor
+            auto shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+            shrinkMapper->SetInputConnection(shrinkFilter->GetOutputPort());
+
+            //add actor to render
+            vtkNew<vtkActor> shrinkActor;
+            shrinkActor->SetMapper(shrinkMapper);
+
+            // Add actor to the renderer
+            part->setClipFiltedActor(shrinkActor);
+            renderer->AddActor(part->getClipFiltedActor());
+            shrinkActor->SetVisibility(1);
+
+
+            //updating the render
+            renderer->Render(); // Refresh the window
+            updateRender();
+            renderer->RemoveActor(part->getActor());
+
 
             emit statusUpdateMessage(QString("shrink filtering"), 0);
 
