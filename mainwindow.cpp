@@ -66,19 +66,14 @@ MainWindow::MainWindow(QWidget *parent)
     checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
     Q_ASSERT(checkConnect);
 
-    // Connect For openning file dialog in menubar
-    checkConnect =  connect(ui->actionOpen_File, &QAction::triggered, this, &MainWindow::on_actionOpen_File_triggered);
-    Q_ASSERT(checkConnect);
 
-    //autoconnect to the actionOpen_File in the menu bar
+    // // Start VR Action
+    // checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
+    // Q_ASSERT(checkConnect);
 
-    // Start VR Action
-    checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
-    Q_ASSERT(checkConnect);
-
-    // Stop VR Action
-    checkConnect =  connect(ui->actionStop_VR, &QAction::triggered, this, &MainWindow::on_actionStop_VR_triggered);
-    Q_ASSERT(checkConnect);
+    // // Stop VR Action
+    // checkConnect =  connect(ui->actionStop_VR, &QAction::triggered, this, &MainWindow::on_actionStop_VR_triggered);
+    // Q_ASSERT(checkConnect);
 
     //Lighting Functions - CO
     mainLight = vtkSmartPointer<vtkLight>::New();
