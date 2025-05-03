@@ -26,6 +26,11 @@
 
 #include "VRRenderThread.h"
 
+
+#include <vtkType.h>  // Include for vtkIdType - for filters debug
+#include <vtkPolyData.h>    // for filters debug
+#include <vtkShrinkPolyData.h>
+
 #include <vtkLight.h> //Lighting
 
 MainWindow::MainWindow(QWidget *parent)
@@ -159,43 +164,67 @@ MainWindow::MainWindow(QWidget *parent)
     //vtkSmartPointer<vtkCylinderSource> cylinder = vtkSmartPointer<vtkCylinderSource>::New();
     cylinder->SetResolution(30);
 
-    //Renderer for lighting initiation
-    renderer = vtkSmartPointer<vtkRenderer>::New();
-    renderWindow->AddRenderer(renderer);
 
+    // -------------------------------- Basic cylinder ----------------------------------
     // this is for rendering basic cylinder
     // The mapper is responsible for pushing geometry into the graphics library
     //vtkNew<vtkPolyDataMapper> cylinderMapper;
     //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
 
-
-
-    // testing using clipping filter - this works on the cylinder
-    // making the clipping plane
-    vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
-    planeLeft->SetOrigin(0,0,0);
-    planeLeft->SetNormal(-1,0,0);
-
-    //applying the clipping filter to the cylinder
-    vtkSmartPointer<vtkClipPolyData> clipFilter = vtkSmartPointer<vtkClipPolyData>::New();
-    clipFilter->SetInputConnection(cylinder->GetOutputPort());
-    clipFilter->SetClipFunction(planeLeft);
+    // --------------------------- Shrink Filtered cylinder ----------------------------------
+    //test for shrink filter
+    /*
+    vtkSmartPointer<vtkShrinkFilter> shrinkFilter = vtkSmartPointer<vtkShrinkFilter >::New();
+    shrinkFilter->SetInputConnection(cylinder->GetOutputPort());
+    shrinkFilter->SetShrinkFactor(.9);
+    shrinkFilter->Update();
 
     // Update the mapper to use the clip filter output
     vtkNew<vtkPolyDataMapper> cylinderMapper;
-    cylinderMapper->SetInputConnection(clipFilter->GetOutputPort());
+    cylinderMapper->SetInputConnection(shrinkFilter->GetOutputPort());
+
+
+
+    //error check for shrink filter
+    //check error message
+    shrinkFilter->Update();
+    vtkPolyData* output = vtkPolyData::SafeDownCast(shrinkFilter->GetOutput());
+
+    vtkIdType numPoints = output->GetNumberOfPoints();
+
+    QString message = QString("Number of points after shrink: %1").arg(numPoints);
+    statusBar()->showMessage(message);
+
+    */
+    // --------------------------- Shrink Filtered cylinder v2 ----------------------------------
+
+    // setup the shrink filter
+    auto shrinkFilter = vtkSmartPointer<vtkShrinkPolyData>::New();
+    shrinkFilter->SetInputConnection(cylinder->GetOutputPort());
+    shrinkFilter->SetShrinkFactor(0.8);
+    shrinkFilter->Update();
+
+    // Set up the mapper and actor
+    auto cylinderMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    cylinderMapper->SetInputConnection(shrinkFilter->GetOutputPort());
 
 
 
 
 
+    // ---------------------------------------------------------------------------------------
 
     // The actor groups the geometry (mapper) and also has properties like color and transformation
     vtkNew<vtkActor> cylinderActor;
     cylinderActor->SetMapper(cylinderMapper);
+
+    // cylinder colour and rotation
     cylinderActor->GetProperty()->SetColor(1.0, 0.0, 0.35); // Red color
     cylinderActor->RotateX(30.0);
     cylinderActor->RotateY(45.0);
+
+    // ---------------------------------------------------------------------------------------
+
 
     // === Section 2.2 Lighting ===
     //light->SetLightTypeToSceneLight();
@@ -207,8 +236,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Add actor to the renderer
     renderer->AddActor(cylinderActor);
-    cylinderActor->SetVisibility(1);        //make cylinder be visible
-    renderer->RemoveActor(cylinderActor);
+    //renderer->RemoveActor(cylinderActor);
 
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
