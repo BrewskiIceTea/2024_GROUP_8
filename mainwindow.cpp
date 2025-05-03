@@ -623,20 +623,25 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             // setup the shrink filter
             auto shrinkFilter = vtkSmartPointer<vtkShrinkPolyData>::New();
             shrinkFilter->SetInputConnection(part->getFile()->GetOutputPort());
-            shrinkFilter->SetShrinkFactor(0.8);
+            shrinkFilter->SetShrinkFactor(part->getShrinkFactorAsFloat()); //0->1
             shrinkFilter->Update();
 
             // Set up the mapper and actor
             auto shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             shrinkMapper->SetInputConnection(shrinkFilter->GetOutputPort());
 
+            //removes old clipActor (makes sure no duplicates)
+            if (part->getShrinkFiltedActor()) {
+                renderer->RemoveActor(part->getShrinkFiltedActor());
+            }
+
             //add actor to render
             vtkNew<vtkActor> shrinkActor;
             shrinkActor->SetMapper(shrinkMapper);
 
             // Add actor to the renderer
-            part->setClipFiltedActor(shrinkActor);
-            renderer->AddActor(part->getClipFiltedActor());
+            part->setShrinkFiltedActor(shrinkActor);
+            renderer->AddActor(part->getShrinkFiltedActor());
             shrinkActor->SetVisibility(1);
 
 

@@ -223,6 +223,11 @@ void ModelPart::setActor(){
         clipFiltedActor->SetVisibility(partIsVisible);
     }
 
+    if (shrinkFilterEnabled){
+        shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        shrinkFiltedActor->SetVisibility(partIsVisible);
+    }
+
 
 }
 
@@ -262,6 +267,12 @@ bool ModelPart::getClipFilterStatus(){
 
 int ModelPart::getShrinkFactor(){
     return shrinkFactor;
+}
+
+float ModelPart::getShrinkFactorAsFloat(){
+
+    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);
+    return shrinkFactorAsFloat/100;
 }
 
 int ModelPart::getClipOrigin(){

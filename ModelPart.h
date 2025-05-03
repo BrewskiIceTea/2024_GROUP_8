@@ -167,6 +167,8 @@ public:
 
     int getShrinkFactor();
 
+    float getShrinkFactorAsFloat();
+
     int getClipOrigin();
 
     vtkSmartPointer<vtkSTLReader> getFile() const;
