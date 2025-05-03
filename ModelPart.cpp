@@ -186,9 +186,12 @@ void ModelPart::loadSTL(QString fileName) {
     //    modelColourB / 255.0
     //    );
     //actor->SetVisibility(partIsVisible ? 1 : 0); //set to visible
+    
+    double* ac = actor->GetOrigin();
+    actor->RotateX(-90);
+    actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
 
-
-    actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // White model for testing
+    actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // Red model for testing
 
     vrActor->GetProperty()->SetColor(1.0, 1.0, 1.0);  // White model for testing
 

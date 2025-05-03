@@ -1,6 +1,12 @@
 # VR Model Viewer
----
+
+![Application_GUI](https://github.com/user-attachments/assets/0edff21c-2a36-4d0e-a044-bc55f6ca0583)
+
 A Qt/VTK-based application for viewing 3D STL models in both desktop and VR environments.
+
+
+## Documentation
+Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All public functions are shown at the github webpage provided.
 
 ## Features
 
@@ -32,15 +38,15 @@ cmake ..
 cmake --build .
 ```
 
-## Usage >>>>>>>>>>>>>>>>EDIT THIS >>>>>>>>>>>>>>>>>
+## How to use
 
 1. Launch the application
-2. Use "File > Open File" to load STL models 
+2. Use "Toolbar" > "Open" (Load folder as models) > Select folder containing all .STL files.
 3. Select models in the tree view to:
    - Edit properties
    - Toggle visibility
    - Change colors
-4. Click "Start VR" to enter VR mode (requires SteamVR to be running)
+4. Click "Start VR" to enter VR mode (Will start SteamVR if not running)
 5. Use "Stop VR" to exit VR mode
 
 
@@ -53,8 +59,7 @@ cmake --build .
 - `optiondialog.*` - Model properties dialog
 - `style.qss` - Custom style sheet for dark mode
 
-## Documentation
-Doxygen documentation at 
+
 
 ## Requirements
 
@@ -66,11 +71,13 @@ Doxygen documentation at
 
 ---
 
-## Team
+## Contributors
 
-- Ben Harle @Beannwing
-- Kai Brewster @BrewskiIceTea
-- Christian Ogatis @ChristianOgatis
+- Ben Harle - [@Beannwing](https://github.com/Beannwing) | eeybh1@exmail.nottingham.ac.uk
+- Kai Brewster - [@BrewskiIceTea](https://github.com/BrewskiIceTea) | eeykb3@nottingham.ac.uk
+- Christian Ogatis - [@ChristianOgatis](https://github.com/BrewskiIceTea) | eeyco5@nottingham.ac.uk
+
+
 
 ## License
 
