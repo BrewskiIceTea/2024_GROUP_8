@@ -594,14 +594,18 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             vtkNew<vtkPolyDataMapper> clipMapper;
             clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
 
+            //removes old clipActor
+            if (part->getClipFiltedActor()) {
+                renderer->RemoveActor(part->getClipFiltedActor());
+            }
 
             // The actor groups the geometry (mapper) and also has properties like color and transformation
             vtkNew<vtkActor> clipActor;
             clipActor->SetMapper(clipMapper);
-            clipActor->GetProperty()->SetColor(part->getColourR(), part->getColourG(), part->getColourG());
 
             // Add actor to the renderer
-            renderer->AddActor(clipActor);
+            part->setClipFiltedActor(clipActor);
+            renderer->AddActor(part->getClipFiltedActor());
             clipActor->SetVisibility(1);
 
 
@@ -625,7 +629,9 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
 
             renderer->AddActor(part->getActor());
-            //renderer->RemoveActor(clipActor);
+            part->setActor();
+
+            renderer->RemoveActor(part->getClipFiltedActor());
 
             renderer->Render(); // Refresh the window
             updateRender();
@@ -635,12 +641,12 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
 
-        /*emit statusUpdateMessage(
+        emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
                 .arg(dialog.getClipFilterEnabled())
                 .arg(dialog.getShrinkFilterEnabled()),
             0
-            );*/
+            );
 
     }
 }

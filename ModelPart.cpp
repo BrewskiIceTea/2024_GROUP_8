@@ -117,25 +117,18 @@ void ModelPart::setColour(int R, const unsigned char  G, const unsigned char  B)
 }
 
 unsigned char ModelPart::getColourR() {
-    /* This is a placeholder function that you will need to modify if you want to use it */
     qDebug() << "getmodelColourR:" << modelColourR;
-    /* As the name suggests ... */
-    return modelColourR;   // needs updating
+    return modelColourR;
 }
 
 unsigned char ModelPart::getColourG() {
-    /* This is a placeholder function that you will need to modify if you want to use it */
     qDebug() << "getmodelColourG:" << modelColourG;
-    /* As the name suggests ... */
-    return modelColourG;   // needs updating
+    return modelColourG;
 }
 
 
-unsigned char ModelPart::getColourB() {
-    /* This is a placeholder function that you will need to modify if you want to use it */
-    qDebug() << "getmodelColourB:" << modelColourB;
-    /* As the name suggests ... */
-    return modelColourB;   // needs updating
+unsigned char ModelPart::getColourB() {    
+    return modelColourB;
 }
 
 void ModelPart::setVisible(bool isVisible) {
@@ -219,6 +212,18 @@ void ModelPart::setActor(){
     actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
     actor->SetVisibility(partIsVisible);
 
+    //if a filter is enabled then dont show base model
+    if (clipFilterEnabled || shrinkFilterEnabled){
+        actor->SetVisibility(0);
+    }
+
+    //if clip filter is enabled update colours and changes
+    if (clipFilterEnabled){
+        clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        clipFiltedActor->SetVisibility(partIsVisible);
+    }
+
+
 }
 
 vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
@@ -293,6 +298,7 @@ void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
 
 void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
     this->clipFiltedActor = clipFiltedActor;
+    clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
 }
 
 // --------------------------- Think can delete ----------------------------------

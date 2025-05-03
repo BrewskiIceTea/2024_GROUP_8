@@ -194,8 +194,9 @@ private:
      */
     vtkSmartPointer<vtkSTLReader>               file;               /**< Datafile from which part loaded */
     vtkSmartPointer<vtkPolyDataMapper>          mapper;             /**< Mapper for rendering */
-    vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkMapper>                  vrMapper;             /**< Mapper for rendering in vr*/
+
+    vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
     vtkSmartPointer<vtkActor>                   clipFiltedActor;
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
