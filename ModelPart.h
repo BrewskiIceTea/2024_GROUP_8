@@ -136,15 +136,14 @@ public:
       */
      vtkSmartPointer<vtkActor> getVrActor();
 
+
+
     //------------------------------Filters---------------------------------------------
     /// Added by Ben :)
 
+    //setters
     void setActor();
 
-    //void buildActor();
-
-
-    //for filers
     void setClipFilterStatus(bool inputClipFilterEnabled);
 
     void setShrinkFilterStatus(bool inputShrinkFilterEnabled);
@@ -153,6 +152,11 @@ public:
 
     void setClipOrigin(int inputClipOrigin);
 
+    void setActor(vtkSmartPointer<vtkActor> actor);
+
+    void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
+
+    //getters
     bool getClipFilterStatus();
 
     bool getShrinkFilterStatus();
@@ -161,33 +165,17 @@ public:
 
     int getClipOrigin();
 
-
-
     vtkSmartPointer<vtkSTLReader> getFile() const;
 
-    // Getter for mapper
     vtkSmartPointer<vtkPolyDataMapper> getMapper() const;
 
-    // Setter for mapper
     void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
 
-    // Getter for actor
     vtkSmartPointer<vtkActor> getActor() const;
 
-    // Setter for actor
-    void setActor(vtkSmartPointer<vtkActor> actor);
-
-    // Getter for clipFiltedActor
     vtkSmartPointer<vtkActor> getClipFiltedActor() const;
 
-    // Setter for clipFiltedActor
-    void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
-
-    //----------------------------------think can delete----------------------------------------------
-
-
-    //------------------------------------------------------------------------------------------------
 
 
 
@@ -206,18 +194,16 @@ private:
      */
     vtkSmartPointer<vtkSTLReader>               file;               /**< Datafile from which part loaded */
     vtkSmartPointer<vtkPolyDataMapper>          mapper;             /**< Mapper for rendering */
-    vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkMapper>                  vrMapper;             /**< Mapper for rendering in vr*/
+
+    vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
     vtkSmartPointer<vtkActor>                   clipFiltedActor;
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
 
-    vtkSmartPointer<vtkPolyData> polydata;
 
-
-    ////////////////////////////////////////////////////////////
-    /// Added by Ben :)
-    //filters
+    //------------------------------Filters defaults---------------------------------------------
+    // Added by Ben :)
     bool clipFilterEnabled = false;         //filter is disabeld by default
     bool shrinkFilterEnabled = false;
     int clipOrigin = 0;
@@ -226,7 +212,7 @@ private:
 
 
 
-    ////////////////////////////////////////////////////////////
+
 
 
 };

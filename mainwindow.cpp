@@ -158,6 +158,7 @@ MainWindow::MainWindow(QWidget *parent)
     renderer = vtkSmartPointer<vtkRenderer>::New();
     renderWindow->AddRenderer(renderer);
 
+    // this is for rendering basic cylinder
     // The mapper is responsible for pushing geometry into the graphics library
     //vtkNew<vtkPolyDataMapper> cylinderMapper;
     //cylinderMapper->SetInputConnection(cylinder->GetOutputPort());
@@ -390,7 +391,6 @@ void MainWindow::openDialog() {
     }
 }
 
-
 void MainWindow::loadFolderAsTree() {
     emit statusUpdateMessage(QString("Loading models"), 0);
 
@@ -471,7 +471,7 @@ void MainWindow::on_actionOpen_File_triggered(){
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
-    renderer->RemoveAllViewProps();
+    //renderer->RemoveAllViewProps();
     updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();    // <<< THIS IS MISSING
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
@@ -575,7 +575,6 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
         if((dialog.getClipFilterEnabled()) && !(dialog.getShrinkFilterEnabled())){
 
-            // testing using clipping filter - this works on the cylinder
             // creating the clipping plane
             vtkSmartPointer<vtkPlane> planeLeft = vtkSmartPointer<vtkPlane>::New();
             planeLeft->SetOrigin(part->getClipOrigin(),0,0);
@@ -590,15 +589,19 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             vtkNew<vtkPolyDataMapper> clipMapper;
             clipMapper->SetInputConnection(clipFilterM->GetOutputPort());
 
+            //removes old clipActor
+            if (part->getClipFiltedActor()) {
+                renderer->RemoveActor(part->getClipFiltedActor());
+            }
 
             // The actor groups the geometry (mapper) and also has properties like color and transformation
             vtkNew<vtkActor> clipActor;
             clipActor->SetMapper(clipMapper);
-            clipActor->GetProperty()->SetColor(part->getColourR(), part->getColourG(), part->getColourG());
 
             // Add actor to the renderer
-            renderer->AddActor(clipActor);
-            clipActor->SetVisibility(part->visible());        //make cylinder be visible
+            part->setClipFiltedActor(clipActor);
+            renderer->AddActor(part->getClipFiltedActor());
+            clipActor->SetVisibility(1);
 
 
             //updating the render
@@ -621,7 +624,9 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
 
 
             renderer->AddActor(part->getActor());
-            //renderer->RemoveActor(clipActor);
+            part->setActor();
+
+            renderer->RemoveActor(part->getClipFiltedActor());
 
             renderer->Render(); // Refresh the window
             updateRender();
@@ -631,16 +636,15 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
 
-        /*emit statusUpdateMessage(
+        emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
                 .arg(dialog.getClipFilterEnabled())
                 .arg(dialog.getShrinkFilterEnabled()),
             0
-            );*/
+            );
 
     }
 }
-
 
 
 
