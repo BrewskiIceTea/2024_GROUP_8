@@ -226,6 +226,11 @@ void ModelPart::setActor(){
         clipFiltedActor->SetVisibility(partIsVisible);
     }
 
+    if (shrinkFilterEnabled){
+        shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        shrinkFiltedActor->SetVisibility(partIsVisible);
+    }
+
 
 }
 
@@ -267,6 +272,12 @@ int ModelPart::getShrinkFactor(){
     return shrinkFactor;
 }
 
+float ModelPart::getShrinkFactorAsFloat(){
+
+    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);
+    return shrinkFactorAsFloat/100;
+}
+
 int ModelPart::getClipOrigin(){
     return clipOrigin;
 }
@@ -274,6 +285,7 @@ int ModelPart::getClipOrigin(){
 
 // --------------------------------- WIP ----------------------------------
 
+// ------------------------------ getters ---------------------------------
 
 vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
     return this->file;
@@ -291,6 +303,13 @@ vtkSmartPointer<vtkActor> ModelPart::getClipFiltedActor() const {
     return this->clipFiltedActor;
 }
 
+vtkSmartPointer<vtkActor> ModelPart::getShrinkFiltedActor() const {
+    return this->shrinkFiltedActor;
+}
+
+
+// ------------------------------ setters ---------------------------------
+
 void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
     this->actor = actor;
 }
@@ -304,7 +323,10 @@ void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
     clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
 }
 
-// --------------------------- Think can delete ----------------------------------
+void ModelPart::setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor){
+    this->shrinkFiltedActor = shrinkFiltedActor;
+    shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+}
 
 
 // ---------------------------------------------------------------------

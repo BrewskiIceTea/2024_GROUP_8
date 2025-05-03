@@ -156,6 +156,10 @@ public:
 
     void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
+    void setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor);
+
+    void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
+
     //getters
     bool getClipFilterStatus();
 
@@ -163,17 +167,19 @@ public:
 
     int getShrinkFactor();
 
+    float getShrinkFactorAsFloat();
+
     int getClipOrigin();
 
     vtkSmartPointer<vtkSTLReader> getFile() const;
 
     vtkSmartPointer<vtkPolyDataMapper> getMapper() const;
 
-    void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
-
     vtkSmartPointer<vtkActor> getActor() const;
 
     vtkSmartPointer<vtkActor> getClipFiltedActor() const;
+
+    vtkSmartPointer<vtkActor> getShrinkFiltedActor() const;
 
 
 
@@ -199,6 +205,8 @@ private:
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
     vtkSmartPointer<vtkActor>                   clipFiltedActor;
+    vtkSmartPointer<vtkActor>                   shrinkFiltedActor;
+
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
 
 
@@ -210,7 +218,7 @@ private:
     int shrinkFactor = 80;                  //in range 0-100 but actual range used by the filer is 0-1
 
 
-
+    //-------------------------------------------------------------------------------------------
 
 
 
