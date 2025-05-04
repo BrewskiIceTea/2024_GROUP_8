@@ -569,11 +569,11 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         part->setClipOrigin(dialog.getClipOrigin());
         part->setShrinkFactor(dialog.getShrinkFactor());
 
-        renderer->RemoveActor(part->getActor());
 
         vtkAlgorithmOutput* currentOutput = part->getFile()->GetOutputPort();
         vtkSmartPointer<vtkAlgorithm> lastFilter;
 
+        // -------------------------- render setup ----------------------------------
         // Remove old filtered actors
         if (part->getClipFiltedActor()) {
             renderer->RemoveActor(part->getClipFiltedActor());
@@ -581,6 +581,9 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         if (part->getShrinkFiltedActor()) {
             renderer->RemoveActor(part->getShrinkFiltedActor());
         }
+
+        renderer->RemoveActor(part->getActor());    //remove original part
+        part->getActor()->SetVisibility(0);         //temp method should use remove actor
 
         bool clipEnabled = dialog.getClipFilterEnabled();
         bool shrinkEnabled = dialog.getShrinkFilterEnabled();
@@ -644,6 +647,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         } else {
             // No filter: show original actor
             renderer->AddActor(part->getActor());
+            part->getActor()->SetVisibility(1);     //temp method should use add actor
 
             if (part->getClipFiltedActor()) renderer->RemoveActor(part->getClipFiltedActor());
             if (part->getShrinkFiltedActor()) renderer->RemoveActor(part->getShrinkFiltedActor());
