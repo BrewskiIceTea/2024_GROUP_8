@@ -156,6 +156,8 @@ public:
 
     void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
+    void setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor);
+
     void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
 
 
@@ -179,15 +181,14 @@ public:
 
     vtkSmartPointer<vtkActor> getClipFiltedActor() const;
 
-
-    //------------------------------Shrink Filter--------------------------------------
-
-    void setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor);
-
     vtkSmartPointer<vtkActor> getShrinkFiltedActor() const;
 
-    vtkSmartPointer<vtkActor> shrinkFilteraFile(vtkSmartPointer<vtkSTLReader> inputFile, float shrinkFac) const;
 
+    //------------------------------ Filters 2 --------------------------------------
+
+    void setFiltedActor(vtkSmartPointer<vtkActor> filtedActor);
+
+    vtkSmartPointer<vtkActor> getFiltedActor() const;
 
     //---------------------------------------------------------------------------------
 
@@ -212,8 +213,7 @@ private:
 
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
-    vtkSmartPointer<vtkActor>                   clipFiltedActor;
-    vtkSmartPointer<vtkActor>                   shrinkFiltedActor;
+    vtkSmartPointer<vtkActor>                   filtedActor;
 
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
 

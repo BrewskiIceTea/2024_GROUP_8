@@ -563,23 +563,20 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
     dialog.loadValuesFromPart(part->getClipFilterStatus(),part->getShrinkFilterStatus(),part->getClipOrigin(),part->getShrinkFactor());
 
     if (dialog.exec() == QDialog::Accepted) {
-        //update part values
+
+        // -------------- update values from filters dialog -------------------------
         part->setClipFilterStatus(dialog.getClipFilterEnabled());
         part->setShrinkFilterStatus(dialog.getShrinkFilterEnabled());
         part->setClipOrigin(dialog.getClipOrigin());
         part->setShrinkFactor(dialog.getShrinkFactor());
-
 
         vtkAlgorithmOutput* currentOutput = part->getFile()->GetOutputPort();
         vtkSmartPointer<vtkAlgorithm> lastFilter;
 
         // -------------------------- render setup ----------------------------------
         // Remove old filtered actors
-        if (part->getClipFiltedActor()) {
-            renderer->RemoveActor(part->getClipFiltedActor());
-        }
-        if (part->getShrinkFiltedActor()) {
-            renderer->RemoveActor(part->getShrinkFiltedActor());
+        if (part->getFiltedActor()) {
+            renderer->RemoveActor(part->getFiltedActor());
         }
 
         renderer->RemoveActor(part->getActor());    //remove original part
@@ -613,7 +610,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             lastFilter = shrinkFilter;
         }
 
-        // --------------------------    ----------------------------------
+        // -------------------------- making actor ----------------------------------
         if (clipEnabled || shrinkEnabled) {
             auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             mapper->SetInputConnection(currentOutput);
@@ -622,18 +619,18 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             actor->SetMapper(mapper);
 
             if (clipEnabled && shrinkEnabled) { //both filters
-                part->setClipFiltedActor(actor);
-                renderer->AddActor(part->getClipFiltedActor());
+                part->setFiltedActor(actor);
+                renderer->AddActor(part->getFiltedActor());
                 emit statusUpdateMessage(QString("Both filtering"), 0);
 
             } else if (clipEnabled) {           //just clip filter
-                part->setClipFiltedActor(actor);
-                renderer->AddActor(part->getClipFiltedActor());
+                part->setFiltedActor(actor);
+                renderer->AddActor(part->getFiltedActor());
                 emit statusUpdateMessage(QString("Clip filtering"), 0);
 
             } else if (shrinkEnabled) {         // just shrink filter
-                part->setShrinkFiltedActor(actor);
-                renderer->AddActor(part->getShrinkFiltedActor());
+                part->setFiltedActor(actor);
+                renderer->AddActor(part->getFiltedActor());
                 emit statusUpdateMessage(QString("Shrink filtering"), 0);
             }
 
@@ -649,8 +646,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             renderer->AddActor(part->getActor());
             part->getActor()->SetVisibility(1);     //temp method should use add actor
 
-            if (part->getClipFiltedActor()) renderer->RemoveActor(part->getClipFiltedActor());
-            if (part->getShrinkFiltedActor()) renderer->RemoveActor(part->getShrinkFiltedActor());
+            if (part->getFiltedActor()) renderer->RemoveActor(part->getFiltedActor());
 
             emit statusUpdateMessage(QString("No filtering"), 0);
         }

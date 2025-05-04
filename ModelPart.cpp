@@ -223,19 +223,9 @@ void ModelPart::setActor(){
     //if a filter is enabled then dont show base model
     if (clipFilterEnabled || shrinkFilterEnabled){
         actor->SetVisibility(0);
+        filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        filtedActor->SetVisibility(partIsVisible);
     }
-
-    //if clip filter is enabled update colours and changes
-    if (clipFilterEnabled){
-        clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-        clipFiltedActor->SetVisibility(partIsVisible);
-    }
-
-    if (shrinkFilterEnabled){
-        shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-        shrinkFiltedActor->SetVisibility(partIsVisible);
-    }
-
 
 }
 
@@ -285,13 +275,7 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() const {
     return this->actor;
 }
 
-vtkSmartPointer<vtkActor> ModelPart::getClipFiltedActor() const {
-    return this->clipFiltedActor;
-}
 
-vtkSmartPointer<vtkActor> ModelPart::getShrinkFiltedActor() const {
-    return this->shrinkFiltedActor;
-}
 
 // ------------------------------ setters ---------------------------------
 
@@ -319,39 +303,21 @@ void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
     this->mapper = mapper;
 }
 
-void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
-    this->clipFiltedActor = clipFiltedActor;
-    clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+
+
+// ------------------------------ Filters v2 ---------------------------------
+
+vtkSmartPointer<vtkActor> ModelPart::getFiltedActor() const {
+    return this->filtedActor;
 }
 
-void ModelPart::setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor){
+void ModelPart::setFiltedActor(vtkSmartPointer<vtkActor> filtedActor){
 
-    this->shrinkFiltedActor = shrinkFiltedActor;
-    shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    this->filtedActor = filtedActor;
+    filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
 
 }
 
-
-// ------------------------ Filters base functions ----------------------------------
-
-vtkSmartPointer<vtkActor> ModelPart::shrinkFilteraFile(vtkSmartPointer<vtkSTLReader> inputFile, float shrinkFac) const {
-
-    // setup the shrink filter
-    auto shrinkFilter = vtkSmartPointer<vtkShrinkPolyData>::New();
-    shrinkFilter->SetInputConnection(inputFile->GetOutputPort());
-    shrinkFilter->SetShrinkFactor(shrinkFac); //0->1
-    shrinkFilter->Update();
-
-    // Set up the mapper and actor
-    auto shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    shrinkMapper->SetInputConnection(shrinkFilter->GetOutputPort());
-
-    //add actor to render
-    vtkNew<vtkActor> shrinkActorOut;
-    shrinkActorOut->SetMapper(shrinkMapper);
-
-    return shrinkActorOut;
-}
 
 
 // ---------------------------------------------------------------------
