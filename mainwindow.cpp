@@ -614,9 +614,16 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         if (clipEnabled || shrinkEnabled) {
             auto mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
             mapper->SetInputConnection(currentOutput);
-
+            //vtkNew<vtkActor> actor;   //replaced with vtkSmartPointer
             auto actor = vtkSmartPointer<vtkActor>::New();
+
             actor->SetMapper(mapper);
+
+            //copy position data
+            actor->SetPosition(part->getActor()->GetPosition());
+            actor->SetOrientation(part->getActor()->GetOrientation());
+            actor->SetScale(part->getActor()->GetScale());
+            actor->SetUserTransform(part->getActor()->GetUserTransform());
 
             if (clipEnabled && shrinkEnabled) { //both filters
                 part->setFiltedActor(actor);
@@ -646,7 +653,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             renderer->AddActor(part->getActor());
             part->getActor()->SetVisibility(1);     //temp method should use add actor
 
-            if (part->getFiltedActor()) renderer->RemoveActor(part->getFiltedActor());
+            //if (part->getFiltedActor()) renderer->RemoveActor(part->getFiltedActor());
 
             emit statusUpdateMessage(QString("No filtering"), 0);
         }
