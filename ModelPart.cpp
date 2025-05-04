@@ -27,6 +27,11 @@
 #include <vtkDataSetAlgorithm.h> // For GetOutputPort()
 #include <vtkXMLUnstructuredGridReader.h> // Example reader
 
+#include <vtkShrinkFilter.h>
+#include <vtkType.h>  // Include for vtkIdType - for filters debug
+#include <vtkPolyData.h>    // for filters debug
+#include <vtkShrinkPolyData.h>
+
 
 ModelPart::ModelPart(const QList<QVariant>& data, ModelPart* parent )
     : m_itemData(data), m_parentItem(parent) {
@@ -209,7 +214,7 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
 }
 
 // ------------------------------------------------------------------
-//added by Ben :)
+
 void ModelPart::setActor(){
 
     actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
@@ -218,19 +223,9 @@ void ModelPart::setActor(){
     //if a filter is enabled then dont show base model
     if (clipFilterEnabled || shrinkFilterEnabled){
         actor->SetVisibility(0);
+        filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        filtedActor->SetVisibility(partIsVisible);
     }
-
-    //if clip filter is enabled update colours and changes
-    if (clipFilterEnabled){
-        clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-        clipFiltedActor->SetVisibility(partIsVisible);
-    }
-
-    if (shrinkFilterEnabled){
-        shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-        shrinkFiltedActor->SetVisibility(partIsVisible);
-    }
-
 
 }
 
@@ -243,7 +238,47 @@ vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
     }
 
 // -------------------------------- Filters ----------------------------------
-//for filters UI setters/getters
+
+// ------------------------------ getters ---------------------------------
+
+bool ModelPart::getShrinkFilterStatus(){
+    return shrinkFilterEnabled;
+}
+
+bool ModelPart::getClipFilterStatus(){
+    return clipFilterEnabled;
+}
+
+int ModelPart::getShrinkFactor(){
+    return shrinkFactor;
+}
+
+float ModelPart::getShrinkFactorAsFloat(){
+
+    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);   //output from UI is int so have to convert to float
+    return shrinkFactorAsFloat/100; //output from UI is 80 but need 0->1.0
+}
+
+int ModelPart::getClipOrigin(){
+    return clipOrigin;
+}
+
+vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
+    return this->file;
+}
+
+vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
+    return this->mapper;
+}
+
+vtkSmartPointer<vtkActor> ModelPart::getActor() const {
+    return this->actor;
+}
+
+
+
+// ------------------------------ setters ---------------------------------
+
 void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
     clipFilterEnabled = inputClipFilterEnabled;
 }
@@ -260,56 +295,6 @@ void ModelPart::setShrinkFactor(int inputShrinkFactor){
     shrinkFactor = inputShrinkFactor;
 }
 
-bool ModelPart::getShrinkFilterStatus(){
-    return shrinkFilterEnabled;
-}
-
-bool ModelPart::getClipFilterStatus(){
-    return clipFilterEnabled;
-}
-
-int ModelPart::getShrinkFactor(){
-    return shrinkFactor;
-}
-
-float ModelPart::getShrinkFactorAsFloat(){
-
-    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);
-    return shrinkFactorAsFloat/100;
-}
-
-int ModelPart::getClipOrigin(){
-    return clipOrigin;
-}
-
-
-// --------------------------------- WIP ----------------------------------
-
-// ------------------------------ getters ---------------------------------
-
-vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
-    return this->file;
-}
-
-vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
-    return this->mapper;
-}
-
-vtkSmartPointer<vtkActor> ModelPart::getActor() const {
-    return this->actor;
-}
-
-vtkSmartPointer<vtkActor> ModelPart::getClipFiltedActor() const {
-    return this->clipFiltedActor;
-}
-
-vtkSmartPointer<vtkActor> ModelPart::getShrinkFiltedActor() const {
-    return this->shrinkFiltedActor;
-}
-
-
-// ------------------------------ setters ---------------------------------
-
 void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
     this->actor = actor;
 }
@@ -318,15 +303,21 @@ void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
     this->mapper = mapper;
 }
 
-void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
-    this->clipFiltedActor = clipFiltedActor;
-    clipFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+
+
+// ------------------------------ Filters v2 ---------------------------------
+
+vtkSmartPointer<vtkActor> ModelPart::getFiltedActor() const {
+    return this->filtedActor;
 }
 
-void ModelPart::setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor){
-    this->shrinkFiltedActor = shrinkFiltedActor;
-    shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+void ModelPart::setFiltedActor(vtkSmartPointer<vtkActor> filtedActor){
+
+    this->filtedActor = filtedActor;
+    filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+
 }
+
 
 
 // ---------------------------------------------------------------------

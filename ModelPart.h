@@ -141,7 +141,7 @@ public:
     //------------------------------Filters---------------------------------------------
     /// Added by Ben :)
 
-    //setters
+    //------------------------------Setters---------------------------------------------
     void setActor();
 
     void setClipFilterStatus(bool inputClipFilterEnabled);
@@ -160,7 +160,9 @@ public:
 
     void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
 
-    //getters
+
+    //------------------------------Getters---------------------------------------------
+
     bool getClipFilterStatus();
 
     bool getShrinkFilterStatus();
@@ -182,6 +184,13 @@ public:
     vtkSmartPointer<vtkActor> getShrinkFiltedActor() const;
 
 
+    //------------------------------ Filters 2 --------------------------------------
+
+    void setFiltedActor(vtkSmartPointer<vtkActor> filtedActor);
+
+    vtkSmartPointer<vtkActor> getFiltedActor() const;
+
+    //---------------------------------------------------------------------------------
 
 
 
@@ -204,8 +213,7 @@ private:
 
     vtkSmartPointer<vtkActor>                   actor;              /**< Actor for rendering */
     vtkSmartPointer<vtkActor>                   vrActor;              /**< Actor for rendering in vr*/
-    vtkSmartPointer<vtkActor>                   clipFiltedActor;
-    vtkSmartPointer<vtkActor>                   shrinkFiltedActor;
+    vtkSmartPointer<vtkActor>                   filtedActor;
 
     //vtkColor3<unsigned char>                    colour;             /**< User defineable colour */
 
