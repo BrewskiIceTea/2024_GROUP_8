@@ -141,7 +141,7 @@ public:
     //------------------------------Filters---------------------------------------------
     /// Added by Ben :)
 
-    //setters
+    //------------------------------Setters---------------------------------------------
     void setActor();
 
     void setClipFilterStatus(bool inputClipFilterEnabled);
@@ -156,11 +156,11 @@ public:
 
     void setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor);
 
-    void setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor);
-
     void setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper);
 
-    //getters
+
+    //------------------------------Getters---------------------------------------------
+
     bool getClipFilterStatus();
 
     bool getShrinkFilterStatus();
@@ -179,9 +179,17 @@ public:
 
     vtkSmartPointer<vtkActor> getClipFiltedActor() const;
 
+
+    //------------------------------Shrink Filter--------------------------------------
+
+    void setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor);
+
     vtkSmartPointer<vtkActor> getShrinkFiltedActor() const;
 
+    vtkSmartPointer<vtkActor> shrinkFilteraFile(vtkSmartPointer<vtkSTLReader> inputFile, float shrinkFac) const;
 
+
+    //---------------------------------------------------------------------------------
 
 
 

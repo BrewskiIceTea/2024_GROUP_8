@@ -27,6 +27,11 @@
 #include <vtkDataSetAlgorithm.h> // For GetOutputPort()
 #include <vtkXMLUnstructuredGridReader.h> // Example reader
 
+#include <vtkShrinkFilter.h>
+#include <vtkType.h>  // Include for vtkIdType - for filters debug
+#include <vtkPolyData.h>    // for filters debug
+#include <vtkShrinkPolyData.h>
+
 
 ModelPart::ModelPart(const QList<QVariant>& data, ModelPart* parent )
     : m_itemData(data), m_parentItem(parent) {
@@ -209,7 +214,7 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
 }
 
 // ------------------------------------------------------------------
-//added by Ben :)
+
 void ModelPart::setActor(){
 
     actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
@@ -243,22 +248,8 @@ vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
     }
 
 // -------------------------------- Filters ----------------------------------
-//for filters UI setters/getters
-void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
-    clipFilterEnabled = inputClipFilterEnabled;
-}
 
-void ModelPart::setShrinkFilterStatus(bool inputShrinkFilterEnabled){
-    shrinkFilterEnabled = inputShrinkFilterEnabled;
-}
-
-void ModelPart::setClipOrigin(int inputClipOrigin){
-    clipOrigin = inputClipOrigin;
-}
-
-void ModelPart::setShrinkFactor(int inputShrinkFactor){
-    shrinkFactor = inputShrinkFactor;
-}
+// ------------------------------ getters ---------------------------------
 
 bool ModelPart::getShrinkFilterStatus(){
     return shrinkFilterEnabled;
@@ -274,18 +265,13 @@ int ModelPart::getShrinkFactor(){
 
 float ModelPart::getShrinkFactorAsFloat(){
 
-    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);
-    return shrinkFactorAsFloat/100;
+    float shrinkFactorAsFloat = static_cast<float>(shrinkFactor);   //output from UI is int so have to convert to float
+    return shrinkFactorAsFloat/100; //output from UI is 80 but need 0->1.0
 }
 
 int ModelPart::getClipOrigin(){
     return clipOrigin;
 }
-
-
-// --------------------------------- WIP ----------------------------------
-
-// ------------------------------ getters ---------------------------------
 
 vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
     return this->file;
@@ -307,8 +293,23 @@ vtkSmartPointer<vtkActor> ModelPart::getShrinkFiltedActor() const {
     return this->shrinkFiltedActor;
 }
 
-
 // ------------------------------ setters ---------------------------------
+
+void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
+    clipFilterEnabled = inputClipFilterEnabled;
+}
+
+void ModelPart::setShrinkFilterStatus(bool inputShrinkFilterEnabled){
+    shrinkFilterEnabled = inputShrinkFilterEnabled;
+}
+
+void ModelPart::setClipOrigin(int inputClipOrigin){
+    clipOrigin = inputClipOrigin;
+}
+
+void ModelPart::setShrinkFactor(int inputShrinkFactor){
+    shrinkFactor = inputShrinkFactor;
+}
 
 void ModelPart::setActor(vtkSmartPointer<vtkActor> actor) {
     this->actor = actor;
@@ -324,8 +325,32 @@ void ModelPart::setClipFiltedActor(vtkSmartPointer<vtkActor> clipFiltedActor){
 }
 
 void ModelPart::setShrinkFiltedActor(vtkSmartPointer<vtkActor> shrinkFiltedActor){
+
     this->shrinkFiltedActor = shrinkFiltedActor;
     shrinkFiltedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+
+}
+
+
+// ------------------------ Filters base functions ----------------------------------
+
+vtkSmartPointer<vtkActor> ModelPart::shrinkFilteraFile(vtkSmartPointer<vtkSTLReader> inputFile, float shrinkFac) const {
+
+    // setup the shrink filter
+    auto shrinkFilter = vtkSmartPointer<vtkShrinkPolyData>::New();
+    shrinkFilter->SetInputConnection(inputFile->GetOutputPort());
+    shrinkFilter->SetShrinkFactor(shrinkFac); //0->1
+    shrinkFilter->Update();
+
+    // Set up the mapper and actor
+    auto shrinkMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    shrinkMapper->SetInputConnection(shrinkFilter->GetOutputPort());
+
+    //add actor to render
+    vtkNew<vtkActor> shrinkActorOut;
+    shrinkActorOut->SetMapper(shrinkMapper);
+
+    return shrinkActorOut;
 }
 
 
