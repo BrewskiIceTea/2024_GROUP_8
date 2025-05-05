@@ -215,7 +215,7 @@ vtkSmartPointer<vtkActor> ModelPart::getActor() {
 
 // ------------------------------------------------------------------
 
-void ModelPart::setActor(){
+void ModelPart::setActorValues(){
 
     actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
     actor->SetVisibility(partIsVisible);
