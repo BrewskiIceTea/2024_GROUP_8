@@ -5,6 +5,13 @@
 #include "ModelPart.h"
 
 /**
+ * @file optionDialog.h
+ * @brief Defines the OptionDialog class for configuring model visual components such as colour and visibility
+ */
+
+
+
+/**
  * @brief The Ui namespace contains the user interface elements for the FilterDialog
  */
 namespace Ui {
