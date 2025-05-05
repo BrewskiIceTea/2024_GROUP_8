@@ -165,7 +165,7 @@ public:
      * @brief this is used to update the models actor with releveant colour and visibility changes
      * @note used in item options to update the RGB values and model visibility status
      */
-    //void setActor();  //think this is duplicated and not needed
+    void setActorValues();  //think this is duplicated and not needed
 
      /**
      * @brief updates the moodel if it's being clip filtered

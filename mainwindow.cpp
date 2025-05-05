@@ -351,7 +351,7 @@ void MainWindow::openDialog() {
         part->set(0, dialog.getPartName());
         part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
         part->setVisible(dialog.getVisibility());
-        part->setActor();
+        part->setActorValues();
 
         /*//  Update actor color immediately
         if (part->getActor()) {
