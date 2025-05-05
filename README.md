@@ -6,7 +6,12 @@ A Qt/VTK-based application for viewing 3D STL models in both desktop and VR envi
 
 
 ## Documentation
-Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All public functions are shown at the github webpage provided.
+Full online documentation is available [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) (generated with Doxygen).
+The documentation includes:
+- Detailed API reference for all public classes and functions
+- Class hierarchies and diagrams
+- Descriptions of key modules and their responsibilities
+
 
 ## Features
 
@@ -81,7 +86,7 @@ cmake --build .
 
 ## License
 
-This project uses a mix of components:
+This project includes:
 - Qt/VTK components under their respective licenses
 - Custom styling based on DevSec Studio's work (MIT License)
 - Original code for the VR viewer implementation
