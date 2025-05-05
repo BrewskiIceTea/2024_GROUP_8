@@ -171,19 +171,20 @@ void ModelPart::loadSTL(QString fileName) {
         qDebug() << "STL file loaded successfully with" << file->GetOutput()->GetNumberOfPoints() << "points.";
     }
 
-    mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInputConnection(file->GetOutputPort());
+    if (!actor){
+        mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        mapper->SetInputConnection(file->GetOutputPort());
+        
+        // create a separate actor for VR rendering
+        vrMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+        vrMapper->SetInputConnection(file->GetOutputPort());
+    }
 
     actor = vtkSmartPointer<vtkActor>::New();
     actor->SetMapper(mapper);
 
-    // create a separate actor for VR rendering
-    vrMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    vrMapper->SetInputConnection(file->GetOutputPort());
-
     vrActor = vtkSmartPointer<vtkActor>::New();
     vrActor->SetMapper(vrMapper);
-
     
 
     // CAD Colour
@@ -194,9 +195,9 @@ void ModelPart::loadSTL(QString fileName) {
     //    );
     //actor->SetVisibility(partIsVisible ? 1 : 0); //set to visible
     
-    double* ac = actor->GetOrigin();
-    actor->RotateX(-90);
-    actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
+    // double* ac = actor->GetOrigin();
+    // actor->RotateX(-90);
+    // actor->AddPosition(-ac[0]+0, -ac[1]-100, -ac[2]-200);
 
     actor->GetProperty()->SetColor(255.0, 1.0, 1.0);  // Red model for testing
 

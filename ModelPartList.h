@@ -92,6 +92,13 @@ public:
     ModelPart* getRootItem();
 
     /**
+     * @brief Gets a ModelPart pointer from a QModelIndex
+     * @param index The model index to get the part from
+     * @return ModelPart* Pointer to the part, or nullptr if invalid index
+     */
+    ModelPart* getPart(const QModelIndex& index);
+    
+    /**
       */
     QModelIndex appendChild( QModelIndex& parent, const QList<QVariant>& data );
 

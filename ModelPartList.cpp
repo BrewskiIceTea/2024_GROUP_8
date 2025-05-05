@@ -67,6 +67,11 @@ QVariant ModelPartList::headerData( int section, Qt::Orientation orientation, in
     return QVariant();
 }
 
+ModelPart* ModelPartList::getPart(const QModelIndex& index) {
+    if (!index.isValid())
+        return rootItem;
+    return static_cast<ModelPart*>(index.internalPointer());
+}
 
 QModelIndex ModelPartList::index(int row, int column, const QModelIndex& parent) const {
     ModelPart* parentItem;

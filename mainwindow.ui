@@ -54,22 +54,9 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="addPushButton">
            <property name="text">
-            <string>Add</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="text">
-            <string>Edit</string>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
+            <string>Add new part</string>
            </property>
           </widget>
          </item>
@@ -99,14 +86,14 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_File"/>
+    <addaction name="actionOpen_Dir"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -124,22 +111,25 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen_File"/>
+   <addaction name="actionOpen_Dir"/>
    <addaction name="actionStart_VR"/>
    <addaction name="actionStop_VR"/>
    <addaction name="actionLighting"/>
   </widget>
-  <action name="actionOpen_File">
+  <action name="actionOpen_Dir">
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+    <iconset theme="QIcon::ThemeIcon::FolderNew"/>
    </property>
    <property name="text">
-    <string>Open </string>
+    <string>Load Model</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens a directory and loads all .STL files within all sub directories. This will replace all models currently loaded&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionItemOptions">
    <property name="text">
-    <string>Item Options</string>
+    <string>Rename and Colour</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -172,7 +162,7 @@
   </action>
   <action name="actionFilterOptions">
    <property name="text">
-    <string>Filter Options</string>
+    <string>Part filter</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -187,6 +177,17 @@
    </property>
    <property name="toolTip">
     <string>Change variables of light</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionReplace_Part">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::SyncSynchronizing"/>
+   </property>
+   <property name="text">
+    <string>Replace current part selected</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

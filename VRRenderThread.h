@@ -73,6 +73,7 @@ public:
       * and other VR devices.
       */
     vtkOpenVRRenderWindowInteractor* getInteractor() { return interactor; }
+    void updateRender();  // Update the render window
 
 
 protected:

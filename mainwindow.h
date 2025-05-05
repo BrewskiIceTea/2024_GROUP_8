@@ -44,15 +44,14 @@ public slots:
     void handleTreeClicked();
 
     // Actions
-    void on_actionOpen_File_triggered();     //for item options
+    void on_actionOpen_Dir_triggered();     //for item options
     void on_actionItemOptions_triggered();
     void on_actionStart_VR_triggered();
     void on_actionStop_VR_triggered();
     void on_actionFilterOptions_triggered(); //filter OPtions not itemOptions
-
+    void on_actionReplace_Part_triggered();  
     
     // Generic open file dialog for loading STL files
-    void openFileDialog();      //for item options
     void openFilterDialog();    //filter OPtions not itemOptions
 
 
@@ -72,8 +71,19 @@ private:
     vtkSmartPointer<vtkRenderer> renderer;
     vtkSmartPointer<vtkLight> mainLight;
 
+/**
+ * @brief Loads all STL files from a selected directory into the tree view and both renderers
+ * 
+ * Opens a directory selection dialog and recursively searches for STL files.
+ * Creates a new ModelPartList and replaces existing ones and populates it with found models.
+ * Updates the tree view with the new model hierarchy.
+ */
     void loadFolderAsTree();
+
+
+    void replaceSelectedPart();
     void openDialog();
+    void addNewPart();
     void updateRender();
     void updateRenderFromTree(const QModelIndex& index);
     void updateAllThreadActors();

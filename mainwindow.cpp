@@ -36,10 +36,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-    //tree right click options
+    // RIGHT CLICK OPTIONS
     ui->treeView->addAction(ui->actionItemOptions);
-    ui->treeView->addAction(ui->actionFilterOptions);   //for filter options
-    ui->treeView->addAction(ui->actionOpen_File);
+    ui->treeView->addAction(ui->actionFilterOptions);   
+    ui->treeView->addAction(ui->actionReplace_Part);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
@@ -47,11 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     bool checkConnect;
     // Connect signals and slots
-    checkConnect = connect(ui->pushButton, &QPushButton::released, this, &MainWindow::openFileDialog); //just emits push button 1 was pressed
-    Q_ASSERT(checkConnect);
 
-    checkConnect = connect(ui->pushButton_2, &QPushButton::released, this, &MainWindow::on_actionItemOptions_triggered);
-    Q_ASSERT(checkConnect);
 
     //Ex5 ClickedSignalOfTree Constructor
     checkConnect = connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::handleTreeClicked);
@@ -61,16 +57,8 @@ MainWindow::MainWindow(QWidget *parent)
     checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
     Q_ASSERT(checkConnect);
 
+    // -------------------------------- UI PANELS ----------------------------------
 
-    // // Start VR Action
-    // checkConnect =  connect(ui->actionStart_VR, &QAction::triggered, this, &MainWindow::on_actionStart_VR_triggered);
-    // Q_ASSERT(checkConnect);
-
-    // // Stop VR Action
-    // checkConnect =  connect(ui->actionStop_VR, &QAction::triggered, this, &MainWindow::on_actionStop_VR_triggered);
-    // Q_ASSERT(checkConnect);
-
-    //Lighting Functions - CO
     mainLight = vtkSmartPointer<vtkLight>::New();
 
     //Creates blank panel for lighting sliders
@@ -179,11 +167,6 @@ MainWindow::MainWindow(QWidget *parent)
     vtkNew<vtkPolyDataMapper> cylinderMapper;
     cylinderMapper->SetInputConnection(clipFilter->GetOutputPort());
 
-
-
-
-
-
     // The actor groups the geometry (mapper) and also has properties like color and transformation
     vtkNew<vtkActor> cylinderActor;
     cylinderActor->SetMapper(cylinderMapper);
@@ -207,9 +190,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Reset camera
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
     renderer->ResetCamera();
-    renderer->GetActiveCamera()->Azimuth(30);
-    renderer->GetActiveCamera()->Elevation(30);
+    renderer->GetActiveCamera()->Roll(30);
+    renderer->GetActiveCamera()->Elevation(-70);
     renderer->ResetCameraClippingRange();
+    
 
     // create base instance for actor loading but no rendering yet
     vrThread = new VRRenderThread(this); // Create a new VR thread // Store the thread pointer for later use
@@ -221,30 +205,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     /* Link it to the tree view in the GUI */
     ui->treeView->setModel(this->partList);
-
-    // /* Add 3 top-level items */
-    // for (int i = 0; i < 3; i++) {
-    //     /* Create strings for both data columns */
-    //     QString name = QString("TopLevel %1").arg(i);
-    //     QString visible("true");
-
-    //     /* Create child item */
-    //     ModelPart *childItem = new ModelPart({name, visible});
-
-    //     /* Append to tree top-level */
-    //     rootItem->appendChild(childItem);
-
-    //     /* Add 5 sub-items */
-    //     for (int j = 0; j < 5; j++) {
-    //         QString name = QString("Item %1,%2").arg(i).arg(j);
-    //         QString visible("true");
-
-    //         ModelPart *childChildItem = new ModelPart({name, visible});
-
-    //         /* Append to parent */
-    //         childItem->appendChild(childChildItem);
-    //     }
-    // }
 
 }
 
@@ -259,8 +219,8 @@ MainWindow::~MainWindow()
 void MainWindow::handleAddButton() {
     // This causes MainWindow to emit the signal that will then be
     // received by the status bar’s slot
-    openDialog();
-    emit statusUpdateMessage(QString("Add button was clicked"), 0);
+    addNewPart();
+    emit statusUpdateMessage(QString("Added new Item to part list"), 0);
 }
 
 void MainWindow::handleTreeClicked(){
@@ -296,7 +256,7 @@ void MainWindow::on_actionStart_VR_triggered(){
 
     ui->actionStart_VR->setEnabled(false); // Disable the Start VR action once started
     ui->actionStop_VR->setEnabled(true); // Enable the Stop VR action
-    // ui->actionOpenFile->setEnabled(false); // Disable the Open File action so loading can't happen when in VR
+    ui->actionOpen_Dir->setEnabled(false); // Disable the Open File action so loading can't happen when in VR
     emit statusUpdateMessage(QString("Started VR Renderer"), 0);
 }
 void MainWindow::on_actionStop_VR_triggered() {
@@ -314,14 +274,35 @@ void MainWindow::on_actionStop_VR_triggered() {
 
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action once started
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action
-    // ui->actionOpenFile->setEnabled(true); // Enable the Open File action so loading can happen when not in VR
+    ui->actionOpen_Dir->setEnabled(true); // Enable the Open File action so loading can happen when not in VR
 
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
 
 // -------------------------------- FILE MODEL LOADING ----------------------------------
 
-void MainWindow::openFileDialog() {
+
+void MainWindow::on_actionItemOptions_triggered() {
+    return;
+}
+
+void MainWindow::on_actionReplace_Part_triggered() {
+    replaceSelectedPart();
+}
+
+
+// -------------------------------- DIALOGS ----------------------------------
+void MainWindow::replaceSelectedPart() {
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(
+            this,
+            tr("No item selected"),
+            tr("Please select an item in the tree view to replace.")
+        );
+        return;
+    }
+
     QString fileName = QFileDialog::getOpenFileName(
         this,
         tr("Open File"),
@@ -329,28 +310,29 @@ void MainWindow::openFileDialog() {
         tr("STL Files (*.stl);;Text Files (*.txt)")
     );
 
-    if (!fileName.isEmpty()) {
-        QModelIndex index = ui->treeView->currentIndex();
-        if (index.isValid()) {
-            ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-            part->set(0, fileName);
+    //  Give a warning if no file was selected
+    if (fileName.isEmpty()) { 
+        QMessageBox::warning(this, 
+            tr("File Selection"), 
+            tr("No file was selected."), 
+            QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    }   
 
-            qDebug() << "About to load STL for" << fileName;
+    ModelPart *part = partList->getPart(index); // Get the part from the model
 
-            part->loadSTL(fileName);    // <<< This MUST happen!
-            updateRender();             // <<< Then refresh
-        }
-    }
+    QString name = QFileInfo(filePath).completeBaseName();
+    part->set(0, name); 
+
+    qDebug() << "About to load STL for" << fileName;
+
+    part->loadSTL(fileName);    // <<< This MUST happen!
+    updateRender();               // <<< Then refresh
 }
 
-void MainWindow::on_actionItemOptions_triggered() {
-    openDialog();
-}
-
-//item options
-void MainWindow::openDialog() {
+void MainWindow::addNewPart() {
     QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) return;
 
     ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
 
@@ -366,14 +348,7 @@ void MainWindow::openDialog() {
         part->setVisible(dialog.getVisibility());
         part->setActor();
 
-        /*//  Update actor color immediately
-        if (part->getActor()) {
-            part->getActor()->GetProperty()->SetColor(
-                part->getColourR() / 255.0,
-                part->getColourG() / 255.0,
-                part->getColourB() / 255.0
-                );
-        }*/
+        partList->getPart(index)->appendChild(part); // Append the new part to the list
 
         renderer->Render(); // Refresh the window
         updateRender();
@@ -390,9 +365,8 @@ void MainWindow::openDialog() {
     }
 }
 
-
 void MainWindow::loadFolderAsTree() {
-    emit statusUpdateMessage(QString("Loading models"), 0);
+    emit statusUpdateMessage(QString("Loading models, this may take a while for large groups."), 0);
 
     QString dirPath = QFileDialog::getExistingDirectory(
     this,
@@ -411,7 +385,6 @@ void MainWindow::loadFolderAsTree() {
         return;
     } 
 
-    
     // Loading new STL files over the old ones if exist
     if (this->partList){
         delete this->partList; // Delete the old part list if it exists
@@ -422,11 +395,11 @@ void MainWindow::loadFolderAsTree() {
     ui->treeView->setModel(this->partList);  
     ModelPart *rootItem = this->partList->getRootItem();
     // Create iterator to recursively search through directories
-    QDirIterator it(dirPath, QStringList() << "*.stl", QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator item(dirPath, QStringList() << "*.stl", QDir::Files, QDirIterator::Subdirectories);
 
     int count = 0; // Counter for the number of STL files found
-    while (it.hasNext()) {
-        QString filePath = it.next();
+    while (item.hasNext()) {
+        QString filePath = item.next();
 
         // Check if it's actually an STL file (case insensitive)
         QFileInfo fileInfo(filePath);
@@ -440,16 +413,7 @@ void MainWindow::loadFolderAsTree() {
         newPart->loadSTL(filePath); 
         rootItem->appendChild(newPart); // append to tree
 
-        // partList->getRootItem()->appendChild(newPart);
-        
-
-        // ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-        // part->set(0, filePath);
-
-        
-        
         vrThread->addActorOffline(newPart->getVrActor().GetPointer());
-        
 
         // Tell the view that the model has changed
         QModelIndex parentIndex = this->partList->index(0, 0, QModelIndex());
@@ -464,23 +428,27 @@ void MainWindow::loadFolderAsTree() {
     }
 }
 
-void MainWindow::on_actionOpen_File_triggered(){
+void MainWindow::on_actionOpen_Dir_triggered(){
     loadFolderAsTree(); // Load the folder as a tree structure
 }
 
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
+
     renderer->RemoveAllViewProps();
     updateRenderFromTree(QModelIndex());
-    renderer->ResetCamera();    // <<< THIS IS MISSING
+    renderer->ResetCamera();  
+    // renderer->RotateCamera(90, 0, 0); // Rotate the camera instead of the model to get accurate lighting
+
     renderer->SetBackground(0.15, 0.15, 0.15); //Background Grey
 
     // Forcing render update
     ui->vtkWidget->update();
     renderer->Render();
 
-    renderWindow->Render(); // forces the render window to update
+    renderWindow->Render(); // forces the render window to update when any 
+    // change is made rather than having to interact to render
 }
 
 void MainWindow::updateAllThreadActors() {
