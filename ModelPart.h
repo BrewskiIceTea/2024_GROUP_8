@@ -14,13 +14,7 @@
 #include <QList>
 #include <QVariant>
 
-/* VTK headers - will be needed when VTK used in next worksheet,
- * commented out for now
- *
- * Note that there are a few function definitions and variables
- * commented out below - this is because you haven't yet installed
- * the VTK library which is needed.
- */
+// vtk headers
 #include <vtkSmartPointer.h>
 #include <vtkMapper.h>
 #include <vtkActor.h>
@@ -33,6 +27,7 @@
 class ModelPart {
 public:
 
+    // model defualt colour values
     unsigned char modelColourR = 255;        /**< Red (R) value component of the model */
     unsigned char modelColourG = 1;          /**< Green (G) value component of the model */
     unsigned char modelColourB = 1;          /**< Blue (B) value component of the model */
