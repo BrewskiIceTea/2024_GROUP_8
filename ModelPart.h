@@ -111,19 +111,19 @@ public:
 
     /**
      * @brief get the int Red (R) colour component of the model
-     * @return The red colour value (0-255)
+     * @return The red colour component value (0-255)
      */
     unsigned char getColourR();
 
     /**
      * @brief get the int Green (G) colour component of the model
-     * @return The green colour value (0-255)
+     * @return The green colour component value (0-255)
      */
     unsigned char getColourG();
 
     /**
      * @brief get the int Blue (B) colour component of the model
-     * @return The blue colour value (0-255)
+     * @return The blue colour component value (0-255)
      */
     unsigned char getColourB();
 
