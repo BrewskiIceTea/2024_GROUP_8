@@ -9,7 +9,6 @@
 
 #include <vtkSmartPointer.h>
 #include <vtkGenericOpenGLRenderWindow.h>
-#include <vtkRenderer.h>
 
 #include "VRRenderThread.h"
 
@@ -29,6 +28,11 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+/**
+ * @file MainWindow.h
+ * @brief Defines the MainWindow class for the 3D/VR application
+ * @note This file contains the main window class with UI setup, event handlers and rendering/VR management for the application
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

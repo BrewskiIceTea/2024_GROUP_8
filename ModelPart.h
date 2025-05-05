@@ -23,7 +23,10 @@
 #include <vtkProperty.h>
 #include <vtkShrinkFilter.h>
 
-
+/**
+ * @brief Contains all model part related information
+ * @note Contains RGB colour component values, visibility status, filter status and filter values
+ */
 class ModelPart {
 public:
 
@@ -194,8 +197,8 @@ public:
     void setClipOrigin(int inputClipOrigin);
 
     /**
-     * @brief this is used to update the models actor with releveant colour and visibility changes
-     * @note used in item options to update the RGB values and model visibility status
+     * @brief this is used to change the model's actor
+     * @param new actor value to replace the original
      */
     void setActor(vtkSmartPointer<vtkActor> actor);
 

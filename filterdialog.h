@@ -4,6 +4,11 @@
 #include <QDialog>
 
 /**
+ * @file FilterDialog.h
+ * @brief Defines the FilterDialog class for configuring model part filter values
+ */
+
+/**
  * @brief The Ui namespace contains the user interface elements for the FilterDialog
  */
 namespace Ui {
@@ -12,7 +17,7 @@ class FilterDialog;
 
 /**
  * @brief Dialog window for configuring clip and shrink filters on a model part
- * @note this dialog window allows the user to enable or disbale filters and adjust the filter values applied to the model
+ * @note this dialog window allows the user to enable or disable filters and adjust the filter values applied to the model
  */
 class FilterDialog : public QDialog
 {
@@ -26,7 +31,7 @@ public:
     explicit FilterDialog(QWidget *parent = nullptr);
 
     /**
-     * @brief Destroys the FilterDialog and frees resources (does denconstructor things)
+     * @brief Destroys the FilterDialog and frees resources
      */
     ~FilterDialog();
 
