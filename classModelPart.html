@@ -102,6 +102,11 @@ $(document).ready(function(){initNavTree('classModelPart.html',''); initResizabl
   <div class="headertitle"><div class="title">ModelPart Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Contains all model part related information.  
+ <a href="classModelPart.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="ModelPart_8h_source.html">ModelPart.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -168,7 +173,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af3f26cae171a840a4b2633ddbd642e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the clip filter which determines how much of the model is clipped.  <br /></td></tr>
 <tr class="separator:af3f26cae171a840a4b2633ddbd642e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ac2732eedf3465c4e98fcb7a511b194" id="r_a1ac2732eedf3465c4e98fcb7a511b194"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a1ac2732eedf3465c4e98fcb7a511b194">setActor</a> (vtkSmartPointer&lt; vtkActor &gt; actor)</td></tr>
-<tr class="memdesc:a1ac2732eedf3465c4e98fcb7a511b194"><td class="mdescLeft">&#160;</td><td class="mdescRight">this is used to update the models actor with releveant colour and visibility changes  <br /></td></tr>
+<tr class="memdesc:a1ac2732eedf3465c4e98fcb7a511b194"><td class="mdescLeft">&#160;</td><td class="mdescRight">this is used to change the model's actor  <br /></td></tr>
 <tr class="separator:a1ac2732eedf3465c4e98fcb7a511b194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac52f65591273772f868b6e136ea6b1d" id="r_aac52f65591273772f868b6e136ea6b1d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#aac52f65591273772f868b6e136ea6b1d">setMapper</a> (vtkSmartPointer&lt; vtkPolyDataMapper &gt; mapper)</td></tr>
 <tr class="memdesc:aac52f65591273772f868b6e136ea6b1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the mapper of the model to a new value  <br /></td></tr>
@@ -215,7 +220,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0ceaf904343299707bf08cb18fec04ee" id="r_a0ceaf904343299707bf08cb18fec04ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a0ceaf904343299707bf08cb18fec04ee">partIsVisible</a> = true</td></tr>
 <tr class="separator:a0ceaf904343299707bf08cb18fec04ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Contains all model part related information. </p>
+<dl class="section note"><dt>Note</dt><dd>Contains RGB colour component values, visibility status, filter status and filter values </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4f22ba9a54525edde005cb4eb7366648" name="a4f22ba9a54525edde005cb4eb7366648"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f22ba9a54525edde005cb4eb7366648">&#9670;&#160;</a></span>ModelPart()</h2>
 
@@ -779,8 +787,13 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>this is used to update the models actor with releveant colour and visibility changes </p>
-<dl class="section note"><dt>Note</dt><dd>used in item options to update the RGB values and model visibility status </dd></dl>
+<p>this is used to change the model's actor </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">new</td><td>actor value to replace the original </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

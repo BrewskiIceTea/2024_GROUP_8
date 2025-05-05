@@ -103,50 +103,50 @@ $(document).ready(function(){initNavTree('filterdialog_8h_source.html',''); init
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QDialog&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="}">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="namespaceUi.html">    9</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceUi.html">Ui</a> {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">class </span><a class="code hl_class" href="classFilterDialog.html">FilterDialog</a>;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>}</div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="namespaceUi.html">   14</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceUi.html">Ui</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">class </span><a class="code hl_class" href="classFilterDialog.html">FilterDialog</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>}</div>
 </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classFilterDialog.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="classFilterDialog.html">FilterDialog</a> : <span class="keyword">public</span> QDialog</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Q_OBJECT</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classFilterDialog.html">FilterDialog</a>(QWidget *parent = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_function" href="classFilterDialog.html#a021f1e42fa83fd2914aace2b3fcbcf62">~FilterDialog</a>();</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="};">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classFilterDialog.html">   22</a></span><span class="keyword">class </span><a class="code hl_class" href="classFilterDialog.html">FilterDialog</a> : <span class="keyword">public</span> QDialog</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    Q_OBJECT</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classFilterDialog.html">FilterDialog</a>(QWidget *parent = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classFilterDialog.html#aed32ec33caaa92f25bd80f873fe016c5">loadValuesFromPart</a>(<span class="keywordtype">bool</span> clipFilterEnabled, <span class="keywordtype">bool</span> shrinkFilterEnabled, <span class="keywordtype">int</span> clipOrigin, <span class="keywordtype">int</span> shrinkFactor);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225">getClipFilterEnabled</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7">getShrinkFilterEnabled</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253">getShrinkFactor</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classFilterDialog.html#a5349dcdd1ff4e52cd7c2e205ca190c2b">getClipOrigin</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    Ui::FilterDialog *ui;   </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
-</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_function" href="classFilterDialog.html#a021f1e42fa83fd2914aace2b3fcbcf62">~FilterDialog</a>();</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classFilterDialog.html#aed32ec33caaa92f25bd80f873fe016c5">loadValuesFromPart</a>(<span class="keywordtype">bool</span> clipFilterEnabled, <span class="keywordtype">bool</span> shrinkFilterEnabled, <span class="keywordtype">int</span> clipOrigin, <span class="keywordtype">int</span> shrinkFactor);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225">getClipFilterEnabled</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7">getShrinkFilterEnabled</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253">getShrinkFactor</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="classFilterDialog.html#a5349dcdd1ff4e52cd7c2e205ca190c2b">getClipOrigin</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif </span><span class="comment">// FILTERDIALOG_H</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="ttc" id="aclassFilterDialog_html"><div class="ttname"><a href="classFilterDialog.html">FilterDialog</a></div><div class="ttdoc">Dialog window for configuring clip and shrink filters on a model part.</div><div class="ttdef"><b>Definition</b> filterdialog.h:18</div></div>
-<div class="ttc" id="aclassFilterDialog_html_a021f1e42fa83fd2914aace2b3fcbcf62"><div class="ttname"><a href="classFilterDialog.html#a021f1e42fa83fd2914aace2b3fcbcf62">FilterDialog::~FilterDialog</a></div><div class="ttdeci">~FilterDialog()</div><div class="ttdoc">Destroys the FilterDialog and frees resources (does denconstructor things)</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:11</div></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    Ui::FilterDialog *ui;   </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>};</div>
+</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif </span><span class="comment">// FILTERDIALOG_H</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="ttc" id="aclassFilterDialog_html"><div class="ttname"><a href="classFilterDialog.html">FilterDialog</a></div><div class="ttdoc">Dialog window for configuring clip and shrink filters on a model part.</div><div class="ttdef"><b>Definition</b> filterdialog.h:23</div></div>
+<div class="ttc" id="aclassFilterDialog_html_a021f1e42fa83fd2914aace2b3fcbcf62"><div class="ttname"><a href="classFilterDialog.html#a021f1e42fa83fd2914aace2b3fcbcf62">FilterDialog::~FilterDialog</a></div><div class="ttdeci">~FilterDialog()</div><div class="ttdoc">Destroys the FilterDialog and frees resources.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:11</div></div>
 <div class="ttc" id="aclassFilterDialog_html_a3e2dabf1a104bd81c7edd70d45939253"><div class="ttname"><a href="classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253">FilterDialog::getShrinkFactor</a></div><div class="ttdeci">int getShrinkFactor() const</div><div class="ttdoc">Gets the current shrink factor.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:43</div></div>
 <div class="ttc" id="aclassFilterDialog_html_a5349dcdd1ff4e52cd7c2e205ca190c2b"><div class="ttname"><a href="classFilterDialog.html#a5349dcdd1ff4e52cd7c2e205ca190c2b">FilterDialog::getClipOrigin</a></div><div class="ttdeci">int getClipOrigin() const</div><div class="ttdoc">Gets the current clip origin.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:38</div></div>
 <div class="ttc" id="aclassFilterDialog_html_a67198bbafb136f4e4bd284a5be954225"><div class="ttname"><a href="classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225">FilterDialog::getClipFilterEnabled</a></div><div class="ttdeci">bool getClipFilterEnabled() const</div><div class="ttdoc">Gets the clip filter status.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:30</div></div>
 <div class="ttc" id="aclassFilterDialog_html_adb3b0da52ac1e1490a641aaf7ca6cbe7"><div class="ttname"><a href="classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7">FilterDialog::getShrinkFilterEnabled</a></div><div class="ttdeci">bool getShrinkFilterEnabled() const</div><div class="ttdoc">Gets the shrink filter status.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:34</div></div>
 <div class="ttc" id="aclassFilterDialog_html_aed32ec33caaa92f25bd80f873fe016c5"><div class="ttname"><a href="classFilterDialog.html#aed32ec33caaa92f25bd80f873fe016c5">FilterDialog::loadValuesFromPart</a></div><div class="ttdeci">void loadValuesFromPart(bool clipFilterEnabled, bool shrinkFilterEnabled, int clipOrigin, int shrinkFactor)</div><div class="ttdoc">Loads filter values from the model part into the dialog.</div><div class="ttdef"><b>Definition</b> filterdialog.cpp:16</div></div>
-<div class="ttc" id="anamespaceUi_html"><div class="ttname"><a href="namespaceUi.html">Ui</a></div><div class="ttdoc">The Ui namespace contains the user interface elements for the FilterDialog.</div><div class="ttdef"><b>Definition</b> filterdialog.h:9</div></div>
+<div class="ttc" id="anamespaceUi_html"><div class="ttname"><a href="namespaceUi.html">Ui</a></div><div class="ttdoc">The Ui namespace contains the user interface elements for the FilterDialog.</div><div class="ttdef"><b>Definition</b> filterdialog.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
