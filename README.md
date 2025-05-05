@@ -1,9 +1,17 @@
 # VR Model Viewer
----
+
+![Application_GUI](https://github.com/user-attachments/assets/0edff21c-2a36-4d0e-a044-bc55f6ca0583)
+
 A Qt/VTK-based application for viewing 3D STL models in both desktop and VR environments.
 
+
 ## Documentation
-Doxygen documentation [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) All pub
+Full online documentation is available [here.](https://brewskiicetea.github.io/2024_GROUP_8/index.html) (generated with Doxygen).
+The documentation includes:
+- Detailed API reference for all public classes and functions
+- Class hierarchies and diagrams
+- Descriptions of key modules and their responsibilities
+
 
 ## Features
 
@@ -56,7 +64,7 @@ cmake --build .
 - `optiondialog.*` - Model properties dialog
 - `style.qss` - Custom style sheet for dark mode
 
-lic functions are shown at the github webpage provided.
+
 
 ## Requirements
 
@@ -78,7 +86,7 @@ lic functions are shown at the github webpage provided.
 
 ## License
 
-This project uses a mix of components:
+This project includes:
 - Qt/VTK components under their respective licenses
 - Custom styling based on DevSec Studio's work (MIT License)
 - Original code for the VR viewer implementation

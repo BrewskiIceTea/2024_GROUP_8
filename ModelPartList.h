@@ -99,7 +99,14 @@ public:
     ModelPart* getPart(const QModelIndex& index);
     
     /**
-      */
+     * @brief Appends a child item to the parent index
+     *
+     * @note Creates a new child item with the provided data and attaches it under the parent in the model
+     *
+     * @param parent The QModelIndex of the parent item
+     * @param data A list of QVariant values representing the new child’s data
+     * @return The QModelIndex of the newly added child item
+     */
     QModelIndex appendChild( QModelIndex& parent, const QList<QVariant>& data );
 
 
