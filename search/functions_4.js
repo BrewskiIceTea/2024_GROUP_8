@@ -1,8 +1,25 @@
 var searchData=
 [
-  ['getactor_0',['getActor',['../classModelPart.html#a3d845a3cb1d357a0c2f4ffb131e73116',1,'ModelPart']]],
-  ['getinteractor_1',['getInteractor',['../classVRRenderThread.html#a57d1599455c667e3628c213d808cabd9',1,'VRRenderThread']]],
-  ['getrootitem_2',['getRootItem',['../classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982',1,'ModelPartList']]],
-  ['getshrinkfactor_3',['getShrinkFactor',['../classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253',1,'FilterDialog']]],
-  ['getvractor_4',['getVrActor',['../classModelPart.html#a2e0393d1e2e4bec55cc3e0b2dc8844ff',1,'ModelPart']]]
+  ['getactor_0',['getactor',['../classModelPart.html#a60f905f171e3554a9500db10d46cf20d',1,'ModelPart::getActor() const'],['../classModelPart.html#a3d845a3cb1d357a0c2f4ffb131e73116',1,'ModelPart::getActor()']]],
+  ['getblue_1',['getBlue',['../classOptionDialog.html#a4757b0e86e0db8c4bb5ea0044f610fef',1,'OptionDialog']]],
+  ['getclipfilterenabled_2',['getClipFilterEnabled',['../classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225',1,'FilterDialog']]],
+  ['getclipfilterstatus_3',['getClipFilterStatus',['../classModelPart.html#a6567ff1ae9a8efe6916da504a6da3cdf',1,'ModelPart']]],
+  ['getcliporigin_4',['getcliporigin',['../classFilterDialog.html#a5349dcdd1ff4e52cd7c2e205ca190c2b',1,'FilterDialog::getClipOrigin()'],['../classModelPart.html#a06d52fcb67964653c06135830353771e',1,'ModelPart::getClipOrigin()']]],
+  ['getcolourb_5',['getColourB',['../classModelPart.html#a2cae1e4fd951f1a5f62b93a7f9c68521',1,'ModelPart']]],
+  ['getcolourg_6',['getColourG',['../classModelPart.html#a3ddfad7df9c628e07f1f5e50a47d41d3',1,'ModelPart']]],
+  ['getcolourr_7',['getColourR',['../classModelPart.html#af2c1b405404cdb46d45a804838440e3a',1,'ModelPart']]],
+  ['getfile_8',['getFile',['../classModelPart.html#a17e5ec6724d00e1924980c1b202b4d54',1,'ModelPart']]],
+  ['getfiltedactor_9',['getFiltedActor',['../classModelPart.html#aec64b1b3b7384437b2ff56f67edbc694',1,'ModelPart']]],
+  ['getgreen_10',['getGreen',['../classOptionDialog.html#acd187e300d4e80b987d2bd3e98ff8abf',1,'OptionDialog']]],
+  ['getinteractor_11',['getInteractor',['../classVRRenderThread.html#a57d1599455c667e3628c213d808cabd9',1,'VRRenderThread']]],
+  ['getmapper_12',['getMapper',['../classModelPart.html#a6039586bf1d04e344d3cbbc17c1a9ace',1,'ModelPart']]],
+  ['getpartname_13',['getPartName',['../classOptionDialog.html#a22d86b3260393612b7764933d9cd6bf1',1,'OptionDialog']]],
+  ['getred_14',['getRed',['../classOptionDialog.html#ad7737daa032be5ecadf91d3e9b3cac59',1,'OptionDialog']]],
+  ['getrootitem_15',['getRootItem',['../classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982',1,'ModelPartList']]],
+  ['getshrinkfactor_16',['getshrinkfactor',['../classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253',1,'FilterDialog::getShrinkFactor()'],['../classModelPart.html#a62fd9602bcd8077c344228decb8d06e6',1,'ModelPart::getShrinkFactor()']]],
+  ['getshrinkfactorasfloat_17',['getShrinkFactorAsFloat',['../classModelPart.html#a5ef7993955f5544d68d095ffd444f91b',1,'ModelPart']]],
+  ['getshrinkfilterenabled_18',['getShrinkFilterEnabled',['../classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7',1,'FilterDialog']]],
+  ['getshrinkfilterstatus_19',['getShrinkFilterStatus',['../classModelPart.html#a099f8e346dc71678a732e5a00a7fdfa1',1,'ModelPart']]],
+  ['getvisibility_20',['getVisibility',['../classOptionDialog.html#ad17c49ed397eb57a9487796bbe85ccbb',1,'OptionDialog']]],
+  ['getvractor_21',['getVrActor',['../classModelPart.html#a2e0393d1e2e4bec55cc3e0b2dc8844ff',1,'ModelPart']]]
 ];

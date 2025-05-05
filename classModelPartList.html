@@ -130,8 +130,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a05d52c5cac09750d28ad041ec6a3d5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b6e2e108802afbc45e4bd054dccf982" id="r_a1b6e2e108802afbc45e4bd054dccf982"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982">getRootItem</a> ()</td></tr>
 <tr class="separator:a1b6e2e108802afbc45e4bd054dccf982"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac687a2942c6e8b8b23df36c32a0deaeb" id="r_ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memItemLeft" align="right" valign="top"><a id="ac687a2942c6e8b8b23df36c32a0deaeb" name="ac687a2942c6e8b8b23df36c32a0deaeb"></a>
-QModelIndex&#160;</td><td class="memItemRight" valign="bottom"><b>appendChild</b> (QModelIndex &amp;<a class="el" href="classModelPartList.html#a2aeb9586030b325193894ddfe99e629c">parent</a>, const QList&lt; QVariant &gt; &amp;<a class="el" href="classModelPartList.html#a60923d947a2eafb5dfabe1cf8461807e">data</a>)</td></tr>
+<tr class="memitem:ac687a2942c6e8b8b23df36c32a0deaeb" id="r_ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memItemLeft" align="right" valign="top">QModelIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#ac687a2942c6e8b8b23df36c32a0deaeb">appendChild</a> (QModelIndex &amp;<a class="el" href="classModelPartList.html#a2aeb9586030b325193894ddfe99e629c">parent</a>, const QList&lt; QVariant &gt; &amp;<a class="el" href="classModelPartList.html#a60923d947a2eafb5dfabe1cf8461807e">data</a>)</td></tr>
+<tr class="memdesc:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a child item to the parent index.  <br /></td></tr>
 <tr class="separator:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -189,6 +189,45 @@ QModelIndex&#160;</td><td class="memItemRight" valign="bottom"><b>appendChild</b
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac687a2942c6e8b8b23df36c32a0deaeb" name="ac687a2942c6e8b8b23df36c32a0deaeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac687a2942c6e8b8b23df36c32a0deaeb">&#9670;&#160;</a></span>appendChild()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QModelIndex ModelPartList::appendChild </td>
+          <td>(</td>
+          <td class="paramtype">QModelIndex &amp;&#160;</td>
+          <td class="paramname"><em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QList&lt; QVariant &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Appends a child item to the parent index. </p>
+<dl class="section note"><dt>Note</dt><dd>Creates a new child item with the provided data and attaches it under the parent in the model</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>The QModelIndex of the parent item </td></tr>
+    <tr><td class="paramname">data</td><td>A list of QVariant values representing the new child’s data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The QModelIndex of the newly added child item </dd></dl>
+
+</div>
+</div>
 <a id="a4a6ebf42f2f1c5c0242154d093295756" name="a4a6ebf42f2f1c5c0242154d093295756"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a6ebf42f2f1c5c0242154d093295756">&#9670;&#160;</a></span>columnCount()</h2>
 

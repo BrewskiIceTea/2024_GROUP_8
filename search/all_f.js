@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['use_0',['How to use',['../md_README.html#autotoc_md4',1,'']]]
+  ['ui_0',['Ui',['../namespaceUi.html',1,'']]],
+  ['use_1',['How to use',['../md_README.html#autotoc_md4',1,'']]]
 ];

@@ -101,6 +101,11 @@ $(document).ready(function(){initNavTree('classFilterDialog.html',''); initResiz
   <div class="headertitle"><div class="title">FilterDialog Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Dialog window for configuring clip and shrink filters on a model part.  
+ <a href="classFilterDialog.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="filterdialog_8h_source.html">filterdialog.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for FilterDialog:</div>
 <div class="dyncontent">
@@ -110,26 +115,200 @@ Inheritance diagram for FilterDialog:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aabe08160d1c3595bfef8c37aa6ecd11f" id="r_aabe08160d1c3595bfef8c37aa6ecd11f"><td class="memItemLeft" align="right" valign="top"><a id="aabe08160d1c3595bfef8c37aa6ecd11f" name="aabe08160d1c3595bfef8c37aa6ecd11f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FilterDialog</b> (QWidget *parent=nullptr)</td></tr>
+<tr class="memitem:aabe08160d1c3595bfef8c37aa6ecd11f" id="r_aabe08160d1c3595bfef8c37aa6ecd11f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#aabe08160d1c3595bfef8c37aa6ecd11f">FilterDialog</a> (QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:aabe08160d1c3595bfef8c37aa6ecd11f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the <a class="el" href="classFilterDialog.html" title="Dialog window for configuring clip and shrink filters on a model part.">FilterDialog</a>.  <br /></td></tr>
 <tr class="separator:aabe08160d1c3595bfef8c37aa6ecd11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed32ec33caaa92f25bd80f873fe016c5" id="r_aed32ec33caaa92f25bd80f873fe016c5"><td class="memItemLeft" align="right" valign="top"><a id="aed32ec33caaa92f25bd80f873fe016c5" name="aed32ec33caaa92f25bd80f873fe016c5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadValuesFromPart</b> (bool clipFilterEnabled, bool shrinkFilterEnabled, int clipOrigin, int shrinkFactor)</td></tr>
+<tr class="memitem:a021f1e42fa83fd2914aace2b3fcbcf62" id="r_a021f1e42fa83fd2914aace2b3fcbcf62"><td class="memItemLeft" align="right" valign="top"><a id="a021f1e42fa83fd2914aace2b3fcbcf62" name="a021f1e42fa83fd2914aace2b3fcbcf62"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~FilterDialog</b> ()</td></tr>
+<tr class="memdesc:a021f1e42fa83fd2914aace2b3fcbcf62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the <a class="el" href="classFilterDialog.html" title="Dialog window for configuring clip and shrink filters on a model part.">FilterDialog</a> and frees resources (does denconstructor things) <br /></td></tr>
+<tr class="separator:a021f1e42fa83fd2914aace2b3fcbcf62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed32ec33caaa92f25bd80f873fe016c5" id="r_aed32ec33caaa92f25bd80f873fe016c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#aed32ec33caaa92f25bd80f873fe016c5">loadValuesFromPart</a> (bool clipFilterEnabled, bool shrinkFilterEnabled, int clipOrigin, int shrinkFactor)</td></tr>
+<tr class="memdesc:aed32ec33caaa92f25bd80f873fe016c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads filter values from the model part into the dialog.  <br /></td></tr>
 <tr class="separator:aed32ec33caaa92f25bd80f873fe016c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67198bbafb136f4e4bd284a5be954225" id="r_a67198bbafb136f4e4bd284a5be954225"><td class="memItemLeft" align="right" valign="top"><a id="a67198bbafb136f4e4bd284a5be954225" name="a67198bbafb136f4e4bd284a5be954225"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getClipFilterEnabled</b> () const</td></tr>
+<tr class="memitem:a67198bbafb136f4e4bd284a5be954225" id="r_a67198bbafb136f4e4bd284a5be954225"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225">getClipFilterEnabled</a> () const</td></tr>
+<tr class="memdesc:a67198bbafb136f4e4bd284a5be954225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the clip filter status.  <br /></td></tr>
 <tr class="separator:a67198bbafb136f4e4bd284a5be954225"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb3b0da52ac1e1490a641aaf7ca6cbe7" id="r_adb3b0da52ac1e1490a641aaf7ca6cbe7"><td class="memItemLeft" align="right" valign="top"><a id="adb3b0da52ac1e1490a641aaf7ca6cbe7" name="adb3b0da52ac1e1490a641aaf7ca6cbe7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getShrinkFilterEnabled</b> () const</td></tr>
+<tr class="memitem:adb3b0da52ac1e1490a641aaf7ca6cbe7" id="r_adb3b0da52ac1e1490a641aaf7ca6cbe7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7">getShrinkFilterEnabled</a> () const</td></tr>
+<tr class="memdesc:adb3b0da52ac1e1490a641aaf7ca6cbe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the shrink filter status.  <br /></td></tr>
 <tr class="separator:adb3b0da52ac1e1490a641aaf7ca6cbe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e2dabf1a104bd81c7edd70d45939253" id="r_a3e2dabf1a104bd81c7edd70d45939253"><td class="memItemLeft" align="right" valign="top"><a id="a3e2dabf1a104bd81c7edd70d45939253" name="a3e2dabf1a104bd81c7edd70d45939253"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getShrinkFactor</b> () const</td></tr>
-<tr class="memdesc:a3e2dabf1a104bd81c7edd70d45939253"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns Int but c;o[[omg fo;ter uses decimales :O <br /></td></tr>
+<tr class="memitem:a3e2dabf1a104bd81c7edd70d45939253" id="r_a3e2dabf1a104bd81c7edd70d45939253"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253">getShrinkFactor</a> () const</td></tr>
+<tr class="memdesc:a3e2dabf1a104bd81c7edd70d45939253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current shrink factor.  <br /></td></tr>
 <tr class="separator:a3e2dabf1a104bd81c7edd70d45939253"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5349dcdd1ff4e52cd7c2e205ca190c2b" id="r_a5349dcdd1ff4e52cd7c2e205ca190c2b"><td class="memItemLeft" align="right" valign="top"><a id="a5349dcdd1ff4e52cd7c2e205ca190c2b" name="a5349dcdd1ff4e52cd7c2e205ca190c2b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getClipOrigin</b> () const</td></tr>
+<tr class="memitem:a5349dcdd1ff4e52cd7c2e205ca190c2b" id="r_a5349dcdd1ff4e52cd7c2e205ca190c2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFilterDialog.html#a5349dcdd1ff4e52cd7c2e205ca190c2b">getClipOrigin</a> () const</td></tr>
+<tr class="memdesc:a5349dcdd1ff4e52cd7c2e205ca190c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current clip origin.  <br /></td></tr>
 <tr class="separator:a5349dcdd1ff4e52cd7c2e205ca190c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Dialog window for configuring clip and shrink filters on a model part. </p>
+<dl class="section note"><dt>Note</dt><dd>this dialog window allows the user to enable or disbale filters and adjust the filter values applied to the model </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aabe08160d1c3595bfef8c37aa6ecd11f" name="aabe08160d1c3595bfef8c37aa6ecd11f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabe08160d1c3595bfef8c37aa6ecd11f">&#9670;&#160;</a></span>FilterDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">FilterDialog::FilterDialog </td>
+          <td>(</td>
+          <td class="paramtype">QWidget *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs the <a class="el" href="classFilterDialog.html" title="Dialog window for configuring clip and shrink filters on a model part.">FilterDialog</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>Optional parent widget </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a67198bbafb136f4e4bd284a5be954225" name="a67198bbafb136f4e4bd284a5be954225"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67198bbafb136f4e4bd284a5be954225">&#9670;&#160;</a></span>getClipFilterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FilterDialog::getClipFilterEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the clip filter status. </p>
+<dl class="section return"><dt>Returns</dt><dd>True = clip filter enabled / False = clip filter disabled </dd></dl>
+
+</div>
+</div>
+<a id="a5349dcdd1ff4e52cd7c2e205ca190c2b" name="a5349dcdd1ff4e52cd7c2e205ca190c2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5349dcdd1ff4e52cd7c2e205ca190c2b">&#9670;&#160;</a></span>getClipOrigin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FilterDialog::getClipOrigin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the current clip origin. </p>
+<dl class="section return"><dt>Returns</dt><dd>The clip x-value origin value </dd></dl>
+
+</div>
+</div>
+<a id="a3e2dabf1a104bd81c7edd70d45939253" name="a3e2dabf1a104bd81c7edd70d45939253"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e2dabf1a104bd81c7edd70d45939253">&#9670;&#160;</a></span>getShrinkFactor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FilterDialog::getShrinkFactor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the current shrink factor. </p>
+<p>returns Int but c;o[[omg fo;ter uses decimales :O</p>
+<dl class="section return"><dt>Returns</dt><dd>The shrink factor value (in range 0–100) </dd></dl>
+
+</div>
+</div>
+<a id="adb3b0da52ac1e1490a641aaf7ca6cbe7" name="adb3b0da52ac1e1490a641aaf7ca6cbe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb3b0da52ac1e1490a641aaf7ca6cbe7">&#9670;&#160;</a></span>getShrinkFilterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FilterDialog::getShrinkFilterEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the shrink filter status. </p>
+<dl class="section return"><dt>Returns</dt><dd>True = shrink filter enabled / False = shrink filter disabled </dd></dl>
+
+</div>
+</div>
+<a id="aed32ec33caaa92f25bd80f873fe016c5" name="aed32ec33caaa92f25bd80f873fe016c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed32ec33caaa92f25bd80f873fe016c5">&#9670;&#160;</a></span>loadValuesFromPart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FilterDialog::loadValuesFromPart </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>clipFilterEnabled</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>shrinkFilterEnabled</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>clipOrigin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shrinkFactor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads filter values from the model part into the dialog. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">clipFilterEnabled</td><td>True if the clip filter is enabled </td></tr>
+    <tr><td class="paramname">shrinkFilterEnabled</td><td>True if the shrink filter is enabled </td></tr>
+    <tr><td class="paramname">clipOrigin</td><td>the x-value origin point for the clip filter </td></tr>
+    <tr><td class="paramname">shrinkFactor</td><td>the shrink factor (in range 0–100) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="filterdialog_8h_source.html">filterdialog.h</a></li>
 <li><b>filterdialog.cpp</b></li>

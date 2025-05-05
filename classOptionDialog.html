@@ -101,6 +101,11 @@ $(document).ready(function(){initNavTree('classOptionDialog.html',''); initResiz
   <div class="headertitle"><div class="title">OptionDialog Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Dialog window for configuring colour and visibility of a model part.  
+ <a href="classOptionDialog.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="optiondialog_8h_source.html">optiondialog.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for OptionDialog:</div>
 <div class="dyncontent">
@@ -110,28 +115,229 @@ Inheritance diagram for OptionDialog:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4540736a5c6e4468dad5165c7aefc8bc" id="r_a4540736a5c6e4468dad5165c7aefc8bc"><td class="memItemLeft" align="right" valign="top"><a id="a4540736a5c6e4468dad5165c7aefc8bc" name="a4540736a5c6e4468dad5165c7aefc8bc"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>OptionDialog</b> (QWidget *parent=nullptr)</td></tr>
+<tr class="memitem:a4540736a5c6e4468dad5165c7aefc8bc" id="r_a4540736a5c6e4468dad5165c7aefc8bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#a4540736a5c6e4468dad5165c7aefc8bc">OptionDialog</a> (QWidget *parent=nullptr)</td></tr>
+<tr class="memdesc:a4540736a5c6e4468dad5165c7aefc8bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs the ItemOptions dialog.  <br /></td></tr>
 <tr class="separator:a4540736a5c6e4468dad5165c7aefc8bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63515695dff72b977f0a277fd87050b5" id="r_a63515695dff72b977f0a277fd87050b5"><td class="memItemLeft" align="right" valign="top"><a id="a63515695dff72b977f0a277fd87050b5" name="a63515695dff72b977f0a277fd87050b5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>loadFromModelPart</b> (const QString &amp;name, int r, int g, int b, bool visible)</td></tr>
+<tr class="memitem:a640a1faddda44f2567cf386de0085ec7" id="r_a640a1faddda44f2567cf386de0085ec7"><td class="memItemLeft" align="right" valign="top"><a id="a640a1faddda44f2567cf386de0085ec7" name="a640a1faddda44f2567cf386de0085ec7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>~OptionDialog</b> ()</td></tr>
+<tr class="memdesc:a640a1faddda44f2567cf386de0085ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the ItemOptions Dialog and frees resources (does denconstructor things) <br /></td></tr>
+<tr class="separator:a640a1faddda44f2567cf386de0085ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63515695dff72b977f0a277fd87050b5" id="r_a63515695dff72b977f0a277fd87050b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#a63515695dff72b977f0a277fd87050b5">loadFromModelPart</a> (const QString &amp;name, int r, int g, int b, bool visible)</td></tr>
+<tr class="memdesc:a63515695dff72b977f0a277fd87050b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads data from a <a class="el" href="classModelPart.html">ModelPart</a> into the dialog.  <br /></td></tr>
 <tr class="separator:a63515695dff72b977f0a277fd87050b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22d86b3260393612b7764933d9cd6bf1" id="r_a22d86b3260393612b7764933d9cd6bf1"><td class="memItemLeft" align="right" valign="top"><a id="a22d86b3260393612b7764933d9cd6bf1" name="a22d86b3260393612b7764933d9cd6bf1"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>getPartName</b> () const</td></tr>
+<tr class="memitem:a22d86b3260393612b7764933d9cd6bf1" id="r_a22d86b3260393612b7764933d9cd6bf1"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#a22d86b3260393612b7764933d9cd6bf1">getPartName</a> () const</td></tr>
+<tr class="memdesc:a22d86b3260393612b7764933d9cd6bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of the model part.  <br /></td></tr>
 <tr class="separator:a22d86b3260393612b7764933d9cd6bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7737daa032be5ecadf91d3e9b3cac59" id="r_ad7737daa032be5ecadf91d3e9b3cac59"><td class="memItemLeft" align="right" valign="top"><a id="ad7737daa032be5ecadf91d3e9b3cac59" name="ad7737daa032be5ecadf91d3e9b3cac59"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getRed</b> () const</td></tr>
+<tr class="memitem:ad7737daa032be5ecadf91d3e9b3cac59" id="r_ad7737daa032be5ecadf91d3e9b3cac59"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#ad7737daa032be5ecadf91d3e9b3cac59">getRed</a> () const</td></tr>
+<tr class="memdesc:ad7737daa032be5ecadf91d3e9b3cac59"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the int Red (R) colour component of the model  <br /></td></tr>
 <tr class="separator:ad7737daa032be5ecadf91d3e9b3cac59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd187e300d4e80b987d2bd3e98ff8abf" id="r_acd187e300d4e80b987d2bd3e98ff8abf"><td class="memItemLeft" align="right" valign="top"><a id="acd187e300d4e80b987d2bd3e98ff8abf" name="acd187e300d4e80b987d2bd3e98ff8abf"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getGreen</b> () const</td></tr>
+<tr class="memitem:acd187e300d4e80b987d2bd3e98ff8abf" id="r_acd187e300d4e80b987d2bd3e98ff8abf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#acd187e300d4e80b987d2bd3e98ff8abf">getGreen</a> () const</td></tr>
+<tr class="memdesc:acd187e300d4e80b987d2bd3e98ff8abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the int Green (G) colour component of the model  <br /></td></tr>
 <tr class="separator:acd187e300d4e80b987d2bd3e98ff8abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4757b0e86e0db8c4bb5ea0044f610fef" id="r_a4757b0e86e0db8c4bb5ea0044f610fef"><td class="memItemLeft" align="right" valign="top"><a id="a4757b0e86e0db8c4bb5ea0044f610fef" name="a4757b0e86e0db8c4bb5ea0044f610fef"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getBlue</b> () const</td></tr>
+<tr class="memitem:a4757b0e86e0db8c4bb5ea0044f610fef" id="r_a4757b0e86e0db8c4bb5ea0044f610fef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#a4757b0e86e0db8c4bb5ea0044f610fef">getBlue</a> () const</td></tr>
+<tr class="memdesc:a4757b0e86e0db8c4bb5ea0044f610fef"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the int Blue (B) colour component of the model  <br /></td></tr>
 <tr class="separator:a4757b0e86e0db8c4bb5ea0044f610fef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad17c49ed397eb57a9487796bbe85ccbb" id="r_ad17c49ed397eb57a9487796bbe85ccbb"><td class="memItemLeft" align="right" valign="top"><a id="ad17c49ed397eb57a9487796bbe85ccbb" name="ad17c49ed397eb57a9487796bbe85ccbb"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getVisibility</b> () const</td></tr>
+<tr class="memitem:ad17c49ed397eb57a9487796bbe85ccbb" id="r_ad17c49ed397eb57a9487796bbe85ccbb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOptionDialog.html#ad17c49ed397eb57a9487796bbe85ccbb">getVisibility</a> () const</td></tr>
+<tr class="memdesc:ad17c49ed397eb57a9487796bbe85ccbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the bool model visibility value.  <br /></td></tr>
 <tr class="separator:ad17c49ed397eb57a9487796bbe85ccbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Dialog window for configuring colour and visibility of a model part. </p>
+<dl class="section note"><dt>Note</dt><dd>this dialog window allows the user to edit the RGB colour components and toggle visibility of the model </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a4540736a5c6e4468dad5165c7aefc8bc" name="a4540736a5c6e4468dad5165c7aefc8bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4540736a5c6e4468dad5165c7aefc8bc">&#9670;&#160;</a></span>OptionDialog()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">OptionDialog::OptionDialog </td>
+          <td>(</td>
+          <td class="paramtype">QWidget *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>nullptr</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs the ItemOptions dialog. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parent</td><td>Optional parent widget </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4757b0e86e0db8c4bb5ea0044f610fef" name="a4757b0e86e0db8c4bb5ea0044f610fef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4757b0e86e0db8c4bb5ea0044f610fef">&#9670;&#160;</a></span>getBlue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int OptionDialog::getBlue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the int Blue (B) colour component of the model </p>
+<dl class="section return"><dt>Returns</dt><dd>The blue colour component value (0-255) </dd></dl>
+
+</div>
+</div>
+<a id="acd187e300d4e80b987d2bd3e98ff8abf" name="acd187e300d4e80b987d2bd3e98ff8abf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd187e300d4e80b987d2bd3e98ff8abf">&#9670;&#160;</a></span>getGreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int OptionDialog::getGreen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the int Green (G) colour component of the model </p>
+<dl class="section return"><dt>Returns</dt><dd>The green colour component value (0-255) </dd></dl>
+
+</div>
+</div>
+<a id="a22d86b3260393612b7764933d9cd6bf1" name="a22d86b3260393612b7764933d9cd6bf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22d86b3260393612b7764933d9cd6bf1">&#9670;&#160;</a></span>getPartName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString OptionDialog::getPartName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the name of the model part. </p>
+<dl class="section return"><dt>Returns</dt><dd>The part name as a QString </dd></dl>
+
+</div>
+</div>
+<a id="ad7737daa032be5ecadf91d3e9b3cac59" name="ad7737daa032be5ecadf91d3e9b3cac59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7737daa032be5ecadf91d3e9b3cac59">&#9670;&#160;</a></span>getRed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int OptionDialog::getRed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the int Red (R) colour component of the model </p>
+<dl class="section return"><dt>Returns</dt><dd>The red colour component value (0-255) </dd></dl>
+
+</div>
+</div>
+<a id="ad17c49ed397eb57a9487796bbe85ccbb" name="ad17c49ed397eb57a9487796bbe85ccbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad17c49ed397eb57a9487796bbe85ccbb">&#9670;&#160;</a></span>getVisibility()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool OptionDialog::getVisibility </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the bool model visibility value. </p>
+<p>Get visible flag </p><dl class="section return"><dt>Returns</dt><dd>visible flag as boolean </dd></dl>
+
+</div>
+</div>
+<a id="a63515695dff72b977f0a277fd87050b5" name="a63515695dff72b977f0a277fd87050b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63515695dff72b977f0a277fd87050b5">&#9670;&#160;</a></span>loadFromModelPart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OptionDialog::loadFromModelPart </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>r</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>visible</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads data from a <a class="el" href="classModelPart.html">ModelPart</a> into the dialog. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the model part </td></tr>
+    <tr><td class="paramname">r</td><td>The red colour component value (0–255) </td></tr>
+    <tr><td class="paramname">g</td><td>The green colour component value (0–255) </td></tr>
+    <tr><td class="paramname">b</td><td>The blue colour component value (0–255) </td></tr>
+    <tr><td class="paramname">visible</td><td>The visibility state of the model part </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="optiondialog_8h_source.html">optiondialog.h</a></li>
 <li><b>optiondialog.cpp</b></li>
