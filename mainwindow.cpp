@@ -306,50 +306,6 @@ void MainWindow::removeSelectedPart(){
     updateRender();
 }
 
-// -------------------------------- WIP ----------------------------------------
-
-//old part still shows and new part dosent appear
-void MainWindow::replaceSelectedPart() {
-    QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) {
-        QMessageBox::warning(
-            this,
-            tr("No item selected"),
-            tr("Please select an item in the tree view to replace.")
-            );
-        return;
-    }
-
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-        );
-
-    //  Give a warning if no file was selected
-    if (filePath.isEmpty()) {
-        QMessageBox::warning(this,
-                             tr("File Selection"),
-                             tr("No file was selected."),
-                             QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }
-
-    ModelPart *part = partList->getPart(index); // Get the part from the model
-
-    QString name = QFileInfo(filePath).completeBaseName();
-    part->set(0, name);
-
-    qDebug() << "About to load STL for" << filePath;
-
-    part->loadSTL(filePath);
-    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
-    updateRender();
-}
-
-//file appears in the render but not in the tree
 void MainWindow::addNewPart() {
     QString filePath = QFileDialog::getOpenFileName(
         this,
@@ -384,6 +340,54 @@ void MainWindow::addNewPart() {
     updateRender();
 
 }
+
+void MainWindow::replaceSelectedPart() {
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(
+            this,
+            tr("No item selected"),
+            tr("Please select an item in the tree view to replace.")
+            );
+        return;
+    }
+
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text Files (*.txt)")
+        );
+
+    //  Give a warning if no file was selected
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("File Selection"),
+                             tr("No file was selected."),
+                             QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    }
+
+
+    ModelPart *partOld = partList->getPart(index); // Get the part from the model
+
+    QString name = QFileInfo(filePath).completeBaseName();
+    ModelPart *partNew = new ModelPart({name, "true"});
+    partNew->loadSTL(filePath);
+
+    renderer->RemoveActor(partOld->getActor());
+    partOld->set(0, name); //set name of part
+    partOld->setActor(partNew->getActor());
+    //partOld->setMapper(partNew->getMapper());
+
+    qDebug() << "About to load STL for" << filePath;
+
+    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    updateRender();
+}
+
+
 
 // -------------------------------- DIALOGS ----------------------------------
 
