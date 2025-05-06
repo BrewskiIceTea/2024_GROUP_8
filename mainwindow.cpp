@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->treeView->addAction(ui->actionItemOptions);
     ui->treeView->addAction(ui->actionFilterOptions);   
     ui->treeView->addAction(ui->actionReplace_Part);
+    ui->treeView->addAction(ui->actionRemove_Part);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
@@ -270,15 +271,85 @@ void MainWindow::on_actionStop_VR_triggered() {
 
 
 void MainWindow::on_actionItemOptions_triggered() {
-    return;
+    openItemOptionsDialog();
+    emit statusUpdateMessage(QString("Opening triggered"), 0);
 }
 
 void MainWindow::on_actionReplace_Part_triggered() {
     replaceSelectedPart();
+    emit statusUpdateMessage(QString("Replace Part triggered"), 0);
+}
+
+void MainWindow::on_actionRemove_Part_triggered(){
+    emit statusUpdateMessage(QString("Remove Part triggered"), 0);
+    removeSelectedPart();
 }
 
 
 // -------------------------------- DIALOGS ----------------------------------
+
+void MainWindow::openItemOptionsDialog(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    OptionDialog dialog(this);
+    dialog.loadFromModelPart(part->data(0).toString(),
+                             part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+
+        part->set(0, dialog.getPartName());
+        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
+        part->setVisible(dialog.getVisibility());
+        part->setActorValues();
+
+        /*//  Update actor color immediately
+        if (part->getActor()) {
+            part->getActor()->GetProperty()->SetColor(
+                part->getColourR() / 255.0,
+                part->getColourG() / 255.0,
+                part->getColourB() / 255.0
+                );
+        }*/
+
+        renderer->Render(); // Refresh the window
+        updateRender();
+
+        ui->treeView->model()->dataChanged(index, index);
+
+        emit statusUpdateMessage(
+            QString("ModelPart updated, dialog visible: %1").arg(part->visible()),
+            0
+            );
+
+    } else {
+        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    }
+}
+
+void MainWindow::removeSelectedPart(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    //remove the actor from the renderer
+    if (part->getActor()) {//checks to see if actor for part exsists
+        renderer->RemoveActor(part->getActor());
+        qDebug() << "Removed actor for part:" << part->data(0).toString();
+    }
+
+    // Remove the part from the model
+    partList->removePart(index);
+
+    // Update the rendering window
+    updateRender();
+}
+
+//old part still shows and new part dosent appear
 void MainWindow::replaceSelectedPart() {
     QModelIndex index = ui->treeView->currentIndex();
     if (!index.isValid()) {
@@ -433,6 +504,7 @@ void MainWindow::on_actionOpen_Dir_triggered(){
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
+    qDebug() << "Update Render running";
     updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();  
     // renderer->RotateCamera(90, 0, 0); // Rotate the camera instead of the model to get accurate lighting
@@ -456,7 +528,13 @@ void MainWindow::updateRenderFromTree(const QModelIndex& parentIndex) {
     if (parentIndex.isValid()) {
         ModelPart* part = static_cast<ModelPart*>(parentIndex.internalPointer());
         if (part && part->getActor()) {
-            renderer->AddActor(part->getActor());
+
+            if(part->getFiltedActor()){ //if part is being filted dont add normal part actor
+                renderer->AddActor(part->getFiltedActor());
+            }
+            else{
+                renderer->AddActor(part->getActor());
+            }
             qDebug() << "Added actor for part:" << part->data(0).toString();
         }
     }
@@ -545,7 +623,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
         renderer->RemoveActor(part->getActor());    //remove original part
-        part->getActor()->SetVisibility(0);         //temp method should use remove actor
+        //part->getActor()->SetVisibility(0);         //temp method should use remove actor
 
         bool clipEnabled = dialog.getClipFilterEnabled();   //transfereed values jsut to make easier to read
         bool shrinkEnabled = dialog.getShrinkFilterEnabled();
@@ -609,7 +687,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         } else {
             // No filter: show original actor
             renderer->AddActor(part->getActor());
-            part->getActor()->SetVisibility(1);     //temp method should use add actor
+            //part->getActor()->SetVisibility(1);     //temp method should use add actor
 
             //emit statusUpdateMessage(QString("No filtering"), 0);
         }

@@ -158,6 +158,9 @@ public:
       */
      vtkSmartPointer<vtkActor> getVrActor();
 
+    //------------------------------Part Managment--------------------------------------
+
+    void removeChild(ModelPart* child);
 
 
     //------------------------------Filters---------------------------------------------

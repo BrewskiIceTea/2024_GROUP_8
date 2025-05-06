@@ -98,6 +98,9 @@ public:
      */
     ModelPart* getPart(const QModelIndex& index);
     
+
+    bool removePart(const QModelIndex &index);
+
     /**
      * @brief Appends a child item to the parent index
      *

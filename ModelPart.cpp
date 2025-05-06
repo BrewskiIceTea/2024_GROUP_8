@@ -238,6 +238,17 @@ vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
          */
     }
 
+void ModelPart::removeChild(ModelPart* child) {
+    if (!child) return;
+
+    int index = m_childItems.indexOf(child);
+    if (index != -1) {
+        delete m_childItems[index];            // free memory if you allocated with new
+        m_childItems.removeAt(index);          // remove from list
+    }
+}
+
+
 // -------------------------------- Filters ----------------------------------
 
 // ------------------------------ getters ---------------------------------

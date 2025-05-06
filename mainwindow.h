@@ -88,7 +88,9 @@ public slots:
     void on_actionFilterOptions_triggered(); //filter OPtions NOT itemOptions
 
 
-    void on_actionReplace_Part_triggered();  
+    void on_actionReplace_Part_triggered();
+
+    void on_actionRemove_Part_triggered();
     
     // // Generic open file dialog for loading STL file
     // /**
@@ -126,22 +128,24 @@ private:
     vtkSmartPointer<vtkLight> mainLight;                      /**< Main scene light */
 
 
-/**
- * @brief Loads all STL files from a selected directory into the tree view and both renderers
- * 
- * Opens a directory selection dialog and recursively searches for STL files.
- * Creates a new ModelPartList and replaces existing ones and populates it with found models.
- * Updates the tree view with the new model hierarchy.
- */
+    /**
+     * @brief Loads all STL files from a selected directory into the tree view and both renderers
+     *
+     * Opens a directory selection dialog and recursively searches for STL files.
+     * Creates a new ModelPartList and replaces existing ones and populates it with found models.
+     * Updates the tree view with the new model hierarchy.
+     */
     void loadFolderAsTree();
 
     /**
      * @brief Opens the item options dialog window
      */
+    void openItemOptionsDialog();
 
 
     void replaceSelectedPart();
-    void openDialog();
+
+    void removeSelectedPart();
 
     
     void addNewPart();
