@@ -285,6 +285,105 @@ void MainWindow::on_actionRemove_Part_triggered(){
     removeSelectedPart();
 }
 
+// ----------------------------- Part Managment ----------------------------------
+
+void MainWindow::removeSelectedPart(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    //remove the actor from the renderer
+    if (part->getActor()) {//checks to see if actor for part exsists
+        renderer->RemoveActor(part->getActor());
+        qDebug() << "Removed actor for part:" << part->data(0).toString();
+    }
+
+    // Remove the part from the model
+    partList->removePart(index);
+
+    // Update the rendering window
+    updateRender();
+}
+
+// -------------------------------- WIP ----------------------------------------
+
+//old part still shows and new part dosent appear
+void MainWindow::replaceSelectedPart() {
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(
+            this,
+            tr("No item selected"),
+            tr("Please select an item in the tree view to replace.")
+            );
+        return;
+    }
+
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text Files (*.txt)")
+        );
+
+    //  Give a warning if no file was selected
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("File Selection"),
+                             tr("No file was selected."),
+                             QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    }
+
+    ModelPart *part = partList->getPart(index); // Get the part from the model
+
+    QString name = QFileInfo(filePath).completeBaseName();
+    part->set(0, name);
+
+    qDebug() << "About to load STL for" << filePath;
+
+    part->loadSTL(filePath);
+    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    updateRender();
+}
+
+//file appears in the render but not in the tree
+void MainWindow::addNewPart() {
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text  (*.txt)")
+        );
+
+    //  Give a warning if no file was selected
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("File Selection"),
+                             tr("No file was selected."),
+                             QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    }
+
+    QString name = QFileInfo(filePath).completeBaseName();
+    ModelPart *newPart = new ModelPart({name, "true"});
+
+    qDebug() << "About to load STL for" << filePath;
+
+    // Always add the new part to the root of the part list
+    if (!partList) {
+        partList = new ModelPartList("Parts List");
+        ui->treeView->setModel(partList);
+    }
+
+    partList->insertPartAtRoot(newPart);
+    newPart->loadSTL(filePath);
+    updateRender();
+
+}
 
 // -------------------------------- DIALOGS ----------------------------------
 
@@ -328,107 +427,6 @@ void MainWindow::openItemOptionsDialog(){
     } else {
         emit statusUpdateMessage(QString("Dialog rejected"), 0);
     }
-}
-
-void MainWindow::removeSelectedPart(){
-    QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) return;
-
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
-    //remove the actor from the renderer
-    if (part->getActor()) {//checks to see if actor for part exsists
-        renderer->RemoveActor(part->getActor());
-        qDebug() << "Removed actor for part:" << part->data(0).toString();
-    }
-
-    // Remove the part from the model
-    partList->removePart(index);
-
-    // Update the rendering window
-    updateRender();
-}
-
-//old part still shows and new part dosent appear
-void MainWindow::replaceSelectedPart() {
-    QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) {
-        QMessageBox::warning(
-            this,
-            tr("No item selected"),
-            tr("Please select an item in the tree view to replace.")
-        );
-        return;
-    }
-
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-    );
-
-    //  Give a warning if no file was selected
-    if (filePath.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }   
-
-    ModelPart *part = partList->getPart(index); // Get the part from the model
-
-    QString name = QFileInfo(filePath).completeBaseName();
-    part->set(0, name); 
-
-    qDebug() << "About to load STL for" << filePath;
-
-    part->loadSTL(filePath);
-    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
-    updateRender();
-}
-
-void MainWindow::addNewPart() {
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text  (*.txt)")
-    );
-
-    //  Give a warning if no file was selected
-    if (filePath.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }
-
-    QString name = QFileInfo(filePath).completeBaseName();
-    ModelPart *newPart = new ModelPart({name, "true"});
-
-    qDebug() << "About to load STL for" << filePath;
-
-    
-
-    QModelIndex index = ui->treeView->currentIndex();
-    if (index.isValid()) {
-       partList->getPart(index)->appendChild(newPart); // Append the new part to the selected part
-       ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
-    } else {
-        ModelPart* rootItem = partList->getRootItem();
-        rootItem->appendChild(newPart);
-        
-        // Get index of the new item
-        QModelIndex newPartIndex = partList->index(rootItem->childCount() - 1, 0, QModelIndex());
-        emit partList->dataChanged(QModelIndex(), newPartIndex);
-    }
-    newPart->loadSTL(filePath);
-    updateRender();
 }
 
 void MainWindow::loadFolderAsTree() {

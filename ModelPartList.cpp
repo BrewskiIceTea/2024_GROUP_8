@@ -174,3 +174,19 @@ bool ModelPartList::removePart(const QModelIndex &index){
 
 }
 
+void ModelPartList::refreshView(){
+    emit layoutChanged(); // optional but helpful to refresh the view
+}
+
+void ModelPartList::insertPartAtRoot(ModelPart* newPart) {
+    ModelPart* rootItem = getRootItem();
+    int row = rootItem->childCount();
+
+    beginInsertRows(QModelIndex(), row, row);
+    rootItem->appendChild(newPart);
+    endInsertRows();
+}
+
+ModelPart* ModelPartList::getRootItem() const {
+    return rootItem; // assuming `rootItem` is a private member
+}

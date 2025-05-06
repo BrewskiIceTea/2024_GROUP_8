@@ -19,6 +19,8 @@
 #include <QString>
 #include <QList>
 
+
+
 class ModelPart;
 
 class ModelPartList : public QAbstractItemModel {
@@ -111,6 +113,12 @@ public:
      * @return The QModelIndex of the newly added child item
      */
     QModelIndex appendChild( QModelIndex& parent, const QList<QVariant>& data );
+
+    void refreshView();
+
+    void insertPartAtRoot(ModelPart* newPart);
+
+    ModelPart* getRootItem() const;
 
 
 private:
