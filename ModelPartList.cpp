@@ -174,10 +174,6 @@ bool ModelPartList::removePart(const QModelIndex &index){
 
 }
 
-void ModelPartList::refreshView(){
-    emit layoutChanged(); // optional but helpful to refresh the view
-}
-
 void ModelPartList::insertPartAtRoot(ModelPart* newPart) {
     ModelPart* rootItem = getRootItem();
     int row = rootItem->childCount();

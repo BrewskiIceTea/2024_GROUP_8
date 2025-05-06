@@ -22,7 +22,6 @@
 #include <QWidgetAction>
 
 #include <vtkGenericOpenGLRenderWindow.h>
-
 #include "VRRenderThread.h"
 
 #include <vtkShrinkFilter.h>
@@ -52,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     bool checkConnect;
     // Connect signals and slots
-
 
     //Ex5 ClickedSignalOfTree Constructor
     checkConnect = connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::handleTreeClicked);
@@ -267,9 +265,6 @@ void MainWindow::on_actionStop_VR_triggered() {
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
 
-// -------------------------------- FILE MODEL LOADING ----------------------------------
-
-
 void MainWindow::on_actionItemOptions_triggered() {
     openItemOptionsDialog();
     emit statusUpdateMessage(QString("Opening triggered"), 0);
@@ -277,12 +272,12 @@ void MainWindow::on_actionItemOptions_triggered() {
 
 void MainWindow::on_actionReplace_Part_triggered() {
     replaceSelectedPart();
-    emit statusUpdateMessage(QString("Replace Part triggered"), 0);
+    emit statusUpdateMessage(QString("Part replaced"), 0);
 }
 
 void MainWindow::on_actionRemove_Part_triggered(){
-    emit statusUpdateMessage(QString("Remove Part triggered"), 0);
     removeSelectedPart();
+    emit statusUpdateMessage(QString("Part removed"), 0);
 }
 
 // ----------------------------- Part Managment ----------------------------------
@@ -391,7 +386,7 @@ void MainWindow::replaceSelectedPart() {
 
 
 
-// -------------------------------- DIALOGS ----------------------------------
+// ----------------------------- Open Folders ----------------------------------
 
 void MainWindow::openItemOptionsDialog(){
     QModelIndex index = ui->treeView->currentIndex();
@@ -521,6 +516,7 @@ void MainWindow::updateRender() {
 
     renderWindow->Render(); // forces the render window to update when any 
     // change is made rather than having to interact to render
+
 }
 
 void MainWindow::updateAllThreadActors() {
@@ -586,17 +582,15 @@ void MainWindow::openFilterDialog(){
     QModelIndex index = ui->treeView->currentIndex();
     if (!index.isValid()) return;
 
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
     FilterDialog dialog(this);
 
     if (dialog.exec() == QDialog::Accepted) {
 
-        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+        emit statusUpdateMessage(QString("Filter Dialog accepted"), 0);
 
 
     } else {
-        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+        emit statusUpdateMessage(QString("Filter Dialog rejected"), 0);
     }
 }
 
@@ -674,17 +668,17 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             if (clipEnabled && shrinkEnabled) { //both filters
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Both filtering"), 0);
+                emit statusUpdateMessage(QString("Both filtering"), 0);
 
             } else if (clipEnabled) {           //just clip filter
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Clip filtering"), 0);
+                emit statusUpdateMessage(QString("Clip filtering"), 0);
 
             } else if (shrinkEnabled) {         // just shrink filter
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Shrink filtering"), 0);
+                emit statusUpdateMessage(QString("Shrink filtering"), 0);
             }
 
 
@@ -693,18 +687,18 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             renderer->AddActor(part->getActor());
             //part->getActor()->SetVisibility(1);     //temp method should use add actor
 
-            //emit statusUpdateMessage(QString("No filtering"), 0);
+            emit statusUpdateMessage(QString("No filtering"), 0);
         }
 
         renderer->Render();
         updateRender();
-
+        /*
         emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
                 .arg(dialog.getClipFilterEnabled())
                 .arg(dialog.getShrinkFilterEnabled()),
             0
-            );
+            );*/
     }
 
 }

@@ -87,9 +87,14 @@ public slots:
      */
     void on_actionFilterOptions_triggered(); //filter OPtions NOT itemOptions
 
-
+    /**
+     * @brief Calls the replace model function
+     */
     void on_actionReplace_Part_triggered();
 
+    /**
+     * @brief Calls the remove model function
+     */
     void on_actionRemove_Part_triggered();
     
     // // Generic open file dialog for loading STL file
@@ -142,12 +147,19 @@ private:
      */
     void openItemOptionsDialog();
 
-
+    /**
+     * @brief Replaces the selected model part in the tree with a new selected part
+     */
     void replaceSelectedPart();
 
+    /**
+     * @brief Removes the selected model part from the tree and render
+     */
     void removeSelectedPart();
 
-    
+    /**
+     * @brief Adds a new model part to the tree
+     */
     void addNewPart();
 
     /**
