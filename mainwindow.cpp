@@ -61,6 +61,9 @@ MainWindow::MainWindow(QWidget *parent)
     checkConnect = connect(this, &MainWindow::statusUpdateMessage, ui->statusbar1, &QStatusBar::showMessage);
     Q_ASSERT(checkConnect);
 
+    checkConnect = connect(ui->addPushButton, &QPushButton::released, this, &MainWindow::addNewPart);
+    Q_ASSERT(checkConnect);
+
     // -------------------------------- UI PANELS ----------------------------------
 
     mainLight = vtkSmartPointer<vtkLight>::New();
@@ -207,14 +210,6 @@ MainWindow::~MainWindow()
 
 // -------------------------------- SIGNALS AND SLOTS ----------------------------------
 
-// Update your button handling slot so it activates the status bar
-void MainWindow::handleAddButton() {
-    // This causes MainWindow to emit the signal that will then be
-    // received by the status bar’s slot
-    addNewPart();
-    emit statusUpdateMessage(QString("Added new Item to part list"), 0);
-}
-
 void MainWindow::handleTreeClicked(){
     //------Exercise-5------
 
@@ -295,7 +290,7 @@ void MainWindow::replaceSelectedPart() {
         return;
     }
 
-    QString fileName = QFileDialog::getOpenFileName(
+    QString filePath = QFileDialog::getOpenFileName(
         this,
         tr("Open File"),
         "C:\\",
@@ -303,7 +298,7 @@ void MainWindow::replaceSelectedPart() {
     );
 
     //  Give a warning if no file was selected
-    if (fileName.isEmpty()) { 
+    if (filePath.isEmpty()) { 
         QMessageBox::warning(this, 
             tr("File Selection"), 
             tr("No file was selected."), 
@@ -317,51 +312,52 @@ void MainWindow::replaceSelectedPart() {
     QString name = QFileInfo(filePath).completeBaseName();
     part->set(0, name); 
 
-    qDebug() << "About to load STL for" << fileName;
+    qDebug() << "About to load STL for" << filePath;
 
-    part->loadSTL(fileName);    // <<< This MUST happen!
-    updateRender();               // <<< Then refresh
+    part->loadSTL(filePath);
+    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    updateRender();
 }
 
 void MainWindow::addNewPart() {
-    QModelIndex index = ui->treeView->currentIndex();
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text  (*.txt)")
+    );
 
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
-    OptionDialog dialog(this);
-    dialog.loadFromModelPart(part->data(0).toString(),
-                             part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
-
-    if (dialog.exec() == QDialog::Accepted) {
-        emit statusUpdateMessage(QString("Dialog accepted"), 0);
-
-        part->set(0, dialog.getPartName());
-        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
-        part->setVisible(dialog.getVisibility());
-        part->setActorValues();
-
-        /*//  Update actor color immediately
-        if (part->getActor()) {
-            part->getActor()->GetProperty()->SetColor(
-                part->getColourR() / 255.0,
-                part->getColourG() / 255.0,
-                part->getColourB() / 255.0
-                );
-        }*/
-
-        renderer->Render(); // Refresh the window
-        updateRender();
-
-        ui->treeView->model()->dataChanged(index, index);
-
-        emit statusUpdateMessage(
-            QString("ModelPart updated, dialog visible: %1").arg(part->visible()),
-            0
-            );
-
-    } else {
-        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    //  Give a warning if no file was selected
+    if (filePath.isEmpty()) { 
+        QMessageBox::warning(this, 
+            tr("File Selection"), 
+            tr("No file was selected."), 
+            QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
     }
+
+    QString name = QFileInfo(filePath).completeBaseName();
+    ModelPart *newPart = new ModelPart({name, "true"});
+
+    qDebug() << "About to load STL for" << filePath;
+
+    
+
+    QModelIndex index = ui->treeView->currentIndex();
+    if (index.isValid()) {
+       partList->getPart(index)->appendChild(newPart); // Append the new part to the selected part
+       ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    } else {
+        ModelPart* rootItem = partList->getRootItem();
+        rootItem->appendChild(newPart);
+        
+        // Get index of the new item
+        QModelIndex newPartIndex = partList->index(rootItem->childCount() - 1, 0, QModelIndex());
+        emit partList->dataChanged(QModelIndex(), newPartIndex);
+    }
+    newPart->loadSTL(filePath);
+    updateRender();
 }
 
 void MainWindow::loadFolderAsTree() {
@@ -388,11 +384,14 @@ void MainWindow::loadFolderAsTree() {
     if (this->partList){
         delete this->partList; // Delete the old part list if it exists
         this->partList = nullptr; // Set to null to avoid dangling pointer
+        renderer->RemoveAllViewProps();
+        qDebug() << "Deleted old part list";
     }
-
+    // Create a new part list and set it to the tree view
     this->partList = new ModelPartList("Parts List");
     ui->treeView->setModel(this->partList);  
     ModelPart *rootItem = this->partList->getRootItem();
+
     // Create iterator to recursively search through directories
     QDirIterator item(dirPath, QStringList() << "*.stl", QDir::Files, QDirIterator::Subdirectories);
 
@@ -434,7 +433,6 @@ void MainWindow::on_actionOpen_Dir_triggered(){
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
-    //renderer->RemoveAllViewProps();
     updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();  
     // renderer->RotateCamera(90, 0, 0); // Rotate the camera instead of the model to get accurate lighting

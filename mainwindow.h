@@ -53,10 +53,6 @@ public:
     
 
 public slots:
-    /**
-     * @brief Handles the Add button click event to add a new model part
-     */
-    void handleAddButton();
 
     /**
      * @brief Handles a click event on the tree view
@@ -64,6 +60,7 @@ public slots:
     void handleTreeClicked();
 
     // -------------------------------- Actions ----------------------------------
+
     /**
      * @brief Opens a file dialog to load an STL file
      */
@@ -89,14 +86,16 @@ public slots:
      * @note this is for filter options NOT item options
      */
     void on_actionFilterOptions_triggered(); //filter OPtions NOT itemOptions
+
+
     void on_actionReplace_Part_triggered();  
     
-    // Generic open file dialog for loading STL file
-    /**
-     * @brief Opens a generic file dialog for loading STL files
-     * @note this is for item options not filter options
-     */
-    void openFileDialog();      //for item options
+    // // Generic open file dialog for loading STL file
+    // /**
+    //  * @brief Opens a generic file dialog for loading STL files
+    //  * @note this is for item options not filter options
+    //  */
+    // void openFileDialog();      //for item options
 
     /**
      * @brief Opens the filter dialog for adjusting filters
