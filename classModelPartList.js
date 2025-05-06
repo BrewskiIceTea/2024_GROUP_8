@@ -6,6 +6,7 @@ var classModelPartList =
     [ "columnCount", "classModelPartList.html#a4a6ebf42f2f1c5c0242154d093295756", null ],
     [ "data", "classModelPartList.html#a60923d947a2eafb5dfabe1cf8461807e", null ],
     [ "flags", "classModelPartList.html#ac28fbfeaf57aafc946127db8225c00b5", null ],
+    [ "getPart", "classModelPartList.html#a63ef57d2826e36464a940a50cd9cefb5", null ],
     [ "getRootItem", "classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982", null ],
     [ "headerData", "classModelPartList.html#a6a54464c7907f0c18c2f5edd7cb4a51e", null ],
     [ "index", "classModelPartList.html#a5698ba9ca23f010369f12ff4a97976e2", null ],

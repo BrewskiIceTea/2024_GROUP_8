@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a05d52c5cac09750d28ad041ec6a3d5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b6e2e108802afbc45e4bd054dccf982" id="r_a1b6e2e108802afbc45e4bd054dccf982"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982">getRootItem</a> ()</td></tr>
 <tr class="separator:a1b6e2e108802afbc45e4bd054dccf982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63ef57d2826e36464a940a50cd9cefb5" id="r_a63ef57d2826e36464a940a50cd9cefb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a63ef57d2826e36464a940a50cd9cefb5">getPart</a> (const QModelIndex &amp;<a class="el" href="classModelPartList.html#a5698ba9ca23f010369f12ff4a97976e2">index</a>)</td></tr>
+<tr class="memdesc:a63ef57d2826e36464a940a50cd9cefb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> pointer from a QModelIndex.  <br /></td></tr>
+<tr class="separator:a63ef57d2826e36464a940a50cd9cefb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac687a2942c6e8b8b23df36c32a0deaeb" id="r_ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memItemLeft" align="right" valign="top">QModelIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#ac687a2942c6e8b8b23df36c32a0deaeb">appendChild</a> (QModelIndex &amp;<a class="el" href="classModelPartList.html#a2aeb9586030b325193894ddfe99e629c">parent</a>, const QList&lt; QVariant &gt; &amp;<a class="el" href="classModelPartList.html#a60923d947a2eafb5dfabe1cf8461807e">data</a>)</td></tr>
 <tr class="memdesc:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a child item to the parent index.  <br /></td></tr>
 <tr class="separator:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -311,6 +314,33 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a Qt item flags </dd></dl>
+
+</div>
+</div>
+<a id="a63ef57d2826e36464a940a50cd9cefb5" name="a63ef57d2826e36464a940a50cd9cefb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63ef57d2826e36464a940a50cd9cefb5">&#9670;&#160;</a></span>getPart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classModelPart.html">ModelPart</a> * ModelPartList::getPart </td>
+          <td>(</td>
+          <td class="paramtype">const QModelIndex &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> pointer from a QModelIndex. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The model index to get the part from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ModelPart* Pointer to the part, or nullptr if invalid index </dd></dl>
 
 </div>
 </div>
