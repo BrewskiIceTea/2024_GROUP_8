@@ -377,9 +377,11 @@ void MainWindow::replaceSelectedPart() {
     partNew->loadSTL(filePath);
 
     renderer->RemoveActor(partOld->getActor());
+
     partOld->set(0, name); //set name of part
+    partOld->setFile(partNew->getFile());
     partOld->setActor(partNew->getActor());
-    //partOld->setMapper(partNew->getMapper());
+    partOld->setMapper(partNew->getMapper());
 
     qDebug() << "About to load STL for" << filePath;
 

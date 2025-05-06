@@ -230,6 +230,11 @@ void ModelPart::setActorValues(){
 
 }
 
+void ModelPart::setFile(vtkSmartPointer<vtkSTLReader> reader){
+
+    this->file = reader;
+}
+
 vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
     /* This is a placeholder function that you will need to modify if you want to use it */
         return vrActor;

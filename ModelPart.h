@@ -162,6 +162,8 @@ public:
 
     void removeChild(ModelPart* child);
 
+    void setFile(vtkSmartPointer<vtkSTLReader> reader );
+
 
     //------------------------------Filters---------------------------------------------
     /// Added by Ben :)
