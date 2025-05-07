@@ -200,7 +200,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     /* Link it to the tree view in the GUI */
     ui->treeView->setModel(this->partList);
-
 }
 
 MainWindow::~MainWindow()
@@ -341,8 +340,6 @@ void MainWindow::addNewPart() {
     ModelPart *newPart = new ModelPart({name, "true"});
 
     qDebug() << "About to load STL for" << filePath;
-
-    
 
     QModelIndex index = ui->treeView->currentIndex();
     if (index.isValid()) {
