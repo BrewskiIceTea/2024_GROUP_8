@@ -147,17 +147,23 @@ public:
     void loadSTL(QString fileName);
 
     /** Return actor
-     *  @brief gets the actor from the model to be used in rendering
-      * @return pointer to default actor for GUI rendering
-      */
-    vtkSmartPointer<vtkActor> getActor();
-
-    /** Return actor
       * @brief gets the VR actor from the model
       * @return pointer to vrthread actor use in VR
       */
      vtkSmartPointer<vtkActor> getVrActor();
 
+    //------------------------------Part Managment--------------------------------------
+     /** remove child
+      * @brief removes a child modelpart from the item tree
+      * @param child Pointer to the child ModelPart to remove
+      */
+    void removeChild(ModelPart* child);
+
+     /** set file
+      * @brief sets the STL reader (file) thats associated with this model part
+      * @param reader Smart pointer to a vtkSTLReader that contains the model data
+      */
+    void setFile(vtkSmartPointer<vtkSTLReader> reader );
 
 
     //------------------------------Filters---------------------------------------------

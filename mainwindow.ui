@@ -121,15 +121,18 @@
     <iconset theme="QIcon::ThemeIcon::FolderNew"/>
    </property>
    <property name="text">
-    <string>Load Model</string>
+    <string>Load Folder</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens a directory and loads all .STL files within all sub directories. This will replace all models currently loaded&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionItemOptions">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+   </property>
    <property name="text">
-    <string>Rename and Colour</string>
+    <string>Item Options</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -161,8 +164,11 @@
    </property>
   </action>
   <action name="actionFilterOptions">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::CameraPhoto"/>
+   </property>
    <property name="text">
-    <string>Part filter</string>
+    <string>Filter Options</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
@@ -188,6 +194,17 @@
    </property>
    <property name="text">
     <string>Replace current part selected</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionRemove_Part">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+   </property>
+   <property name="text">
+    <string>Remove Part</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

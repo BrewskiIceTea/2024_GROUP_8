@@ -19,6 +19,8 @@
 #include <QString>
 #include <QList>
 
+
+
 class ModelPart;
 
 class ModelPartList : public QAbstractItemModel {
@@ -99,6 +101,13 @@ public:
     ModelPart* getPart(const QModelIndex& index);
     
     /**
+     * @brief Removes a part from the model at the specified index
+     * @param index The QModelIndex of the part to remove
+     * @return true if the part was successfully removed, false if failed
+     */
+    bool removePart(const QModelIndex &index);
+
+    /**
      * @brief Appends a child item to the parent index
      *
      * @note Creates a new child item with the provided data and attaches it under the parent in the model
@@ -108,6 +117,20 @@ public:
      * @return The QModelIndex of the newly added child item
      */
     QModelIndex appendChild( QModelIndex& parent, const QList<QVariant>& data );
+
+    /**
+     * @brief Inserts a new part as a child of the root item in the model hierarchy
+     * @note This function appends the given MOdelPart to the root of the part tree and notifys the view/model system of the change if necessary
+     * @param newPart Pointer to the ModelPart to be inserted at the root level
+     */
+    void insertPartAtRoot(ModelPart* newPart);
+
+    /**
+     * @brief Retrieves the root item of the part hierarchy
+     * Returns a pointer to the root ModelPart, which serves as the top-level node in the model's tree structure
+     * @return Pointer to the root ModelPart
+     */
+    ModelPart* getRootItem() const;
 
 
 private:

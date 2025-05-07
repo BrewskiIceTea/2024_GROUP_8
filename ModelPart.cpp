@@ -110,44 +110,6 @@ int ModelPart::row() const {
     return 0;
 }
 
-void ModelPart::setColour(int R, const unsigned char  G, const unsigned char  B) {
-    /* This is a placeholder function */
-
-    modelColourR = static_cast<unsigned char>(R);
-    modelColourG = G;
-    modelColourB = B;
-    qDebug() << "R:" << R << "G:" << G << "B:" << B;
-    qDebug() << "modelColourR:" << modelColourR << "modelColourG:" << modelColourG << "modelColourB:" << modelColourB;
-
-}
-
-unsigned char ModelPart::getColourR() {
-    qDebug() << "getmodelColourR:" << modelColourR;
-    return modelColourR;
-}
-
-unsigned char ModelPart::getColourG() {
-    qDebug() << "getmodelColourG:" << modelColourG;
-    return modelColourG;
-}
-
-
-unsigned char ModelPart::getColourB() {    
-    return modelColourB;
-}
-
-void ModelPart::setVisible(bool isVisible) {
-    /* This is a placeholder function that you will need to modify if you want to use it */
-    partIsVisible = isVisible;
-    /* As the name suggests ... */
-}
-
-bool ModelPart::visible() {
-    /* This is a placeholder function that you will need to modify if you want to use it */
-    qDebug() << "partIsVisible:" << partIsVisible;
-    /* As the name suggests ... */
-    return partIsVisible;
-}
 
 void ModelPart::loadSTL(QString fileName) {
     qDebug() << "Loading STL file:" << fileName;
@@ -206,41 +168,62 @@ void ModelPart::loadSTL(QString fileName) {
 
 }
 
-vtkSmartPointer<vtkActor> ModelPart::getActor() {
-/* This is a placeholder function that you will need to modify if you want to use it */
-    return actor;
-/* Needs to return a smart pointer to the vtkActor to allow
-     * part to be rendered.
-     */
+void ModelPart::removeChild(ModelPart* child) {
+    if (!child) return;
+
+    int index = m_childItems.indexOf(child);
+    if (index != -1) {
+        delete m_childItems[index];            // free memory if you allocated with new
+        m_childItems.removeAt(index);          // remove from list
+    }
 }
 
-// ------------------------------------------------------------------
 
-void ModelPart::setActorValues(){
+// ------------------------------ getters ---------------------------------
 
-    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-    actor->SetVisibility(partIsVisible);
+unsigned char ModelPart::getColourR() {
+    qDebug() << "getmodelColourR:" << modelColourR;
+    return modelColourR;
+}
 
-    //if a filter is enabled then dont show base model
-    if (clipFilterEnabled || shrinkFilterEnabled){
-        actor->SetVisibility(0);
-        filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
-        filtedActor->SetVisibility(partIsVisible);
-    }
+unsigned char ModelPart::getColourG() {
+    qDebug() << "getmodelColourG:" << modelColourG;
+    return modelColourG;
+}
 
+
+unsigned char ModelPart::getColourB() {
+    return modelColourB;
+}
+
+bool ModelPart::visible() {
+    /* This is a placeholder function that you will need to modify if you want to use it */
+    qDebug() << "partIsVisible:" << partIsVisible;
+    /* As the name suggests ... */
+    return partIsVisible;
+}
+
+vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
+    return this->file;
+}
+
+vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
+    return this->mapper;
+}
+
+vtkSmartPointer<vtkActor> ModelPart::getActor() const {
+    return this->actor;
 }
 
 vtkSmartPointer<vtkActor> ModelPart::getVrActor() {
     /* This is a placeholder function that you will need to modify if you want to use it */
-        return vrActor;
+    return vrActor;
     /* Needs to return a smart pointer to the vtkActor to allow
          * part to be rendered.
          */
-    }
+}
 
-// -------------------------------- Filters ----------------------------------
-
-// ------------------------------ getters ---------------------------------
+// ----------------------------- Filters ----------------------------------
 
 bool ModelPart::getShrinkFilterStatus(){
     return shrinkFilterEnabled;
@@ -264,21 +247,56 @@ int ModelPart::getClipOrigin(){
     return clipOrigin;
 }
 
-vtkSmartPointer<vtkSTLReader> ModelPart::getFile() const {
-    return this->file;
+vtkSmartPointer<vtkActor> ModelPart::getFiltedActor() const {
+    return this->filtedActor;
 }
-
-vtkSmartPointer<vtkPolyDataMapper> ModelPart::getMapper() const {
-    return this->mapper;
-}
-
-vtkSmartPointer<vtkActor> ModelPart::getActor() const {
-    return this->actor;
-}
-
 
 
 // ------------------------------ setters ---------------------------------
+
+void ModelPart::setColour(int R, const unsigned char  G, const unsigned char  B) {
+    /* This is a placeholder function */
+
+    modelColourR = static_cast<unsigned char>(R);
+    modelColourG = G;
+    modelColourB = B;
+    qDebug() << "R:" << R << "G:" << G << "B:" << B;
+    qDebug() << "modelColourR:" << modelColourR << "modelColourG:" << modelColourG << "modelColourB:" << modelColourB;
+
+}
+
+void ModelPart::setVisible(bool isVisible) {
+    /* This is a placeholder function that you will need to modify if you want to use it */
+    partIsVisible = isVisible;
+    /* As the name suggests ... */
+}
+
+void ModelPart::setActorValues(){
+
+    actor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+    actor->SetVisibility(partIsVisible);
+
+    //if a filter is enabled then dont show base model
+    if (clipFilterEnabled || shrinkFilterEnabled){
+        actor->SetVisibility(0);
+        filtedActor->GetProperty()->SetColor(modelColourR,modelColourG,modelColourB);
+        filtedActor->SetVisibility(partIsVisible);
+        qDebug() << "clipFilterEnabled || shrinkFilterEnabled";
+    }
+
+    if (!(clipFilterEnabled) || !(shrinkFilterEnabled)){
+        filtedActor->SetVisibility(0);
+        qDebug() << "(!(clipFilterEnabled) || !(shrinkFilterEnabled))";
+    }
+
+}
+
+void ModelPart::setFile(vtkSmartPointer<vtkSTLReader> reader){
+
+    this->file = reader;
+}
+
+// ----------------------------- Filters ----------------------------------
 
 void ModelPart::setClipFilterStatus(bool inputClipFilterEnabled){
     clipFilterEnabled = inputClipFilterEnabled;
@@ -304,14 +322,6 @@ void ModelPart::setMapper(vtkSmartPointer<vtkPolyDataMapper> mapper) {
     this->mapper = mapper;
 }
 
-
-
-// ------------------------------ Filters v2 ---------------------------------
-
-vtkSmartPointer<vtkActor> ModelPart::getFiltedActor() const {
-    return this->filtedActor;
-}
-
 void ModelPart::setFiltedActor(vtkSmartPointer<vtkActor> filtedActor){
 
     this->filtedActor = filtedActor;
@@ -319,9 +329,8 @@ void ModelPart::setFiltedActor(vtkSmartPointer<vtkActor> filtedActor){
 
 }
 
-
-
 // ---------------------------------------------------------------------
+
 
 
 //vtkActor* ModelPart::getNewActor() {
