@@ -151,12 +151,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d004c61b9f9cb0da895956a4c22b97b" id="r_a8d004c61b9f9cb0da895956a4c22b97b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a8d004c61b9f9cb0da895956a4c22b97b">loadSTL</a> (QString fileName)</td></tr>
 <tr class="memdesc:a8d004c61b9f9cb0da895956a4c22b97b"><td class="mdescLeft">&#160;</td><td class="mdescRight">loads the part and prepares it to be rendered  <br /></td></tr>
 <tr class="separator:a8d004c61b9f9cb0da895956a4c22b97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d845a3cb1d357a0c2f4ffb131e73116" id="r_a3d845a3cb1d357a0c2f4ffb131e73116"><td class="memItemLeft" align="right" valign="top">vtkSmartPointer&lt; vtkActor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a3d845a3cb1d357a0c2f4ffb131e73116">getActor</a> ()</td></tr>
-<tr class="memdesc:a3d845a3cb1d357a0c2f4ffb131e73116"><td class="mdescLeft">&#160;</td><td class="mdescRight">gets the actor from the model to be used in rendering  <br /></td></tr>
-<tr class="separator:a3d845a3cb1d357a0c2f4ffb131e73116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e0393d1e2e4bec55cc3e0b2dc8844ff" id="r_a2e0393d1e2e4bec55cc3e0b2dc8844ff"><td class="memItemLeft" align="right" valign="top">vtkSmartPointer&lt; vtkActor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a2e0393d1e2e4bec55cc3e0b2dc8844ff">getVrActor</a> ()</td></tr>
 <tr class="memdesc:a2e0393d1e2e4bec55cc3e0b2dc8844ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">gets the VR actor from the model  <br /></td></tr>
 <tr class="separator:a2e0393d1e2e4bec55cc3e0b2dc8844ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b26b7adbeabaadce95ddf9df608937" id="r_a52b26b7adbeabaadce95ddf9df608937"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a52b26b7adbeabaadce95ddf9df608937">removeChild</a> (<a class="el" href="classModelPart.html">ModelPart</a> *<a class="el" href="classModelPart.html#af32381b69415f0aa6bdfd84435f842cc">child</a>)</td></tr>
+<tr class="memdesc:a52b26b7adbeabaadce95ddf9df608937"><td class="mdescLeft">&#160;</td><td class="mdescRight">removes a child modelpart from the item tree  <br /></td></tr>
+<tr class="separator:a52b26b7adbeabaadce95ddf9df608937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb462c0bc55a35f16710217fcc64c6f8" id="r_aeb462c0bc55a35f16710217fcc64c6f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#aeb462c0bc55a35f16710217fcc64c6f8">setFile</a> (vtkSmartPointer&lt; vtkSTLReader &gt; reader)</td></tr>
+<tr class="memdesc:aeb462c0bc55a35f16710217fcc64c6f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the STL reader (file) thats associated with this model part  <br /></td></tr>
+<tr class="separator:aeb462c0bc55a35f16710217fcc64c6f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23d8f6e2601232419ea39daff6161388" id="r_a23d8f6e2601232419ea39daff6161388"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPart.html#a23d8f6e2601232419ea39daff6161388">setActorValues</a> ()</td></tr>
 <tr class="memdesc:a23d8f6e2601232419ea39daff6161388"><td class="mdescLeft">&#160;</td><td class="mdescRight">Added by Ben :)  <br /></td></tr>
 <tr class="separator:a23d8f6e2601232419ea39daff6161388"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -388,28 +391,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3d845a3cb1d357a0c2f4ffb131e73116" name="a3d845a3cb1d357a0c2f4ffb131e73116"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d845a3cb1d357a0c2f4ffb131e73116">&#9670;&#160;</a></span>getActor() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">vtkSmartPointer&lt; vtkActor &gt; ModelPart::getActor </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>gets the actor from the model to be used in rendering </p>
-<p>Return actor </p><dl class="section return"><dt>Returns</dt><dd>pointer to default actor for GUI rendering </dd></dl>
-
-</div>
-</div>
 <a id="a60f905f171e3554a9500db10d46cf20d" name="a60f905f171e3554a9500db10d46cf20d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60f905f171e3554a9500db10d46cf20d">&#9670;&#160;</a></span>getActor() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a60f905f171e3554a9500db10d46cf20d">&#9670;&#160;</a></span>getActor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -718,6 +701,32 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a52b26b7adbeabaadce95ddf9df608937" name="a52b26b7adbeabaadce95ddf9df608937"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52b26b7adbeabaadce95ddf9df608937">&#9670;&#160;</a></span>removeChild()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ModelPart::removeChild </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td>
+          <td class="paramname"><em>child</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>removes a child modelpart from the item tree </p>
+<p>remove child </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">child</td><td>Pointer to the child <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> to remove </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a05bc0dd06a3658d9a2c46fa717dec910" name="a05bc0dd06a3658d9a2c46fa717dec910"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a05bc0dd06a3658d9a2c46fa717dec910">&#9670;&#160;</a></span>row()</h2>
 
@@ -908,6 +917,32 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">Red</td><td>(R) value (0–255) </td></tr>
     <tr><td class="paramname">Green</td><td>(G) value (0–255) </td></tr>
     <tr><td class="paramname">Blue</td><td>(B) value (0–255) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aeb462c0bc55a35f16710217fcc64c6f8" name="aeb462c0bc55a35f16710217fcc64c6f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb462c0bc55a35f16710217fcc64c6f8">&#9670;&#160;</a></span>setFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ModelPart::setFile </td>
+          <td>(</td>
+          <td class="paramtype">vtkSmartPointer&lt; vtkSTLReader &gt;&#160;</td>
+          <td class="paramname"><em>reader</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>sets the STL reader (file) thats associated with this model part </p>
+<p>set file </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">reader</td><td>Smart pointer to a vtkSTLReader that contains the model data </td></tr>
   </table>
   </dd>
 </dl>

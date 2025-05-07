@@ -133,9 +133,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a63ef57d2826e36464a940a50cd9cefb5" id="r_a63ef57d2826e36464a940a50cd9cefb5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a63ef57d2826e36464a940a50cd9cefb5">getPart</a> (const QModelIndex &amp;<a class="el" href="classModelPartList.html#a5698ba9ca23f010369f12ff4a97976e2">index</a>)</td></tr>
 <tr class="memdesc:a63ef57d2826e36464a940a50cd9cefb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> pointer from a QModelIndex.  <br /></td></tr>
 <tr class="separator:a63ef57d2826e36464a940a50cd9cefb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3a4f53c541b4ceba2233e597cd6e539" id="r_ad3a4f53c541b4ceba2233e597cd6e539"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#ad3a4f53c541b4ceba2233e597cd6e539">removePart</a> (const QModelIndex &amp;<a class="el" href="classModelPartList.html#a5698ba9ca23f010369f12ff4a97976e2">index</a>)</td></tr>
+<tr class="memdesc:ad3a4f53c541b4ceba2233e597cd6e539"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a part from the model at the specified index.  <br /></td></tr>
+<tr class="separator:ad3a4f53c541b4ceba2233e597cd6e539"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac687a2942c6e8b8b23df36c32a0deaeb" id="r_ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memItemLeft" align="right" valign="top">QModelIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#ac687a2942c6e8b8b23df36c32a0deaeb">appendChild</a> (QModelIndex &amp;<a class="el" href="classModelPartList.html#a2aeb9586030b325193894ddfe99e629c">parent</a>, const QList&lt; QVariant &gt; &amp;<a class="el" href="classModelPartList.html#a60923d947a2eafb5dfabe1cf8461807e">data</a>)</td></tr>
 <tr class="memdesc:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a child item to the parent index.  <br /></td></tr>
 <tr class="separator:ac687a2942c6e8b8b23df36c32a0deaeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a569be7e9cfe30b3ebd1828584c4a583f" id="r_a569be7e9cfe30b3ebd1828584c4a583f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a569be7e9cfe30b3ebd1828584c4a583f">insertPartAtRoot</a> (<a class="el" href="classModelPart.html">ModelPart</a> *newPart)</td></tr>
+<tr class="memdesc:a569be7e9cfe30b3ebd1828584c4a583f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new part as a child of the root item in the model hierarchy.  <br /></td></tr>
+<tr class="separator:a569be7e9cfe30b3ebd1828584c4a583f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d87a0e63384415eb1ec45195d9cf4e0" id="r_a7d87a0e63384415eb1ec45195d9cf4e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classModelPartList.html#a7d87a0e63384415eb1ec45195d9cf4e0">getRootItem</a> () const</td></tr>
+<tr class="memdesc:a7d87a0e63384415eb1ec45195d9cf4e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the root item of the part hierarchy Returns a pointer to the root <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a>, which serves as the top-level node in the model's tree structure.  <br /></td></tr>
+<tr class="separator:a7d87a0e63384415eb1ec45195d9cf4e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a039afc4b526b377bd346e8ea5b2d027d" name="a039afc4b526b377bd346e8ea5b2d027d"></a>
@@ -345,7 +354,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a1b6e2e108802afbc45e4bd054dccf982" name="a1b6e2e108802afbc45e4bd054dccf982"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b6e2e108802afbc45e4bd054dccf982">&#9670;&#160;</a></span>getRootItem()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b6e2e108802afbc45e4bd054dccf982">&#9670;&#160;</a></span>getRootItem() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,6 +368,26 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Get a pointer to the root item of the tree </p><dl class="section return"><dt>Returns</dt><dd>the root item pointer </dd></dl>
+
+</div>
+</div>
+<a id="a7d87a0e63384415eb1ec45195d9cf4e0" name="a7d87a0e63384415eb1ec45195d9cf4e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d87a0e63384415eb1ec45195d9cf4e0">&#9670;&#160;</a></span>getRootItem() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classModelPart.html">ModelPart</a> * ModelPartList::getRootItem </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the root item of the part hierarchy Returns a pointer to the root <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a>, which serves as the top-level node in the model's tree structure. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the root <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> </dd></dl>
 
 </div>
 </div>
@@ -440,6 +469,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a569be7e9cfe30b3ebd1828584c4a583f" name="a569be7e9cfe30b3ebd1828584c4a583f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a569be7e9cfe30b3ebd1828584c4a583f">&#9670;&#160;</a></span>insertPartAtRoot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ModelPartList::insertPartAtRoot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classModelPart.html">ModelPart</a> *&#160;</td>
+          <td class="paramname"><em>newPart</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inserts a new part as a child of the root item in the model hierarchy. </p>
+<dl class="section note"><dt>Note</dt><dd>This function appends the given MOdelPart to the root of the part tree and notifys the view/model system of the change if necessary </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newPart</td><td>Pointer to the <a class="el" href="classModelPart.html" title="Contains all model part related information.">ModelPart</a> to be inserted at the root level </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a2aeb9586030b325193894ddfe99e629c" name="a2aeb9586030b325193894ddfe99e629c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2aeb9586030b325193894ddfe99e629c">&#9670;&#160;</a></span>parent()</h2>
 
@@ -462,6 +518,33 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>index of parent </dd></dl>
+
+</div>
+</div>
+<a id="ad3a4f53c541b4ceba2233e597cd6e539" name="ad3a4f53c541b4ceba2233e597cd6e539"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3a4f53c541b4ceba2233e597cd6e539">&#9670;&#160;</a></span>removePart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ModelPartList::removePart </td>
+          <td>(</td>
+          <td class="paramtype">const QModelIndex &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a part from the model at the specified index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The QModelIndex of the part to remove </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the part was successfully removed, false if failed </dd></dl>
 
 </div>
 </div>

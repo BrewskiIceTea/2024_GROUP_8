@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['getactor_0',['getactor',['../classModelPart.html#a60f905f171e3554a9500db10d46cf20d',1,'ModelPart::getActor() const'],['../classModelPart.html#a3d845a3cb1d357a0c2f4ffb131e73116',1,'ModelPart::getActor()']]],
+  ['getactor_0',['getActor',['../classModelPart.html#a60f905f171e3554a9500db10d46cf20d',1,'ModelPart']]],
   ['getblue_1',['getBlue',['../classOptionDialog.html#a4757b0e86e0db8c4bb5ea0044f610fef',1,'OptionDialog']]],
   ['getclipfilterenabled_2',['getClipFilterEnabled',['../classFilterDialog.html#a67198bbafb136f4e4bd284a5be954225',1,'FilterDialog']]],
   ['getclipfilterstatus_3',['getClipFilterStatus',['../classModelPart.html#a6567ff1ae9a8efe6916da504a6da3cdf',1,'ModelPart']]],
@@ -16,7 +16,7 @@ var searchData=
   ['getpart_13',['getPart',['../classModelPartList.html#a63ef57d2826e36464a940a50cd9cefb5',1,'ModelPartList']]],
   ['getpartname_14',['getPartName',['../classOptionDialog.html#a22d86b3260393612b7764933d9cd6bf1',1,'OptionDialog']]],
   ['getred_15',['getRed',['../classOptionDialog.html#ad7737daa032be5ecadf91d3e9b3cac59',1,'OptionDialog']]],
-  ['getrootitem_16',['getRootItem',['../classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982',1,'ModelPartList']]],
+  ['getrootitem_16',['getrootitem',['../classModelPartList.html#a1b6e2e108802afbc45e4bd054dccf982',1,'ModelPartList::getRootItem()'],['../classModelPartList.html#a7d87a0e63384415eb1ec45195d9cf4e0',1,'ModelPartList::getRootItem() const']]],
   ['getshrinkfactor_17',['getshrinkfactor',['../classFilterDialog.html#a3e2dabf1a104bd81c7edd70d45939253',1,'FilterDialog::getShrinkFactor()'],['../classModelPart.html#a62fd9602bcd8077c344228decb8d06e6',1,'ModelPart::getShrinkFactor()']]],
   ['getshrinkfactorasfloat_18',['getShrinkFactorAsFloat',['../classModelPart.html#a5ef7993955f5544d68d095ffd444f91b',1,'ModelPart']]],
   ['getshrinkfilterenabled_19',['getShrinkFilterEnabled',['../classFilterDialog.html#adb3b0da52ac1e1490a641aaf7ca6cbe7',1,'FilterDialog']]],
