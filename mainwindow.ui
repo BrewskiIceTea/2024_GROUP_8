@@ -121,7 +121,7 @@
     <iconset theme="QIcon::ThemeIcon::FolderNew"/>
    </property>
    <property name="text">
-    <string>Load Model</string>
+    <string>Load Folder</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens a directory and loads all .STL files within all sub directories. This will replace all models currently loaded&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
