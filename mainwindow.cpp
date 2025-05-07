@@ -22,7 +22,6 @@
 #include <QWidgetAction>
 
 #include <vtkGenericOpenGLRenderWindow.h>
-
 #include "VRRenderThread.h"
 
 #include <vtkShrinkFilter.h>
@@ -44,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->treeView->addAction(ui->actionItemOptions);
     ui->treeView->addAction(ui->actionFilterOptions);   
     ui->treeView->addAction(ui->actionReplace_Part);
+    ui->treeView->addAction(ui->actionRemove_Part);
     
     ui->actionStart_VR->setEnabled(true); // Enable the Start VR action button
     ui->actionStop_VR->setEnabled(false); // Disable the Stop VR action button
@@ -51,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     bool checkConnect;
     // Connect signals and slots
-
 
     //Ex5 ClickedSignalOfTree Constructor
     checkConnect = connect(ui->treeView, &QTreeView::clicked, this, &MainWindow::handleTreeClicked);
@@ -266,56 +265,39 @@ void MainWindow::on_actionStop_VR_triggered() {
     emit statusUpdateMessage(QString("Stopped VR Renderer"), 0);
 }
 
-// -------------------------------- FILE MODEL LOADING ----------------------------------
-
-
 void MainWindow::on_actionItemOptions_triggered() {
-    return;
+    openItemOptionsDialog();
+    emit statusUpdateMessage(QString("Opening triggered"), 0);
 }
 
 void MainWindow::on_actionReplace_Part_triggered() {
     replaceSelectedPart();
+    emit statusUpdateMessage(QString("Part replaced"), 0);
 }
 
+void MainWindow::on_actionRemove_Part_triggered(){
+    removeSelectedPart();
+    emit statusUpdateMessage(QString("Part removed"), 0);
+}
 
-// -------------------------------- DIALOGS ----------------------------------
-void MainWindow::replaceSelectedPart() {
+// ----------------------------- Part Managment ----------------------------------
+
+void MainWindow::removeSelectedPart(){
     QModelIndex index = ui->treeView->currentIndex();
-    if (!index.isValid()) {
-        QMessageBox::warning(
-            this,
-            tr("No item selected"),
-            tr("Please select an item in the tree view to replace.")
-        );
-        return;
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    //remove the actor from the renderer
+    if (part->getActor()) {//checks to see if actor for part exsists
+        renderer->RemoveActor(part->getActor());
+        qDebug() << "Removed actor for part:" << part->data(0).toString();
     }
 
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C:\\",
-        tr("STL Files (*.stl);;Text Files (*.txt)")
-    );
+    // Remove the part from the model
+    partList->removePart(index);
 
-    //  Give a warning if no file was selected
-    if (filePath.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
-        emit statusUpdateMessage(QString("No file selected"), 0);
-        return;
-    }   
-
-    ModelPart *part = partList->getPart(index); // Get the part from the model
-
-    QString name = QFileInfo(filePath).completeBaseName();
-    part->set(0, name); 
-
-    qDebug() << "About to load STL for" << filePath;
-
-    part->loadSTL(filePath);
-    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    // Update the rendering window
     updateRender();
 }
 
@@ -325,14 +307,14 @@ void MainWindow::addNewPart() {
         tr("Open File"),
         "C:\\",
         tr("STL Files (*.stl);;Text  (*.txt)")
-    );
+        );
 
     //  Give a warning if no file was selected
-    if (filePath.isEmpty()) { 
-        QMessageBox::warning(this, 
-            tr("File Selection"), 
-            tr("No file was selected."), 
-            QMessageBox::Ok);
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("File Selection"),
+                             tr("No file was selected."),
+                             QMessageBox::Ok);
         emit statusUpdateMessage(QString("No file selected"), 0);
         return;
     }
@@ -342,22 +324,110 @@ void MainWindow::addNewPart() {
 
     qDebug() << "About to load STL for" << filePath;
 
-    
-
-    QModelIndex index = ui->treeView->currentIndex();
-    if (index.isValid()) {
-       partList->getPart(index)->appendChild(newPart); // Append the new part to the selected part
-       ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
-    } else {
-        ModelPart* rootItem = partList->getRootItem();
-        rootItem->appendChild(newPart);
-        
-        // Get index of the new item
-        QModelIndex newPartIndex = partList->index(rootItem->childCount() - 1, 0, QModelIndex());
-        emit partList->dataChanged(QModelIndex(), newPartIndex);
+    // Always add the new part to the root of the part list
+    if (!partList) {
+        partList = new ModelPartList("Parts List");
+        ui->treeView->setModel(partList);
     }
+
+    partList->insertPartAtRoot(newPart);
     newPart->loadSTL(filePath);
     updateRender();
+
+}
+
+void MainWindow::replaceSelectedPart() {
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) {
+        QMessageBox::warning(
+            this,
+            tr("No item selected"),
+            tr("Please select an item in the tree view to replace.")
+            );
+        return;
+    }
+
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open File"),
+        "C:\\",
+        tr("STL Files (*.stl);;Text Files (*.txt)")
+        );
+
+    //  Give a warning if no file was selected
+    if (filePath.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("File Selection"),
+                             tr("No file was selected."),
+                             QMessageBox::Ok);
+        emit statusUpdateMessage(QString("No file selected"), 0);
+        return;
+    }
+
+
+    ModelPart *partOld = partList->getPart(index); // Get the part from the model
+
+    QString name = QFileInfo(filePath).completeBaseName();
+    ModelPart *partNew = new ModelPart({name, "true"});
+    partNew->loadSTL(filePath);
+
+    renderer->RemoveActor(partOld->getActor());
+
+    partOld->set(0, name); //set name of part
+    partOld->setFile(partNew->getFile());
+    partOld->setActor(partNew->getActor());
+    partOld->setMapper(partNew->getMapper());
+
+    qDebug() << "About to load STL for" << filePath;
+
+    ui->treeView->model()->dataChanged(index, index); // Tell the view that the model has changed
+    updateRender();
+}
+
+
+
+// ----------------------------- Open Folders ----------------------------------
+
+void MainWindow::openItemOptionsDialog(){
+    QModelIndex index = ui->treeView->currentIndex();
+    if (!index.isValid()) return;
+
+    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
+
+    OptionDialog dialog(this);
+    dialog.loadFromModelPart(part->data(0).toString(),
+                             part->getColourR(), part->getColourG(), part->getColourB(), part->visible());
+
+    if (dialog.exec() == QDialog::Accepted) {
+        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+
+        part->set(0, dialog.getPartName());
+        part->setColour(dialog.getRed(), dialog.getGreen(), dialog.getBlue());
+        part->setVisible(dialog.getVisibility());
+        part->setActorValues();
+
+        /*//  Update actor color immediately
+        if (part->getActor()) {
+            part->getActor()->GetProperty()->SetColor(
+                part->getColourR() / 255.0,
+                part->getColourG() / 255.0,
+                part->getColourB() / 255.0
+                );
+        }*/
+
+        renderer->Render(); // Refresh the window
+        updateRender();
+
+        ui->treeView->model()->dataChanged(index, index);
+
+        emit statusUpdateMessage(
+            QString("ModelPart updated, dialog visible: %1").arg(part->visible()),
+            0
+            );
+
+    } else {
+        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+    }
 }
 
 void MainWindow::loadFolderAsTree() {
@@ -433,6 +503,7 @@ void MainWindow::on_actionOpen_Dir_triggered(){
 // -------------------------------- UPDATE RENDERING ----------------------------------
 
 void MainWindow::updateRender() {
+    qDebug() << "Update Render running";
     updateRenderFromTree(QModelIndex());
     renderer->ResetCamera();  
     // renderer->RotateCamera(90, 0, 0); // Rotate the camera instead of the model to get accurate lighting
@@ -445,6 +516,7 @@ void MainWindow::updateRender() {
 
     renderWindow->Render(); // forces the render window to update when any 
     // change is made rather than having to interact to render
+
 }
 
 void MainWindow::updateAllThreadActors() {
@@ -456,7 +528,13 @@ void MainWindow::updateRenderFromTree(const QModelIndex& parentIndex) {
     if (parentIndex.isValid()) {
         ModelPart* part = static_cast<ModelPart*>(parentIndex.internalPointer());
         if (part && part->getActor()) {
-            renderer->AddActor(part->getActor());
+
+            if(part->getFiltedActor()){ //if part is being filted dont add normal part actor
+                renderer->AddActor(part->getFiltedActor());
+            }
+            else{
+                renderer->AddActor(part->getActor());
+            }
             qDebug() << "Added actor for part:" << part->data(0).toString();
         }
     }
@@ -504,17 +582,15 @@ void MainWindow::openFilterDialog(){
     QModelIndex index = ui->treeView->currentIndex();
     if (!index.isValid()) return;
 
-    ModelPart *part = static_cast<ModelPart*>(index.internalPointer());
-
     FilterDialog dialog(this);
 
     if (dialog.exec() == QDialog::Accepted) {
 
-        emit statusUpdateMessage(QString("Dialog accepted"), 0);
+        emit statusUpdateMessage(QString("Filter Dialog accepted"), 0);
 
 
     } else {
-        emit statusUpdateMessage(QString("Dialog rejected"), 0);
+        emit statusUpdateMessage(QString("Filter Dialog rejected"), 0);
     }
 }
 
@@ -545,7 +621,7 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
         }
 
         renderer->RemoveActor(part->getActor());    //remove original part
-        part->getActor()->SetVisibility(0);         //temp method should use remove actor
+        //part->getActor()->SetVisibility(0);         //temp method should use remove actor
 
         bool clipEnabled = dialog.getClipFilterEnabled();   //transfereed values jsut to make easier to read
         bool shrinkEnabled = dialog.getShrinkFilterEnabled();
@@ -592,37 +668,37 @@ void MainWindow::on_actionFilterOptions_triggered(){    //should only ever be op
             if (clipEnabled && shrinkEnabled) { //both filters
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Both filtering"), 0);
+                emit statusUpdateMessage(QString("Both filtering"), 0);
 
             } else if (clipEnabled) {           //just clip filter
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Clip filtering"), 0);
+                emit statusUpdateMessage(QString("Clip filtering"), 0);
 
             } else if (shrinkEnabled) {         // just shrink filter
                 part->setFiltedActor(actor);
                 renderer->AddActor(part->getFiltedActor());
-                //emit statusUpdateMessage(QString("Shrink filtering"), 0);
+                emit statusUpdateMessage(QString("Shrink filtering"), 0);
             }
 
 
         } else {
             // No filter: show original actor
             renderer->AddActor(part->getActor());
-            part->getActor()->SetVisibility(1);     //temp method should use add actor
+            //part->getActor()->SetVisibility(1);     //temp method should use add actor
 
-            //emit statusUpdateMessage(QString("No filtering"), 0);
+            emit statusUpdateMessage(QString("No filtering"), 0);
         }
 
         renderer->Render();
         updateRender();
-
+        /*
         emit statusUpdateMessage(
             QString("FilterDialog: clipFilterEnabled = %1, shrinkFilterEnabled = %2")
                 .arg(dialog.getClipFilterEnabled())
                 .arg(dialog.getShrinkFilterEnabled()),
             0
-            );
+            );*/
     }
 
 }

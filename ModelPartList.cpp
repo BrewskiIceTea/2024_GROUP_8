@@ -149,3 +149,40 @@ QModelIndex ModelPartList::appendChild(QModelIndex& parent, const QList<QVariant
     return child;
 }
 
+bool ModelPartList::removePart(const QModelIndex &index){
+    if (!index.isValid())
+        return false;
+
+    ModelPart* partToBeRemoved = static_cast<ModelPart*>(index.internalPointer());
+    ModelPart* parent = partToBeRemoved->parentItem();
+
+    if (!parent)
+        return false;
+
+    int row = partToBeRemoved->row(); // assumes ModelPart::row() gives correct position in parent's children
+
+    beginRemoveRows(index.parent(), row, row);
+    parent->removeChild(partToBeRemoved); // make sure this deletes the child from the parent's list
+    //delete part; // free memory if you're managing raw pointers
+    endRemoveRows();
+
+    emit layoutChanged(); // optional but helpful to refresh the view
+
+    qDebug() << "removePart:";
+
+    return true;
+
+}
+
+void ModelPartList::insertPartAtRoot(ModelPart* newPart) {
+    ModelPart* rootItem = getRootItem();
+    int row = rootItem->childCount();
+
+    beginInsertRows(QModelIndex(), row, row);
+    rootItem->appendChild(newPart);
+    endInsertRows();
+}
+
+ModelPart* ModelPartList::getRootItem() const {
+    return rootItem; // assuming `rootItem` is a private member
+}
